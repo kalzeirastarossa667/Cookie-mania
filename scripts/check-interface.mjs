@@ -13,7 +13,7 @@ await new Promise(resolve => window.addEventListener('load', resolve, { once: tr
 const app = window.cookieEmpire;
 const document = window.document;
 assert.ok(app, 'application démarrée');
-assert.ok(window.cookieEmpireFoundationTests?.total >= 151, 'suite intégrée complète lancée dans un DOM');
+assert.ok(window.cookieEmpireFoundationTests?.total >= 152, 'suite intégrée complète lancée dans un DOM');
 assert.equal(window.cookieEmpireFoundationTests?.passed, true, 'suite intégrée réussie dans un DOM');
 
 const cards = [...document.querySelectorAll('#generatorList .generator')];
