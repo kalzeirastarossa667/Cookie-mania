@@ -1245,7 +1245,8 @@ class CookieEmpireApp {
   }
 
   flushPendingSave(){
-    if(this.saveAccumulator>0 && this.saveSystem.save(this.state)) this.saveAccumulator=0;
+    // Un clic ou un achat peut survenir avant la frame suivante : sauvegarder même à compteur nul.
+    if(this.saveSystem.save(this.state)) this.saveAccumulator=0;
   }
 
   loop(time){
