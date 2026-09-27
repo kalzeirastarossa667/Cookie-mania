@@ -10,6 +10,6 @@ Ouvrir `index.html` dans un navigateur pour jouer. Les données sont sauvegardé
 - Rapport de la version : [`docs/Cookie_Empire_Foundation_0.7.1_Test_Report.md`](docs/Cookie_Empire_Foundation_0.7.1_Test_Report.md).
 - Vérifications automatiques : `npm ci` puis `npm test` (Node 24).
 
-La suite relance 152 tests de règles et de persistance, puis 22 assertions d'interface avec jsdom. Elle ne remplace pas un essai dans un vrai navigateur. Le rapport historique 0.7 annonce également 58 scénarios DOM simulés, dont le programme de test autonome n'est pas dans ce dépôt.
+La suite relance 152 tests de règles et de persistance, puis 23 assertions d'interface avec jsdom. Elle ne remplace pas un essai dans un vrai navigateur. Le rapport historique 0.7 annonce également 58 scénarios DOM simulés, dont le programme de test autonome n'est pas dans ce dépôt.
 
 Avant d'ajouter une mécanique, lire le Master Dev File, vérifier la version courante et conserver la compatibilité des sauvegardes.
