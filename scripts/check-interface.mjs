@@ -17,8 +17,19 @@ assert.ok(window.cookieEmpireFoundationTests?.total >= 157, 'suite intégrée co
 assert.equal(window.cookieEmpireFoundationTests?.passed, true, 'suite intégrée réussie dans un DOM');
 
 const cards = [...document.querySelectorAll('#generatorList .generator')];
-assert.equal(cards.length, 3, 'trois générateurs affichés');
+assert.equal(cards.length, 4, 'quatre générateurs affichés');
 assert.match(cards[2].querySelector('.click-bonus').textContent, /8 cookie\/clic/, 'contribution du four lisible');
+assert.match(cards[3].querySelector('.click-bonus').textContent, /47 cookie\/clic/, 'contribution de la mine lisible');
+const themeButton = document.getElementById('themeButton');
+assert.equal(document.documentElement.dataset.theme, 'dark', 'galaxie par défaut');
+assert.equal(themeButton.getAttribute('aria-pressed'), 'true', 'thème annoncé');
+themeButton.click();
+assert.equal(document.documentElement.dataset.theme, 'light', 'mode clair activable');
+assert.equal(app.saveSystem.readTheme(), 'light', 'préférence conservée');
+assert.equal(themeButton.getAttribute('aria-label'), 'Activer le mode nuit', 'action accessible');
+themeButton.click();
+assert.equal(app.saveSystem.readTheme(), 'dark', 'retour au mode nuit');
+assert.equal(app.saveSystem.writeTheme('invalid'), false, 'thème inconnu rejeté');
 assert.match(document.querySelector('.tap-hint').textContent, /générateur.*clics/, 'règle indiquée dans le jeu');
 const oven = document.querySelector('[data-generator-id="oven"][data-buy-mode="1"]');
 const ovenTen = document.querySelector('[data-generator-id="oven"][data-buy-mode="10"]');
@@ -63,6 +74,15 @@ assert.equal(state.totalClicks, clicksBeforeKeyboard, 'raccourci de clic ignoré
 const saved = JSON.parse(app.saveSystem.encode(state));
 delete saved.state.generators.oven;
 assert.equal(app.saveSystem.decode(JSON.stringify(saved))?.generators.oven, 0, 'ancienne sauvegarde compatible');
+delete saved.state.generators.cocoa_mine;
+assert.equal(app.saveSystem.decode(JSON.stringify(saved))?.generators.cocoa_mine, 0, 'mine initialisée sur ancienne sauvegarde');
+const mine = document.querySelector('[data-generator-id="cocoa_mine"][data-buy-mode="1"]');
+state.cookies = state.totalProduced = app.engine.getGeneratorCost('cocoa_mine');
+app.ui.render();
+mine.click();
+assert.equal(state.generators.cocoa_mine, 1, 'achat de mine');
+assert.equal(state.clickReward.compare(window.eval('HugeNumber.from(136)')), 0, 'mine ajoute 47 aux clics');
+assert.equal(state.cps.compare(window.eval('HugeNumber.from(135)')), 0, 'mine produit 47 cookies/s');
 
 assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 8, 'progression conservée');
 assert.equal(document.getElementById('diagnosticResults').textContent.includes(`${window.cookieEmpireFoundationTests.total}/${window.cookieEmpireFoundationTests.total}`), true, 'diagnostic affiché');
@@ -84,4 +104,4 @@ app.saveAccumulator = 0;
 window.dispatchEvent(new window.Event('pagehide'));
 assert.equal(app.saveSystem.load()?.totalClicks, state.totalClicks, 'clic juste avant fermeture conservé');
 window.close();
-console.log('Interface simulée : 28/28 vérifications réussies');
+console.log('Interface simulée : 40 vérifications ciblées réussies');
