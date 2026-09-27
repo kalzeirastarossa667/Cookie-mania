@@ -16,6 +16,7 @@ const context = createContext({
     getElementById: id => id === 'diagnosticResults' ? diagnostic : details,
   },
   window: { addEventListener() {} },
+  requestAnimationFrame() {},
   localStorage: {
     getItem: key => stored.has(key) ? stored.get(key) : null,
     setItem: (key, value) => stored.set(key, String(value)),
@@ -31,3 +32,15 @@ if (!result.passed) {
   process.exitCode = 1;
 }
 console.log(diagnostic.text);
+new Script(`
+  const counts={render:0,recovery:0,save:0,tick:0};
+  const app={lastFrame:0,saveAccumulator:0,renderAccumulator:0,state:{},
+    engine:{tick(){counts.tick++;}},
+    ui:{render(){counts.render++;},renderRecovery(){counts.recovery++;}},
+    saveSystem:{save(){counts.save++;}}};
+  for(let time=250;time<=5000;time+=250) CookieEmpireApp.prototype.loop.call(app,time);
+  if(counts.tick!==20 || counts.render!==20 || counts.save!==1 || counts.recovery!==1)
+    throw new Error('Cadence UI/sauvegarde incorrecte : '+JSON.stringify(counts));
+  globalThis.loopCounts=counts;
+`).runInContext(context);
+console.log(`Cadence simulation : ${context.loopCounts.render} rendus, ${context.loopCounts.save} sauvegarde sur 5 s`);
