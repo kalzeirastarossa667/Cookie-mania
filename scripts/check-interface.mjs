@@ -13,7 +13,7 @@ await new Promise(resolve => window.addEventListener('load', resolve, { once: tr
 const app = window.cookieEmpire;
 const document = window.document;
 assert.ok(app, 'application démarrée');
-assert.equal(window.cookieEmpireFoundationTests?.total, 151, 'suite intégrée lancée dans un DOM');
+assert.ok(window.cookieEmpireFoundationTests?.total >= 151, 'suite intégrée complète lancée dans un DOM');
 assert.equal(window.cookieEmpireFoundationTests?.passed, true, 'suite intégrée réussie dans un DOM');
 
 const cards = [...document.querySelectorAll('#generatorList .generator')];
@@ -54,7 +54,7 @@ delete saved.state.generators.oven;
 assert.equal(app.saveSystem.decode(JSON.stringify(saved))?.generators.oven, 0, 'ancienne sauvegarde compatible');
 
 assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 8, 'progression conservée');
-assert.equal(document.getElementById('diagnosticResults').textContent.includes('151/151'), true, 'diagnostic affiché');
+assert.equal(document.getElementById('diagnosticResults').textContent.includes(`${window.cookieEmpireFoundationTests.total}/${window.cookieEmpireFoundationTests.total}`), true, 'diagnostic affiché');
 app.saveAccumulator = 1;
 window.dispatchEvent(new window.Event('pagehide'));
 assert.equal(app.saveAccumulator, 0, 'sortie de page vide le compteur de sauvegarde');
