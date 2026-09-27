@@ -48,6 +48,10 @@ ovenTen.click();
 assert.equal(state.generators.oven, 11, 'achat ×10 depuis le bouton');
 assert.equal(state.cps.m, 8.8, 'production de onze fours');
 assert.notEqual(ovenTen.querySelector('[data-role="batch-cost"]').textContent, initialBatch, 'prix du lot recalculé');
+const clicksBeforeKeyboard = state.totalClicks;
+ovenTen.focus();
+ovenTen.dispatchEvent(new window.KeyboardEvent('keydown', { code: 'Space', bubbles: true }));
+assert.equal(state.totalClicks, clicksBeforeKeyboard, 'raccourci de clic ignoré depuis un bouton de boutique');
 
 const saved = JSON.parse(app.saveSystem.encode(state));
 delete saved.state.generators.oven;
@@ -69,4 +73,4 @@ Object.defineProperty(document, 'hidden', { configurable: true, value: true });
 document.dispatchEvent(new window.Event('visibilitychange'));
 assert.equal(app.saveAccumulator, 0, 'mise en arrière-plan réessaie la sauvegarde');
 window.close();
-console.log('Interface simulée : 21/21 vérifications réussies');
+console.log('Interface simulée : 22/22 vérifications réussies');
