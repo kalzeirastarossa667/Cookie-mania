@@ -15,14 +15,14 @@ Aucune modification des quatre améliorations, des huit étapes, des anciennes r
 | Contrôle | Résultat |
 |---|---|
 | Tests intégrés précédents | 146 conservés |
-| Nouveaux tests de générateur | 5, observés échouer avant ajout puis réussir |
-| Tests intégrés totaux | **151/151** |
+| Nouveaux tests de générateur | 6, dont 5 observés échouer avant ajout puis réussir |
+| Tests intégrés totaux | **152/152** |
 | Simulation de 5 s de boucle | 20 rendus, 1 sauvegarde |
 | Scénarios d'interface jsdom ciblés | **22/22** |
 | Syntaxe JavaScript | PASS, Node 24.19.0 |
 | Vrai navigateur et rendu mobile | Non vérifiés : accès direct au fichier local refusé par la politique du navigateur de test (`file:` bloqué) |
 
-La simulation d'interface vérifie le prix et son libellé accessible, les boutons ×1/×10, le CPS, l'ancien format v4 sans four, la progression, l'isolement des raccourcis clavier, la sauvegarde à la fermeture, l'échec et la reprise d'une sauvegarde ainsi que le passage en arrière-plan. L'assertion de sauvegarde à la fermeture a échoué avant l'ajout du gestionnaire, puis réussi. Les 58 scénarios DOM historiques de la livraison 0.7 ne sont pas disponibles en tant que suite autonome dans ce dépôt et ne sont pas présentés comme relancés.
+La simulation d'interface vérifie le prix et son libellé accessible, les boutons ×1/×10, le CPS, l'ancien format v4 sans four, la progression, l'isolement des raccourcis clavier, la sauvegarde à la fermeture, l'échec et la reprise d'une sauvegarde ainsi que le passage en arrière-plan. Un test de règles vérifie en plus l'import d'un ancien export v4 sans four. L'assertion de sauvegarde à la fermeture a échoué avant l'ajout du gestionnaire, puis réussi. Les 58 scénarios DOM historiques de la livraison 0.7 ne sont pas disponibles en tant que suite autonome dans ce dépôt et ne sont pas présentés comme relancés.
 
 ## Limites
 
