@@ -1,0 +1,11 @@
+{
+  "name": "cookie-empire-foundation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.1"
+  }
+}
