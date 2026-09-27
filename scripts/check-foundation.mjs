@@ -27,6 +27,7 @@ const context = createContext({
 });
 new Script(`${match[1]}\n;globalThis.testOutcome=runFoundationTests();`, { filename: 'index.html' }).runInContext(context);
 const result = context.testOutcome;
+if (result.total < 151) throw new Error(`Suite de régression incomplète : ${result.total}/151 cas attendus`);
 if (!result.passed) {
   console.error(result.failed);
   process.exitCode = 1;
