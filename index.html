@@ -2169,6 +2169,14 @@ function runFoundationTests(){
     assert(loaded.generators.oven===2 && loaded.cps.compare(16)===0,'reconstruction');
     assert(save.newGame(GameState.create()) && save.load().generators.oven===0,'reset');
   });
+  test('four artisanal : import d’un ancien export v4',()=>{
+    const {save,state}=recoveryFixture();
+    const previous=JSON.parse(save.encode(state));delete previous.state.generators.oven;
+    const bundle=JSON.stringify({format:'cookie-empire-recovery',version:1,exportedAt:Date.now(),primary:JSON.stringify(previous),backup:null,quarantine:null});
+    const candidates=save.inspectImport(bundle).candidates;
+    assert(candidates.length===1 && candidates[0].state.generators.oven===0,'four initialisé à zéro');
+    assert(candidates[0].state.cps.compare(2)===0,'anciens bonus reconstruits');
+  });
   const failed=results.filter(r=>!r.ok);
   const status=document.createElement('div');
   status.id='testStatus';
