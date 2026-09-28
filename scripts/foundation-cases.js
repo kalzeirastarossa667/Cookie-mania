@@ -582,8 +582,8 @@ validateResearchGraph(UPGRADES);
   });
   test('prestige : v5 rejette valeurs permanentes invalides',()=>{
     const save=new SaveSystem('prestige-v5-invalid'),state=GameState.create(),raw=JSON.parse(save.encode(state));
-    for(const value of [null,{}, {m:-1,e:0}]){const f=structuredClone(raw);f.state.prestigePoints=value;assert(save.decode(JSON.stringify(f))===null,'points invalides');}
-    for(const value of [-1,0.5,'1',Number.MAX_SAFE_INTEGER+1]){const f=structuredClone(raw);f.state.prestigeCount=value;assert(save.decode(JSON.stringify(f))===null,'compteur invalide');}
+    for(const value of [null,{}, {m:-1,e:0}]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigePoints=value;assert(save.decode(JSON.stringify(f))===null,'points invalides');}
+    for(const value of [-1,0.5,'1',Number.MAX_SAFE_INTEGER+1]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigeCount=value;assert(save.decode(JSON.stringify(f))===null,'compteur invalide');}
   });
 
   function memoryStore(initial={}){
@@ -804,12 +804,12 @@ validateResearchGraph(UPGRADES);
     for(const archive of [JSON.stringify({version:2,entries:[]}),importArchive([raw,raw,raw]),JSON.stringify({version:1,entries:[{raw,sourceKey:'x',capturedAt:-1}]})]){const r=save.inspectImport(importBundle(raw,null,archive));assert(r.candidates.length===1 && r.invalidCount===1,'archive ignorée');}
     assert(storage.getItem(save.quarantineKey)===before,'archive locale intacte');
   });
-  test('import : v1 à v3 migrent vers un état v4 sans valeurs dérivées persistées',()=>{
+  test('import : v1 à v3 migrent vers un état v5 sans valeurs dérivées persistées',()=>{
     const {save,raw}=recoveryFixture();for(const version of [1,2,3]){
       const data=JSON.parse(raw);data.version=version;delete data.state.ownedUpgrades;data.state.cps={m:9,e:99};
       if(version===1){data.state.cookies=500;data.state.totalProduced=600;data.state.clickPower=3;}
       const state=save.decodeImport(JSON.stringify(data));assert(state && state.ownedUpgrades.length===0,'migration');
-      const persisted=JSON.parse(save.encode(state));assert(persisted.version===4 && !('cps' in persisted.state) && !('clickReward' in persisted.state),'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
+      const persisted=JSON.parse(save.encode(state));assert(persisted.version===5 && !('cps' in persisted.state) && !('clickReward' in persisted.state) && 'prestigePoints' in persisted.state && 'prestigeCount' in persisted.state,'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
     }
   });
   test('import : compteurs et horodatages hérités doivent être réinscriptibles',()=>{
@@ -902,7 +902,7 @@ validateResearchGraph(UPGRADES);
     for(const definitions of bad){let rejected=false;try{validateMilestoneContent(definitions);}catch{rejected=true;}assert(rejected,'contenu invalide '+JSON.stringify(definitions));}
   });
   test('progression : sauvegarde inchangée et étapes reconstruites',()=>{
-    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
+    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigePoints,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
   });
   test('progression : migration ancienne respecte ses possessions historiques',()=>{
     const {save,raw}=recoveryFixture();const data=JSON.parse(raw);data.version=3;delete data.state.ownedUpgrades;const s=save.decode(JSON.stringify(data));assert(step(s,'first_cursor').done && !step(s,'first_upgrade').done,'v3');data.version=2;const v2=save.decode(JSON.stringify(data));assert(step(v2,'first_batch').done && !step(v2,'first_cursor').done,'v2 sans ownership');
