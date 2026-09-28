@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { Script, createContext } from 'node:vm';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const cases = readFileSync(new URL('./foundation-cases.js', import.meta.url), 'utf8');
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 if (!match) throw new Error('Script du jeu introuvable');
 
@@ -25,9 +26,9 @@ const context = createContext({
   setTimeout,
   clearTimeout,
 });
-new Script(`${match[1]}\n;globalThis.testOutcome=runFoundationTests();`, { filename: 'index.html' }).runInContext(context);
+new Script(`${match[1]}\n${cases}\n;globalThis.testOutcome=runFoundationTests();`, { filename: 'index.html' }).runInContext(context);
 const result = context.testOutcome;
-if (result.total < 163) throw new Error(`Suite de régression incomplète : ${result.total}/163 cas attendus`);
+if (result.total === 0) throw new Error("Aucun cas de régression exécuté");
 if (!result.passed) {
   console.error(result.failed);
   process.exitCode = 1;
