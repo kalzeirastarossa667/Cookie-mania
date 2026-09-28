@@ -1,27 +1,27 @@
 # Cookie Empire
 
-**Foundation 2.0 — Constellation** : jeu idle/clicker autonome, avec une nouvelle interface mobile galaxie.
+**Foundation 2.1 — Horizons** : clicker autonome avec **16 générateurs**, **22 recherches** et **44 objectifs**.
 
 ## Jouer
 
-Télécharger `index.html` et l’ouvrir dans un navigateur. Le dépôt GitHub contient le code ; sa page de fichiers n’est pas une page de jeu hébergée.
+Télécharger `index.html` puis l'ouvrir dans un navigateur. La page de fichiers GitHub n'est pas un jeu hébergé.
 
-- **Empire** : cookie central, prochain objectif et destinations spatiales.
-- **Atelier** : huit générateurs, achats ×1 / ×10 / Max et gains par clic effectifs.
-- **Recherche** : quatorze bonus permanents, trois branches, prérequis et filtres.
-- **Parcours** : vingt-huit objectifs jusqu’aux forges stellaires.
+- **Empire** : cookie central, prochain objectif et destinations.
+- **Atelier** : seize générateurs dans quatre régions ; filtres ; achats ×1 / ×10 / Max ; gains effectifs par clic ; estimation du temps avant achat sans clic manuel.
+- **Recherche** : bonus permanents et huit spécialisations des anciens générateurs, accessibles à dix unités possédées. Une spécialisation double les CPS et la contribution aux clics du générateur concerné.
+- **Parcours** : quarante-quatre objectifs.
 
-Réserve et gains toujours accessibles ; bouton de clic disponible depuis les autres vues. Mode nuit par défaut, mode clair conservé. Fonctionnement sans dépendance réseau.
+Mode galaxie par défaut, thème clair disponible, ressources persistantes et clic accessible depuis les autres vues. Pas de dépendance réseau. Les tests de développement ne sont plus embarqués dans le jeu.
 
-Pour reprendre une partie dans un nouveau fichier téléchargé, utiliser **Exporter les données** dans l’ancien jeu puis **Importer une partie** dans le nouveau. Les sauvegardes v4 antérieures sont acceptées ; les nouveaux générateurs commencent à zéro. Ne pas revenir à une ancienne version après des achats propres à 2.0.
+Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les données** depuis l'ancien jeu, puis **Importer une partie** dans le nouveau. Les anciennes sauvegardes v4 restent acceptées ; les nouveaux générateurs commencent à zéro. Le retour à une ancienne version après des achats nouveaux n'est pas pris en charge.
 
 ## Développer
 
-- Source de vérité : [Master Dev File v2.9](docs/Cookie_Empire_Master_Dev_File_v2.9.md).
-- Résultats : [Rapport Foundation 2.0](docs/Cookie_Empire_Foundation_2.0_Test_Report.md).
-- Installer les outils : `npm ci` (Node 24).
-- Vérifier : `npm test`.
+- [Master Dev File v3.0](docs/Cookie_Empire_Master_Dev_File_v3.0.md), source de vérité.
+- [Rapport Foundation 2.1](docs/Cookie_Empire_Foundation_2.1_Test_Report.md).
+- [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
+- Node 24 : `npm ci`, puis `npm test`.
 
-175 tests intégrés et les suites DOM passent, dont 40 nouvelles assertions pour Constellation. Les tests jsdom ne remplacent pas une validation visuelle sur un appareil réel. La nouvelle interface reste une candidate ; la vidéo du joueur valide la version 1.1 précédente.
+La suite exécute 181 cas de règles/persistance, les vérifications d'interface existantes et 56 assertions Constellation/Horizons. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
 
-Avant toute mécanique, lire le Master, spécifier les règles et conserver la compatibilité des sauvegardes. Cell to Singularity a servi de référence d’organisation de l’interface ; aucun de ses assets n’est embarqué dans le jeu.
+Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
