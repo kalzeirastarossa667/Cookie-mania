@@ -25,3 +25,9 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 La suite exécute 181 cas de règles/persistance, les vérifications d'interface existantes et 56 assertions Constellation/Horizons. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
 
 Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
+
+## Organisation du dépôt
+
+- [Documentation actuelle](docs/README.md) et [méthode de travail](docs/WORKFLOW.md).
+- `index.html` : jeu courant ; `scripts/` : vérifications ; `docs/archive/` : historique documentaire ; `archive/releases/` : anciens prototypes.
+- GitHub Actions vérifie le code ; Dependabot propose les mises à jour hebdomadaires. Les dépendances de développement ne sont pas embarquées dans le jeu.

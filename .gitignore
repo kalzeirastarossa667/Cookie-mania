@@ -1,0 +1,9 @@
+node_modules/
+analysis/
+reference/
+upload/
+project_sources/
+*.log
+.DS_Store
+Cookie-Empire-*.html
+Cookie-Empire-*.docx

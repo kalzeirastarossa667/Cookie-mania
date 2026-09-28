@@ -2,15 +2,38 @@ name: Foundation checks
 
 on:
   push:
+    paths:
+      - 'index.html'
+      - 'scripts/**'
+      - 'package*.json'
+      - '.nvmrc'
+      - '.github/workflows/foundation.yml'
   pull_request:
+    paths:
+      - 'index.html'
+      - 'scripts/**'
+      - 'package*.json'
+      - '.nvmrc'
+      - '.github/workflows/foundation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   foundation:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version-file: '.nvmrc'
+          cache: npm
+          cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm test
