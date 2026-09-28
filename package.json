@@ -3,9 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs"
+    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs",
+    "test:browser": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "jsdom": "30.1.1"
   }
 }

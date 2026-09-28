@@ -25,3 +25,7 @@ Les réglages de protection de branche, CodeQL et les outils payants ne sont pas
 - https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md — cache npm.
 - https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency — annulation des exécutions remplacées.
 - https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference — configuration des mises à jour.
+
+## Vérification navigateur
+
+Le workflow Browser checks exécute Playwright dans Chromium sur GitHub Actions, avec un écran ordinateur et une émulation Pixel 5. Commande : npm run test:browser après npx playwright install --with-deps chromium. Deux scénarios par format couvrent clics, achat de curseur, sauvegarde/rechargement, navigation, filtres, thème et absence de débordement horizontal. Les captures et traces sont conservées sept jours dans l’artefact browser-report. L’émulation ne constitue pas un test sur un téléphone physique. Aucun navigateur n’est lancé dans l’environnement local restreint.

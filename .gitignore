@@ -7,3 +7,5 @@ project_sources/
 .DS_Store
 Cookie-Empire-*.html
 Cookie-Empire-*.docx
+playwright-report/
+test-results/
