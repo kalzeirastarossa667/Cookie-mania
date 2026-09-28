@@ -84,7 +84,10 @@ assert.equal(state.generators.cocoa_mine, 1, 'achat de mine');
 assert.equal(state.clickReward.compare(window.eval('HugeNumber.from(136)')), 0, 'mine ajoute 47 aux clics');
 assert.equal(state.cps.compare(window.eval('HugeNumber.from(135)')), 0, 'mine produit 47 cookies/s');
 
-assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 8, 'progression conservée');
+assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 12, 'progression prolongée');
+assert.match(document.getElementById('milestoneCount').textContent, /12 étapes/, 'nouveau total visible');
+assert.equal(document.querySelector('[data-milestone-id="ten_mines"]') !== null, true, 'objectif mines présent');
+assert.equal(document.querySelector('[data-milestone-id="million_cookies"]') !== null, true, 'objectif million présent');
 assert.equal(document.getElementById('diagnosticResults').textContent.includes(`${window.cookieEmpireFoundationTests.total}/${window.cookieEmpireFoundationTests.total}`), true, 'diagnostic affiché');
 app.saveAccumulator = 1;
 window.dispatchEvent(new window.Event('pagehide'));
