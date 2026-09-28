@@ -1985,3 +1985,14 @@ The Parcours view displays accumulated Éclats, the permanent multiplier and the
 ## 39.4 Verification contract
 
 Add red/green coverage for v4 migration, v5 roundtrip, invalid prestige values, exact 1e12 threshold, reward scaling, multiplier separation, repeated prestige accumulation, full-new-game clearing, and storage failure leaving the live run unchanged. Rerun all 181 existing core cases and all existing jsdom/Constellation suites. Extend Playwright with a prestige-path test using a controlled valid save rather than millions of clicks, then require both Foundation and Browser workflows to pass on the feature branch. Browser emulation is reported as browser-tested, not as a physical-phone test.
+
+
+## 39.5 Implementation and verification
+
+Implemented on branch `feature/foundation-2.2-prestige`. GameState now owns `prestigePoints` (HugeNumber) and `prestigeCount`; Economy owns reward and permanent multiplier derivation; GameEngine prepares a detached prestige candidate without mutating the live run; SaveSystem alone commits the v5 replacement. V4 and older saves load with neutral prestige values. Recovery import revalidates prestigePoints as a canonical HugeNumber. The Parcours view exposes the permanent total, multiplier, pending reward and a confirmed prestige action.
+
+Observed red/green: the first implementation failed the Foundation suite because historical schema assertions still required v4. After migrating those expectations, three failures remained: one test helper unavailable inside the VM context and two exact persisted-field assertions still describing v4. Those tests were corrected without weakening their checks. A dedicated storage-failure regression then verifies that a failed primary write leaves the live run byte-for-byte unchanged and enters uncertain mode.
+
+Final automated result on the feature branch: **187/187 Foundation cases**, existing targeted interface checks pass, **56/56 Constellation/Horizons DOM checks** pass, deterministic cadence remains 20 renders and one autosave per five simulated seconds. GitHub Actions Browser checks pass in Chromium for desktop and Pixel 5 emulation, including the new prestige path: locked below threshold, confirmed reset at 1e12, one permanent Éclat, ×1.1 multiplier, zero current wallet and persistence after reload. This is real browser automation, but not a physical-phone validation.
+
+No prestige shop, second prestige tier, timed buff, extra generator, or automation was added. Balance is intentionally conservative and must be observed in a long real play session before expanding the system.
