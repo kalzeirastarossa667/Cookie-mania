@@ -599,6 +599,15 @@ validateResearchGraph(UPGRADES);
     state.ownedUpgrades=['reinforced_click','efficient_cursor'];Economy.refreshDerived(state);
     return {storage,save,state,raw:save.encode(state)};
   }
+  test('prestige : échec de stockage conserve le run vivant',()=>{
+    const {save,storage,state,raw}=recoveryFixture();storage.data.set(save.key,raw);assert(save.load(),'chargement');
+    state.totalProduced=HugeNumber.from('1e12');Economy.refreshDerived(state);
+    const engine=new GameEngine(state),candidate=engine.prestigeCandidate(),before=snapshot(state);
+    storage.failSet=key=>key===save.key;
+    assert(candidate && !save.commitPrestige(candidate.state,state),'échec attendu');
+    assert(snapshot(state)===before,'run vivant intact');
+    assert(save.mode==='uncertain','écriture ambiguë suspendue');
+  });
   test('protection : chargement corrompu bloque toutes les écritures automatiques',()=>{
     const {save,storage}=recoveryFixture();storage.data.set(save.key,'{broken');
     assert(save.load()===null,'repli');for(let i=0;i<100;i++)assert(!save.save(GameState.create()),'bloqué');
