@@ -493,12 +493,12 @@ validateResearchGraph(UPGRADES);
     const {state,engine}=funded();engine.buyUpgrade('reinforced_click');engine.buyUpgrade('warm_ovens');
     const save=new SaveSystem('cookie-empire-test-v4-schema');
     try{assert(save.save(state),'save');const raw=JSON.parse(localStorage.getItem(save.key));
-      assert(raw.version===4,'version');
-      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,totalClicks,totalProduced','champs exacts');
+      assert(raw.version===5,'version');
+      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigePoints,totalClicks,totalProduced','champs exacts');
       assert(raw.state.clickPower.m===1 && raw.state.ownedUpgrades.length===2,'base + IDs');
     }finally{save.clear();}
   });
-  test('v4 round-trip conserve achats et reconstruit effets',()=>{
+  test('v5 round-trip conserve achats et reconstruit effets',()=>{
     const {state,engine}=funded();state.clickPower=HugeNumber.from(3);state.generators.grandma=4;
     for(const id of ['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens'])engine.buyUpgrade(id);
     const save=new SaveSystem('cookie-empire-test-v4-roundtrip');
@@ -552,6 +552,38 @@ validateResearchGraph(UPGRADES);
   test('v4 rejette un compteur générateur explicitement null',()=>{
     const f=fixture();f.state.generators.cursor=null;
     assert(loadFixture(f)===null,'null ne signifie pas générateur absent');
+  });
+
+  test('prestige : migration v4 initialise les valeurs permanentes',()=>{
+    const state=loadFixture(fixture(4));
+    assert(state && state.prestigePoints.isZero() && state.prestigeCount===0,'migration prestige neutre');
+  });
+  test('prestige : seuil exact, récompense et multiplicateur séparé',()=>{
+    const state=GameState.create();state.totalProduced=HugeNumber.from('1e12');state.generators.cursor=1;Economy.refreshDerived(state);
+    const reward=Economy.prestigeReward(state);assert(reward.compare(1)===0,'récompense seuil');
+    state.prestigePoints=HugeNumber.from(10);Economy.refreshDerived(state);
+    assert(Economy.prestigeMultiplier(state).compare(2)===0,'multiplicateur x2');
+    assert(state.cps.compare('0.2')===0,'cps prestige');
+    assert(state.clickReward.compare('1.2')===0,'base clic non multipliée, bonus générateur oui');
+  });
+  test('prestige : candidat atomique réinitialise le run et accumule',()=>{
+    const state=GameState.create();state.cookies=HugeNumber.from('9e11');state.totalProduced=HugeNumber.from('4e12');
+    state.totalClicks=99;state.generators.cursor=10;state.ownedUpgrades=['reinforced_click'];state.prestigePoints=HugeNumber.from(3);state.prestigeCount=2;
+    const engine=new GameEngine(state),before=snapshot(state),candidate=engine.prestigeCandidate();
+    assert(candidate && candidate.reward.compare(2)===0,'récompense racine');
+    assert(snapshot(state)===before,'source non mutée');
+    assert(candidate.state.cookies.isZero() && candidate.state.totalProduced.isZero() && candidate.state.totalClicks===0,'run remis à zéro');
+    assert(candidate.state.generators.cursor===0 && candidate.state.ownedUpgrades.length===0,'contenu remis à zéro');
+    assert(candidate.state.prestigePoints.compare(5)===0 && candidate.state.prestigeCount===3,'permanent accumulé');
+  });
+  test('prestige : sous le seuil aucun candidat',()=>{
+    const state=GameState.create();state.totalProduced=HugeNumber.from('9.999e11');
+    assert(new GameEngine(state).prestigeCandidate()===null,'verrou');
+  });
+  test('prestige : v5 rejette valeurs permanentes invalides',()=>{
+    const save=new SaveSystem('prestige-v5-invalid'),state=GameState.create(),raw=JSON.parse(save.encode(state));
+    for(const value of [null,{}, {m:-1,e:0}]){const f=structuredClone(raw);f.state.prestigePoints=value;assert(save.decode(JSON.stringify(f))===null,'points invalides');}
+    for(const value of [-1,0.5,'1',Number.MAX_SAFE_INTEGER+1]){const f=structuredClone(raw);f.state.prestigeCount=value;assert(save.decode(JSON.stringify(f))===null,'compteur invalide');}
   });
 
   function memoryStore(initial={}){
