@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cookie Empire — Foundation 1.1</title>
+<title>Cookie Empire — Foundation 2.0 · Constellation</title>
 <style>
 :root{color-scheme:light;--paper:#f5f0e6;--card:#fffdf8;--ink:#35271f;--muted:#776c5e;--line:#e5dccb;--amber:#b76a22;--gold:#f6c875;--green:#183e35;--ok:#286f50}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0,#fffaf0,transparent 50%),var(--paper);color:var(--ink);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,summary{font:inherit;-webkit-tap-highlight-color:transparent}button{touch-action:manipulation}button,summary,a{outline-offset:4px}button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #ba681d}button:disabled{cursor:not-allowed}[hidden]{display:none!important}svg{display:block}h1,h2,h3,p{margin:0}button{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-width:0}button svg{pointer-events:none}.app{max-width:1150px;margin:auto;padding:24px 28px 18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand-mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid #d9bb81;border-radius:14px;background:#f4dfaf;font-size:27px;flex-shrink:0}.eyebrow{display:block;font-size:10px;font-weight:750;letter-spacing:2px;text-transform:uppercase}.brand .eyebrow{color:#8a633b;font-size:8px;letter-spacing:1.8px}.brand h1{white-space:nowrap;font:700 29px/1.15 Georgia,serif;letter-spacing:-1px}.toolbar{display:flex;gap:8px;align-items:center}.btn{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700;background:var(--card);color:var(--ink);transition:background .16s,border-color .16s,transform .12s}.btn:hover:not(:disabled){border-color:#b6a28a;background:#f8eedb}.btn:active:not(:disabled){transform:translateY(1px)}.save-button{display:flex;align-items:center;gap:7px}.save-button svg{width:17px;height:17px}.settings{position:relative}.settings>summary{list-style:none;display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;font-size:20px;font-weight:750}.settings>summary::-webkit-details-marker{display:none}.settings-menu{position:absolute;z-index:5;right:0;top:50px;background:var(--card);padding:8px;width:190px;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 30px #35271f1a}.settings-menu .btn{width:100%}.danger{color:#a43932}.status{min-height:28px;margin:8px 0;color:var(--ok);font-size:12px;overflow-wrap:anywhere}.layout{display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.12fr);gap:26px;align-items:start}.hero{background:radial-gradient(ellipse at 50% 35%,#315a45 0,#1c4237 40%,#14372f 100%);color:#fbf3df;border:1px solid #143a2f;border-radius:28px;padding:26px 24px 20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 14px 36px #243c2c14}.hero::before{content:"";position:absolute;inset:10px;border:1px solid #eac88022;border-radius:20px;pointer-events:none}.hero .eyebrow{color:#c9d1bb;font-size:9px;letter-spacing:2.4px}.balance{font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-2px;line-height:1.14;font-variant-numeric:tabular-nums;margin-top:9px;color:#ffe1a1;overflow-wrap:anywhere}.balance.long-number{font-size:clamp(27px,4vw,39px);letter-spacing:-1px}.label{font-size:13px;color:#d2dccb;margin-top:2px}.cookie-stage{position:relative;display:flex;align-items:center;justify-content:center;height:330px;isolation:isolate}.cookie-stage::before{content:"";position:absolute;width:290px;height:290px;border:1px solid #f9d99422;border-radius:50%;box-shadow:0 0 0 20px #eccc7e05,0 0 0 42px #eccc7e03;z-index:-1}.cookie{display:block;width:270px;max-width:100%;height:270px;border:0;padding:0;background:none;border-radius:50%;position:relative;user-select:none;transition:transform .12s,filter .12s;filter:drop-shadow(0 16px 10px #071d2560)}.cookie svg{width:100%;height:100%;pointer-events:none}.cookie:hover{transform:translateY(-3px) rotate(-2deg);filter:drop-shadow(0 18px 12px #071d2570) brightness(1.04)}.cookie:active{transform:scale(.95) rotate(2deg)}.cookie:focus-visible{outline-color:#ffe1a1}.star{position:absolute;color:#f8d89780;font-size:20px;pointer-events:none}.star.one{left:5%;top:21%}.star.two{right:4%;top:48%;font-size:13px}.star.three{left:17%;bottom:15%;font-size:10px}.tap-hint{font-size:11px;color:#d2dccb;letter-spacing:.4px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.stat{padding:13px 8px;border:1px solid #ffffff18;border-radius:15px;background:#091d182c;min-width:0}.stat b{display:block;font-size:23px;line-height:1.3;font-variant-numeric:tabular-nums;color:#fff1d2;overflow-wrap:anywhere}.stat span{display:block;font-size:11px;color:#d2dccb;margin-top:2px}.stat:first-child b{color:#fbd188}.session-stats{margin:15px 0 0;font-size:11px;color:#d1dbcf}.session-stats summary{cursor:pointer;min-height:32px;padding:6px;list-style-position:inside}.session-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;padding-top:9px}.session-row b{display:block;color:#f6eddb;font-size:15px;overflow-wrap:anywhere}.hero-foot{font-size:9px;color:#a6bcae;margin-top:12px}.shop{padding:4px 0;min-width:0}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.section-heading .eyebrow{color:#977548;font-size:9px;letter-spacing:1.6px}.section-heading h2{font:700 27px/1.3 Georgia,serif;letter-spacing:-.6px;margin-top:2px}.section-count{font-size:10px;font-weight:700;letter-spacing:.5px;color:#827160;border:1px solid #d9cbb9;border-radius:30px;padding:5px 9px;white-space:nowrap}.generator{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 3px 0 #d1bf9a10;transition:border-color .16s}.generator.is-available{border-color:#d1b17a}.generator-row{display:flex;align-items:center;gap:11px;min-width:0}.generator-icon{width:45px;height:45px;display:grid;place-items:center;background:#f6ead2;border:1px solid #ead7b4;border-radius:14px;font-size:26px;flex-shrink:0}.generator-info{flex:1;min-width:0}.generator h3{font-size:16px;line-height:1.3;letter-spacing:-.2px}.generator p{font-size:11px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.owned-badge{display:flex;flex-direction:column;align-items:center;min-width:35px;max-width:42%;font-size:10px;color:var(--muted);text-align:center}.owned-badge b{font-size:23px;font-weight:750;line-height:1.15;color:#5c4630;overflow-wrap:anywhere;max-width:100%}.purchase-actions{display:flex;gap:6px;margin-top:13px}.purchase-actions .buy{flex:0 0 56px}.purchase-actions .primary-buy{flex:1 1 0;min-width:0}.buy{font-size:12px;border-radius:10px;min-height:44px;padding:9px 8px}.buy:disabled{background:#f2eee6;color:#857c6e;border-color:#e7e0d4;opacity:1}.primary-buy:not(:disabled){background:#efbe68;border-color:#dfa64a;color:#462b13}.primary-buy:hover:not(:disabled){background:#f5c77c;border-color:#ce923a}.primary-buy span{overflow-wrap:anywhere}.upgrades{margin-top:27px}.section-note{font-size:11px;color:var(--muted);margin:-8px 0 14px}.upgrade-card{padding:13px 14px}.upgrade-card .generator-row{gap:10px;align-items:center}.upgrade-card .generator-icon{width:37px;height:37px;font-size:19px;border-radius:11px;background:#f4eadb}.upgrade-card h3{font-size:13px}.upgrade-card p{font-size:10px;margin-top:3px}.upgrade-card .buy{flex:0 1 126px;max-width:42%;font-size:11px;overflow-wrap:anywhere;line-height:1.3}.upgrade-owned:disabled{color:#276448;background:#e4efe3;border-color:#cadcc5;font-weight:750}.upgrade-card.is-owned{background:#f4f7ed;border-color:#d7e1cb}.upgrade-card.is-owned .generator-icon{background:#e5eddb;border-color:#d6e1c6;color:#3c6b43}.section-divider{width:32px;height:2px;background:#c99e59;margin-bottom:12px}.footer{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-top:24px;padding:16px 2px 0;border-top:1px solid var(--line);font-size:10px;color:#857664}.footer-brand{font-family:Georgia,serif;font-size:13px;color:#69533b}.diagnostics{max-width:100%;font-size:11px}.diagnostics summary{cursor:pointer;min-height:32px;padding:5px 0;list-style-position:inside}.diagnostics[open]{flex-basis:100%;width:100%}.diagnostics #testStatus{background:#e9efe3;border:1px solid #d6dfcd;border-radius:10px;padding:12px;overflow-wrap:anywhere;color:#345839}.diagnostics.has-failures #testStatus{background:#fff0ec;border-color:#ecc5b9;color:#90382d}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -50,11 +50,21 @@
 .click-feedback{position:absolute;z-index:2;bottom:5px;left:50%;transform:translateX(-50%);padding:4px 13px;border-radius:24px;background:#101f31dc;border:1px solid #ffe0a887;color:#ffe2a7;font-weight:800;font-size:16px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}.click-feedback.is-visible{opacity:1}
 .milestone-filter{margin:4px 0 10px;font-size:11px;min-height:44px}
 .journey-shortcut{margin-top:12px;font-size:11px;text-decoration:none}
+/* Constellation 2.0: stable resources, one active scene, reachable controls. */
+.app{max-width:1120px;padding:16px 24px 110px}.layout{display:block}.topbar{padding-bottom:12px}.brand h1{font-size:25px}.brand .eyebrow{font-size:8px}.toolbar{width:auto}.status{position:fixed;z-index:30;top:12px;left:50%;transform:translateX(-50%);width:max-content;max-width:90vw;min-height:0;margin:0;padding:10px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px #0003;pointer-events:none}.status:empty{display:none}.resource-hud{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;margin:12px 0 18px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 8px 28px #0002;min-height:86px}.wallet{min-width:0;flex:1}.wallet .eyebrow{font-size:9px;color:var(--muted);letter-spacing:1.7px}.wallet .balance,.wallet .balance.long-number{display:block;font-size:32px;line-height:1.15;letter-spacing:-1px;white-space:nowrap;margin:3px 0 0;color:var(--amber);overflow:hidden;text-overflow:ellipsis}.hud-rates{display:grid;gap:5px;text-align:right;max-width:49%;font-size:11px;color:var(--muted)}.hud-rates span{white-space:nowrap}.hud-rates b{color:var(--ink);font-variant-numeric:tabular-nums}.game-view{scroll-margin-top:105px}.hero{position:relative;top:auto;border-color:#606097;background:radial-gradient(ellipse at 50% 48%,#49428180,transparent 52%),radial-gradient(circle at 75% 15%,#713f8055,transparent 40%),linear-gradient(145deg,#131c3b,#201533);padding:23px;color:#f6efff;min-height:540px}.hero::before{border-color:#9d87d322}.scene-heading h2{font-size:28px;font-weight:650;margin:5px 0 9px;letter-spacing:-.7px}.scene-heading .eyebrow{color:#bebada}.scene-chapter{font-size:10px;letter-spacing:1.1px;color:#f2d095;text-transform:uppercase}.cookie-stage{height:285px}.cookie-stage::before{width:270px;height:270px;border-color:#afa1ff55;box-shadow:0 0 0 20px #8982ef0c,0 0 0 43px #8982ef05;transform:rotate(-18deg) scaleY(.78)}.cookie{width:245px;height:245px}.tap-hint{color:#d1cce5;font-size:11px;letter-spacing:0}.empire-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:670px;margin:20px auto 0}.objective-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:4px;color:#f8f0ff;background:#2a2852;border:1px solid #79719b;border-radius:14px;padding:13px 16px;min-height:85px}.objective-card .eyebrow{font-size:8px;color:#cac2e1}.objective-card b{font-size:14px}.objective-card>span:last-child{color:#eed59e;font-size:11px}.research-shortcut{background:#33294c;border-color:#86729d;color:#f6dfad;gap:9px;font-size:13px}.session-stats{color:#c6bedb}.session-row b{color:#f7e7c7}.hero-foot{color:#c3b8d9}.game-nav{position:fixed;z-index:20;bottom:0;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,1fr);width:min(100%,640px);padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;box-shadow:0 -6px 30px #0003;gap:6px}.game-nav button{min-height:53px;display:flex;flex-direction:column;gap:2px;color:var(--muted);background:none;border:1px solid transparent;border-radius:12px;font-size:11px;font-weight:650}.game-nav button>span{font-size:21px;line-height:1.2}.game-nav button[aria-current]{background:#f6c87520;border-color:#aa8b58;color:var(--amber)}.quick-click{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom));right:max(16px,calc((100vw - 1072px)/2));z-index:15;display:flex;align-items:center;gap:9px;padding:6px 6px 6px 13px;border:1px solid var(--line);border-radius:30px;background:var(--card);box-shadow:0 8px 24px #0003}.quick-click>span{font-size:10px;color:var(--muted)}.quick-click button{min-height:44px;min-width:110px;padding:9px 16px;gap:8px;border:1px solid #c69e61;border-radius:24px;background:#efbe68;color:#302018;font-size:15px}.quick-click button.is-tapped{background:#ffe5a6}.section-heading h2{font:650 29px/1.3 system-ui,sans-serif;letter-spacing:-.7px}.section-heading .eyebrow{font-size:9px}.section-count{font-size:10px}.upgrades{margin-top:0}.section-divider{display:none}.section-note{font-size:12px;margin:0 0 15px}.generator{border-radius:17px;padding:16px}.generator-info .click-bonus{font-size:11px}.generator h3{font-size:16px}.generator p{font-size:12px}.purchase-actions{margin-top:12px}.purchase-actions .buy{font-size:12px}.purchase-actions .primary-buy{flex-wrap:wrap;gap:4px}.research-controls{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}.branch-filters{display:flex;gap:6px;flex-wrap:wrap}.research-controls .btn{font-size:11px;padding:9px 12px}.branch-filters [aria-pressed=true]{border-color:var(--amber);background:#b88c4424;color:var(--ink)}#upgradeList{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.research-branch>h3{font-size:13px;letter-spacing:.4px;margin:0 0 18px;color:var(--amber)}.research-branch{min-width:0}.upgrade-card{position:relative;margin-bottom:20px;border-radius:16px;min-height:190px}.upgrade-card:not(:last-child)::after{content:'↓';position:absolute;left:24px;bottom:-21px;color:var(--muted);font-size:16px}.upgrade-card .generator-icon{display:grid;width:36px;height:36px;font-size:22px;border-radius:50%;flex-shrink:0}.upgrade-card h3{font-size:14px}.upgrade-card p{font-size:11px}.upgrade-card .generator-row{align-items:flex-start}.research-requires{margin:10px 0!important;min-height:32px;color:var(--muted);line-height:1.4}.research-purchase{display:flex;gap:7px;flex-direction:column}.research-purchase>span{font-size:10px;color:var(--muted)}.research-purchase .buy{max-width:100%;width:100%;flex:auto;font-size:12px;min-height:44px}.upgrade-card.is-locked{border-style:dashed}.upgrade-card.is-owned{min-height:190px}.empire-journey{padding:22px;margin:0}.journey-heading h2{font-family:system-ui,sans-serif;font-size:25px}.next-copy h3{font-size:17px}.next-copy p{font-size:12px}.milestone-copy b{font-size:13px}.milestone-copy p{font-size:12px}.milestone-state{font-size:11px}.milestone-details summary{font-size:13px}.milestone-row{padding:14px 0}.journey-progress span{font-size:11px}.footer{margin-top:18px;padding-top:12px;font-size:10px}.footer-brand{font:12px system-ui,sans-serif}.recovery-panel{margin-top:12px}
+[data-theme=light] .wallet .balance{color:#8b501f}[data-theme=light] .game-nav button[aria-current]{color:#754a14}[data-theme=light] .research-branch>h3{color:#805326}[data-theme=dark] .resource-hud,[data-theme=dark] .game-nav{background:#141a32}[data-theme=dark] .hero{background:radial-gradient(ellipse at 50% 48%,#49428180,transparent 52%),radial-gradient(circle at 75% 15%,#713f8055,transparent 40%),linear-gradient(145deg,#131c3b,#201533)}[data-theme=dark] .research-shortcut{background:#33294c;color:#f6dfad;border-color:#86729d}
+@media(min-width:761px){#generatorList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}#generatorList .generator{margin:0}.hero{max-width:850px;margin:auto}.cookie-stage{height:310px}.cookie{width:270px;height:270px}}
+@media(max-width:760px){.app{padding:10px 12px 155px;max-width:600px}.topbar{flex-wrap:nowrap;gap:8px;padding-bottom:10px}.brand{flex:1 1 auto;gap:7px}.brand h1{font-size:20px;line-height:1.1;letter-spacing:-.6px}.brand-mark{width:32px;height:32px;font-size:20px}.brand .eyebrow{font-size:6px;letter-spacing:.8px}.toolbar{flex:none;width:auto;gap:5px}.toolbar .btn,.toolbar .settings>summary{min-width:44px;width:44px;padding:8px}.resource-hud{padding:10px 12px;margin:10px 0 14px;min-height:83px;border-radius:14px}.wallet .balance,.wallet .balance.long-number{font-size:29px}.wallet .eyebrow{font-size:8px;letter-spacing:1px}.hud-rates{font-size:9px;gap:5px}.hud-rates b{display:block;font-size:12px;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis}.hero{min-height:0;padding:18px 14px}.scene-heading h2{font-size:23px;margin:5px 0 8px}.scene-heading .eyebrow{font-size:8px;letter-spacing:1.4px}.scene-chapter{font-size:9px}.cookie-stage{height:240px}.cookie{width:215px;height:215px}.cookie-stage::before{width:230px;height:230px}.empire-summary{margin-top:16px;gap:8px;grid-template-columns:1fr}.objective-card{min-height:72px;padding:10px 13px;position:relative}.objective-card>span:last-child{position:absolute;right:12px;top:10px}.objective-card b{padding-right:0;font-size:13px}.research-shortcut{min-height:44px;font-size:12px}.session-stats{margin-top:6px}.section-heading h2{font-size:25px}.generator{padding:14px}.owned-badge b{font-size:23px}.research-controls{align-items:stretch}.branch-filters{display:grid;grid-template-columns:repeat(4,1fr);width:100%;gap:5px}.branch-filters .btn{padding:8px 6px;font-size:11px}#researchFilter{min-height:44px;margin-left:auto}#upgradeList{grid-template-columns:1fr;gap:14px}.research-branch>h3{margin-bottom:12px}.upgrade-card,.upgrade-card.is-owned{min-height:0;margin-left:12px;margin-bottom:20px}.research-branch{border-left:1px solid var(--line);padding-left:8px}.research-purchase{flex-direction:row;align-items:center;justify-content:space-between}.research-purchase .buy{width:auto;flex:0 1 62%;max-width:62%;font-size:11px}.research-purchase>span{flex:1}.research-requires{min-height:0}.upgrade-card .generator-info{min-width:0}.empire-journey{padding:17px}.journey-heading{align-items:flex-start;gap:7px}.journey-heading h2{font-size:21px}.journey-count{font-size:9px}.journey-progress{flex-wrap:wrap}.journey-progress progress{flex-basis:100%}.milestone-state{white-space:normal;max-width:31%;text-align:right}.quick-click{right:12px;bottom:calc(82px + env(safe-area-inset-bottom))}.game-nav{border-radius:18px 18px 0 0}.footer{margin-bottom:8px}}
+@media(max-width:370px){.brand-mark{display:none}.brand h1{font-size:18px}.brand .eyebrow{display:none}.wallet .balance,.wallet .balance.long-number{font-size:25px}.hud-rates b{font-size:11px}.cookie-stage{height:215px}.cookie{width:190px;height:190px}.cookie-stage::before{width:205px;height:205px}.quick-click>span{display:none}.objective-card>span:last-child{position:static}.milestone-copy p{font-size:11px}}
+
+.upgrade-card:not(:last-child)::after{content:none}.upgrade-card.has-prerequisite::before{content:'↓';position:absolute;top:-23px;left:24px;color:var(--muted)}.prerequisite-link{display:inline;min-height:44px;padding:5px 2px;background:none;border:0;text-decoration:underline;color:inherit;font-size:11px;text-align:left}.research-requires{margin:5px 0!important}.research-purchase{position:relative}
+.hud-rates{min-width:0;grid-template-columns:minmax(0,1fr)}.hud-rates span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.orbital-network{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:420px;margin:0 auto 14px}.orbital-network button{display:flex;flex-direction:column;gap:1px;border:1px solid #605f85;border-radius:12px;background:#1b2444;color:#c6c1d9;padding:8px 5px;min-height:70px}.orbital-network button>span{font-size:19px}.orbital-network b{font-size:10px}.orbital-network small{font-size:9px}.orbital-network .is-discovered{border-color:#c8a66c;background:#36304c;color:#ffe1a7}.hero[data-era=moon]{box-shadow:inset 0 0 90px #6274bc30}.hero[data-era=star]{box-shadow:inset 0 0 100px #99602a45}.generator:focus-visible,.upgrade-card:focus-visible{outline:3px solid var(--amber);outline-offset:4px}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="#c98a3e"/><circle cx="19" cy="18" r="15" fill="#eab967"/><g fill="#73421f"><circle cx="13" cy="11" r="2.5"/><circle cx="26" cy="15" r="3"/><circle cx="17" cy="25" r="3"/><circle cx="9" cy="22" r="2"/><circle cx="26" cy="28" r="2"/></g></svg></span><div><span class="eyebrow">La fabrique à cookies</span><h1>Cookie Empire</h1></div></div>
+<header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="#c98a3e"/><circle cx="19" cy="18" r="15" fill="#eab967"/><g fill="#73421f"><circle cx="13" cy="11" r="2.5"/><circle cx="26" cy="15" r="3"/><circle cx="17" cy="25" r="3"/><circle cx="9" cy="22" r="2"/><circle cx="26" cy="28" r="2"/></g></svg></span><div><span class="eyebrow">Constellation · Chapitre 2</span><h1>Cookie Empire</h1></div></div>
 <div class="toolbar"><button class="btn" id="themeButton" type="button" aria-label="Activer le mode clair" aria-pressed="true" title="Activer le mode clair">☾</button><button class="btn save-button" id="saveButton" type="button" aria-label="Sauvegarder la partie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></svg><span class="save-label">Sauvegarder</span></button><details class="settings"><summary aria-label="Options de la partie" title="Options de la partie">⋯</summary><div class="settings-menu"><button class="btn" id="exportSaveButton" type="button">Exporter les données</button><button class="btn" id="importButton" type="button">Importer une partie</button><button class="btn danger" id="resetButton" type="button">Nouvelle partie</button></div></details></div></header>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <section id="recoveryPanel" class="recovery-panel" aria-labelledby="recoveryTitle" hidden><h2 id="recoveryTitle">Protéger votre partie</h2><p id="recoveryMessage" role="status"></p><div class="recovery-actions"><button class="btn" id="restoreButton" type="button">Restaurer la copie valide</button><button class="btn" id="retryLoadButton" type="button">Relire la sauvegarde</button><button class="btn" id="recoveryNewButton" type="button">Créer une nouvelle partie</button></div><details><summary>Conserver ou gérer les données</summary><p>Exportez les données avant toute suppression. L’export conserve les données brutes, sans les réparer.</p><div class="recovery-actions"><button class="btn" id="exportRecoveryButton" type="button">Exporter les données</button><button class="btn danger" id="releaseArchiveButton" type="button">Libérer la copie protégée</button></div></details></section>
@@ -67,18 +77,21 @@
 <p>À la confirmation, cette partie remplacera votre progression. La production hors ligne sera calculée, jusqu’à 30 jours. Votre partie actuelle sera conservée dans une copie protégée.</p></div>
 <details><summary>Gérer les copies protégées</summary><p>Si les emplacements sont pleins, exportez les données avant de libérer les copies protégées. Leur suppression est définitive.</p><div class="recovery-actions"><button class="btn" id="importExportButton" type="button">Exporter les données</button><button class="btn danger" id="importReleaseArchiveButton" type="button">Libérer les copies protégées</button></div></details>
 <div class="recovery-actions"><button class="btn" id="confirmImportButton" type="button" disabled>Importer cette partie</button><button class="btn" id="cancelImportButton" type="button">Fermer</button></div></section>
-<main class="layout"><section class="hero" aria-label="Votre production de cookies"><span class="eyebrow">Votre réserve</span><div class="balance" id="balance">0</div><div class="label">cookies tout juste sortis du four</div>
+<div class="resource-hud" aria-label="Ressources de votre empire"><div class="wallet"><span class="eyebrow">Cookies en réserve</span><strong id="balance" class="balance">0</strong></div><div class="hud-rates"><span><b id="perClick">1</b> / clic</span><span><b id="cps">0</b> / seconde</span></div></div>
+<main class="layout"><section class="hero game-view" id="view-empire" data-view="empire" aria-labelledby="sceneTitle"><div class="scene-heading"><span class="eyebrow">Votre constellation gourmande</span><h2 id="sceneTitle">Les débuts gourmands</h2><span class="scene-chapter" id="sceneChapter">L’atelier originel</span></div>
 <div class="cookie-stage"><span class="star one" aria-hidden="true">✦</span><span class="star two" aria-hidden="true">✧</span><span class="star three" aria-hidden="true">✦</span><button class="cookie" id="cookieButton" type="button" aria-label="Produire des cookies"><svg viewBox="0 0 300 300" aria-hidden="true" focusable="false"><defs><radialGradient id="dough" cx="38%" cy="28%" r="78%"><stop stop-color="#ffe4a1"/><stop offset=".52" stop-color="#eebb69"/><stop offset=".84" stop-color="#cf8839"/><stop offset="1" stop-color="#9f5625"/></radialGradient><linearGradient id="chip" x2=".3" y2="1"><stop stop-color="#714020"/><stop offset="1" stop-color="#3b2119"/></linearGradient><clipPath id="crumbClip"><polygon points="282.00,150.00 284.04,157.02 283.86,164.07 281.55,170.84 278.80,177.38 276.75,183.96 274.92,190.59 272.32,196.96 269.09,203.02 266.38,209.30 264.66,216.20 262.77,223.24 259.10,229.26 253.43,233.76 247.20,237.52 241.84,241.84 237.36,247.02 232.76,252.20 227.44,256.59 221.80,260.56 216.35,264.92 210.86,269.44 204.64,272.73 197.55,273.88 190.25,273.86 183.41,274.70 177.06,277.31 170.67,280.49 163.92,282.48 156.96,282.90 150.00,282.80 143.04,282.90 136.08,282.48 129.33,280.49 122.94,277.31 116.59,274.70 109.75,273.86 102.45,273.88 95.36,272.73 89.14,269.44 83.65,264.92 78.20,260.56 72.56,256.59 67.24,252.20 62.64,247.02 58.16,241.84 52.80,237.52 46.57,233.76 40.90,229.26 37.23,223.24 35.34,216.20 33.62,209.30 30.91,203.02 27.68,196.96 25.08,190.59 23.25,183.96 21.20,177.38 18.45,170.84 16.14,164.07 15.96,157.02 18.00,150.00 20.40,143.21 21.30,136.47 20.80,129.54 20.57,122.49 21.75,115.63 23.85,109.01 25.86,102.35 27.91,95.64 31.15,89.45 36.03,84.20 41.36,79.45 45.52,74.09 48.27,67.62 51.01,60.87 55.16,55.16 60.71,50.83 66.62,47.03 72.27,43.01 78.01,39.15 84.35,36.28 91.00,34.21 97.27,31.56 102.95,27.42 108.66,22.78 115.09,19.70 122.17,19.07 129.37,19.74 136.33,19.93 143.15,19.26 150.00,18.80 156.85,19.26 163.67,19.93 170.63,19.74 177.83,19.07 184.91,19.70 191.34,22.78 197.05,27.42 202.73,31.56 209.00,34.21 215.65,36.28 221.99,39.15 227.73,43.01 233.38,47.03 239.29,50.83 244.84,55.16 248.99,60.87 251.73,67.62 254.48,74.09 258.64,79.45 263.97,84.20 268.85,89.45 272.09,95.64 274.14,102.35 276.15,109.01 278.25,115.63 279.43,122.49 279.20,129.54 278.70,136.47 279.60,143.21"/></clipPath></defs><polygon points="282.00,150.00 284.04,157.02 283.86,164.07 281.55,170.84 278.80,177.38 276.75,183.96 274.92,190.59 272.32,196.96 269.09,203.02 266.38,209.30 264.66,216.20 262.77,223.24 259.10,229.26 253.43,233.76 247.20,237.52 241.84,241.84 237.36,247.02 232.76,252.20 227.44,256.59 221.80,260.56 216.35,264.92 210.86,269.44 204.64,272.73 197.55,273.88 190.25,273.86 183.41,274.70 177.06,277.31 170.67,280.49 163.92,282.48 156.96,282.90 150.00,282.80 143.04,282.90 136.08,282.48 129.33,280.49 122.94,277.31 116.59,274.70 109.75,273.86 102.45,273.88 95.36,272.73 89.14,269.44 83.65,264.92 78.20,260.56 72.56,256.59 67.24,252.20 62.64,247.02 58.16,241.84 52.80,237.52 46.57,233.76 40.90,229.26 37.23,223.24 35.34,216.20 33.62,209.30 30.91,203.02 27.68,196.96 25.08,190.59 23.25,183.96 21.20,177.38 18.45,170.84 16.14,164.07 15.96,157.02 18.00,150.00 20.40,143.21 21.30,136.47 20.80,129.54 20.57,122.49 21.75,115.63 23.85,109.01 25.86,102.35 27.91,95.64 31.15,89.45 36.03,84.20 41.36,79.45 45.52,74.09 48.27,67.62 51.01,60.87 55.16,55.16 60.71,50.83 66.62,47.03 72.27,43.01 78.01,39.15 84.35,36.28 91.00,34.21 97.27,31.56 102.95,27.42 108.66,22.78 115.09,19.70 122.17,19.07 129.37,19.74 136.33,19.93 143.15,19.26 150.00,18.80 156.85,19.26 163.67,19.93 170.63,19.74 177.83,19.07 184.91,19.70 191.34,22.78 197.05,27.42 202.73,31.56 209.00,34.21 215.65,36.28 221.99,39.15 227.73,43.01 233.38,47.03 239.29,50.83 244.84,55.16 248.99,60.87 251.73,67.62 254.48,74.09 258.64,79.45 263.97,84.20 268.85,89.45 272.09,95.64 274.14,102.35 276.15,109.01 278.25,115.63 279.43,122.49 279.20,129.54 278.70,136.47 279.60,143.21" fill="#86431e" transform="translate(0 5)"/><polygon points="282.00,150.00 284.04,157.02 283.86,164.07 281.55,170.84 278.80,177.38 276.75,183.96 274.92,190.59 272.32,196.96 269.09,203.02 266.38,209.30 264.66,216.20 262.77,223.24 259.10,229.26 253.43,233.76 247.20,237.52 241.84,241.84 237.36,247.02 232.76,252.20 227.44,256.59 221.80,260.56 216.35,264.92 210.86,269.44 204.64,272.73 197.55,273.88 190.25,273.86 183.41,274.70 177.06,277.31 170.67,280.49 163.92,282.48 156.96,282.90 150.00,282.80 143.04,282.90 136.08,282.48 129.33,280.49 122.94,277.31 116.59,274.70 109.75,273.86 102.45,273.88 95.36,272.73 89.14,269.44 83.65,264.92 78.20,260.56 72.56,256.59 67.24,252.20 62.64,247.02 58.16,241.84 52.80,237.52 46.57,233.76 40.90,229.26 37.23,223.24 35.34,216.20 33.62,209.30 30.91,203.02 27.68,196.96 25.08,190.59 23.25,183.96 21.20,177.38 18.45,170.84 16.14,164.07 15.96,157.02 18.00,150.00 20.40,143.21 21.30,136.47 20.80,129.54 20.57,122.49 21.75,115.63 23.85,109.01 25.86,102.35 27.91,95.64 31.15,89.45 36.03,84.20 41.36,79.45 45.52,74.09 48.27,67.62 51.01,60.87 55.16,55.16 60.71,50.83 66.62,47.03 72.27,43.01 78.01,39.15 84.35,36.28 91.00,34.21 97.27,31.56 102.95,27.42 108.66,22.78 115.09,19.70 122.17,19.07 129.37,19.74 136.33,19.93 143.15,19.26 150.00,18.80 156.85,19.26 163.67,19.93 170.63,19.74 177.83,19.07 184.91,19.70 191.34,22.78 197.05,27.42 202.73,31.56 209.00,34.21 215.65,36.28 221.99,39.15 227.73,43.01 233.38,47.03 239.29,50.83 244.84,55.16 248.99,60.87 251.73,67.62 254.48,74.09 258.64,79.45 263.97,84.20 268.85,89.45 272.09,95.64 274.14,102.35 276.15,109.01 278.25,115.63 279.43,122.49 279.20,129.54 278.70,136.47 279.60,143.21" fill="url(#dough)" stroke="#d4974a" stroke-width="2"/><ellipse cx="139" cy="117" rx="108" ry="94" fill="none" stroke="#fff0c2" stroke-width="2" opacity=".22"/><g clip-path="url(#crumbClip)"><circle cx="189.0" cy="207.0" r="1.2" fill="#d38e40" opacity=".5"/><circle cx="83.9" cy="119.4" r="1.2" fill="#d38e40" opacity=".5"/><circle cx="72.6" cy="102.2" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="253.0" cy="216.9" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="45.0" cy="173.5" r="1.6" fill="#a56227" opacity=".5"/><circle cx="65.1" cy="141.1" r="1.6" fill="#a56227" opacity=".5"/><circle cx="216.7" cy="132.9" r="0.7" fill="#d38e40" opacity=".5"/><circle cx="133.1" cy="220.6" r="1.1" fill="#f9d28a" opacity=".5"/><circle cx="165.6" cy="150.5" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="249.9" cy="96.6" r="1.2" fill="#d38e40" opacity=".5"/><circle cx="63.7" cy="91.5" r="0.8" fill="#a56227" opacity=".5"/><circle cx="177.8" cy="70.9" r="1.4" fill="#a56227" opacity=".5"/><circle cx="250.5" cy="231.2" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="145.6" cy="150.0" r="1.0" fill="#d38e40" opacity=".5"/><circle cx="230.5" cy="228.1" r="0.9" fill="#a56227" opacity=".5"/><circle cx="142.5" cy="140.4" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="97.8" cy="75.7" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="104.5" cy="84.2" r="1.1" fill="#f9d28a" opacity=".5"/><circle cx="189.0" cy="59.1" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="252.3" cy="134.1" r="1.1" fill="#f9d28a" opacity=".5"/><circle cx="151.3" cy="181.3" r="0.6" fill="#f9d28a" opacity=".5"/><circle cx="182.8" cy="65.1" r="0.7" fill="#f9d28a" opacity=".5"/><circle cx="102.9" cy="143.4" r="0.7" fill="#d38e40" opacity=".5"/><circle cx="143.3" cy="249.6" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="182.7" cy="176.8" r="0.6" fill="#f9d28a" opacity=".5"/><circle cx="176.6" cy="108.0" r="1.3" fill="#a56227" opacity=".5"/><circle cx="165.3" cy="167.8" r="1.7" fill="#a56227" opacity=".5"/><circle cx="98.1" cy="113.5" r="0.6" fill="#f9d28a" opacity=".5"/><circle cx="183.8" cy="92.1" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="142.5" cy="150.6" r="1.7" fill="#d38e40" opacity=".5"/><circle cx="216.8" cy="162.4" r="1.4" fill="#d38e40" opacity=".5"/><circle cx="250.2" cy="178.2" r="1.3" fill="#f9d28a" opacity=".5"/><circle cx="182.1" cy="163.8" r="1.5" fill="#a56227" opacity=".5"/><circle cx="231.8" cy="94.7" r="0.6" fill="#a56227" opacity=".5"/><circle cx="152.8" cy="223.7" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="193.1" cy="187.2" r="1.0" fill="#a56227" opacity=".5"/><circle cx="138.0" cy="218.4" r="1.7" fill="#a56227" opacity=".5"/><circle cx="179.9" cy="181.8" r="1.1" fill="#d38e40" opacity=".5"/><circle cx="49.0" cy="122.4" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="140.7" cy="196.2" r="0.6" fill="#f9d28a" opacity=".5"/><circle cx="100.3" cy="245.5" r="1.0" fill="#a56227" opacity=".5"/><circle cx="76.4" cy="182.8" r="1.2" fill="#d38e40" opacity=".5"/><circle cx="171.2" cy="68.2" r="0.6" fill="#f9d28a" opacity=".5"/><circle cx="50.3" cy="186.5" r="1.3" fill="#a56227" opacity=".5"/><circle cx="159.2" cy="159.1" r="0.6" fill="#a56227" opacity=".5"/><circle cx="72.7" cy="107.8" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="68.2" cy="189.0" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="167.3" cy="120.8" r="1.5" fill="#d38e40" opacity=".5"/><circle cx="93.0" cy="77.5" r="1.1" fill="#d38e40" opacity=".5"/><circle cx="88.6" cy="139.5" r="0.9" fill="#d38e40" opacity=".5"/><circle cx="226.8" cy="137.6" r="1.7" fill="#d38e40" opacity=".5"/><circle cx="54.0" cy="75.2" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="117.1" cy="242.6" r="0.7" fill="#f9d28a" opacity=".5"/><circle cx="45.8" cy="95.1" r="0.9" fill="#a56227" opacity=".5"/><circle cx="62.7" cy="129.9" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="157.5" cy="81.2" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="145.0" cy="105.8" r="1.0" fill="#d38e40" opacity=".5"/><circle cx="54.2" cy="184.8" r="1.7" fill="#d38e40" opacity=".5"/><circle cx="93.2" cy="218.8" r="0.7" fill="#a56227" opacity=".5"/><circle cx="147.0" cy="198.2" r="1.0" fill="#f9d28a" opacity=".5"/><circle cx="133.1" cy="54.3" r="0.7" fill="#f9d28a" opacity=".5"/><circle cx="217.8" cy="103.8" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="245.3" cy="247.3" r="0.9" fill="#a56227" opacity=".5"/><circle cx="210.3" cy="158.9" r="0.9" fill="#a56227" opacity=".5"/><circle cx="55.9" cy="183.4" r="1.6" fill="#d38e40" opacity=".5"/><circle cx="140.8" cy="243.7" r="0.7" fill="#f9d28a" opacity=".5"/><circle cx="191.4" cy="112.1" r="1.7" fill="#f9d28a" opacity=".5"/><circle cx="247.9" cy="73.9" r="1.3" fill="#a56227" opacity=".5"/><circle cx="119.8" cy="86.0" r="1.3" fill="#f9d28a" opacity=".5"/><circle cx="117.4" cy="193.3" r="1.1" fill="#d38e40" opacity=".5"/><circle cx="256.3" cy="206.7" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="77.7" cy="201.0" r="1.0" fill="#a56227" opacity=".5"/><circle cx="86.2" cy="148.1" r="0.7" fill="#d38e40" opacity=".5"/><circle cx="213.3" cy="95.5" r="1.3" fill="#a56227" opacity=".5"/><circle cx="80.8" cy="177.1" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="55.2" cy="237.3" r="0.9" fill="#a56227" opacity=".5"/><circle cx="182.3" cy="156.0" r="1.2" fill="#a56227" opacity=".5"/><circle cx="158.1" cy="247.4" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="174.0" cy="113.5" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="170.3" cy="88.7" r="0.6" fill="#a56227" opacity=".5"/><circle cx="191.6" cy="219.0" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="143.0" cy="187.6" r="1.4" fill="#d38e40" opacity=".5"/><circle cx="54.5" cy="176.0" r="1.2" fill="#a56227" opacity=".5"/><circle cx="229.6" cy="174.0" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="96.1" cy="227.3" r="1.3" fill="#f9d28a" opacity=".5"/><circle cx="239.0" cy="140.1" r="1.5" fill="#d38e40" opacity=".5"/><circle cx="109.4" cy="146.6" r="1.5" fill="#d38e40" opacity=".5"/><circle cx="250.1" cy="236.3" r="0.8" fill="#d38e40" opacity=".5"/><circle cx="206.2" cy="169.0" r="0.9" fill="#a56227" opacity=".5"/><circle cx="203.8" cy="218.8" r="1.3" fill="#f9d28a" opacity=".5"/><circle cx="127.3" cy="176.2" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="49.2" cy="245.4" r="1.5" fill="#d38e40" opacity=".5"/><circle cx="146.1" cy="116.7" r="1.6" fill="#a56227" opacity=".5"/><circle cx="244.6" cy="75.5" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="107.3" cy="147.5" r="0.9" fill="#d38e40" opacity=".5"/><circle cx="243.8" cy="238.8" r="1.3" fill="#a56227" opacity=".5"/><circle cx="161.2" cy="90.4" r="0.8" fill="#a56227" opacity=".5"/><circle cx="42.9" cy="76.4" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="104.2" cy="64.9" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="247.1" cy="177.9" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="139.9" cy="207.3" r="0.7" fill="#d38e40" opacity=".5"/><circle cx="117.7" cy="122.7" r="0.8" fill="#a56227" opacity=".5"/><circle cx="239.6" cy="241.8" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="148.6" cy="86.3" r="1.0" fill="#d38e40" opacity=".5"/><circle cx="150.4" cy="135.1" r="1.6" fill="#d38e40" opacity=".5"/><circle cx="152.7" cy="206.3" r="0.7" fill="#a56227" opacity=".5"/><circle cx="110.8" cy="56.9" r="0.7" fill="#d38e40" opacity=".5"/><circle cx="226.4" cy="123.2" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="248.9" cy="214.8" r="0.9" fill="#d38e40" opacity=".5"/><circle cx="250.9" cy="85.3" r="1.6" fill="#d38e40" opacity=".5"/><circle cx="217.7" cy="98.8" r="1.1" fill="#d38e40" opacity=".5"/><circle cx="46.1" cy="239.0" r="1.4" fill="#f9d28a" opacity=".5"/><circle cx="168.1" cy="241.1" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="207.1" cy="200.6" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="135.3" cy="113.4" r="1.5" fill="#a56227" opacity=".5"/><circle cx="234.5" cy="85.2" r="1.2" fill="#f9d28a" opacity=".5"/><circle cx="202.1" cy="105.1" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="195.9" cy="104.8" r="1.3" fill="#d38e40" opacity=".5"/><circle cx="55.9" cy="173.5" r="1.0" fill="#a56227" opacity=".5"/><circle cx="213.6" cy="133.7" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="79.8" cy="141.9" r="1.0" fill="#f9d28a" opacity=".5"/><circle cx="52.6" cy="219.2" r="1.0" fill="#f9d28a" opacity=".5"/><circle cx="139.0" cy="63.8" r="0.9" fill="#f9d28a" opacity=".5"/><circle cx="229.8" cy="169.5" r="1.5" fill="#f9d28a" opacity=".5"/><circle cx="236.8" cy="197.7" r="1.1" fill="#d38e40" opacity=".5"/></g><g transform="translate(91 63) rotate(16)"><path d="M-14 -7.700000000000001 Q0 -16.8 11.200000000000001 -8.4 L14 6.3 Q0 15.400000000000002 -11.200000000000001 9.1Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-9.1 -4.8999999999999995 Q0 -10.5 7.700000000000001 -5.6000000000000005" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(184 58) rotate(-25)"><path d="M-12 -6.6000000000000005 Q0 -14.399999999999999 9.600000000000001 -7.199999999999999 L12 5.4 Q0 13.200000000000001 -9.600000000000001 7.800000000000001Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-7.800000000000001 -4.199999999999999 Q0 -9.0 6.6000000000000005 -4.800000000000001" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(232 103) rotate(10)"><path d="M-14 -7.700000000000001 Q0 -16.8 11.200000000000001 -8.4 L14 6.3 Q0 15.400000000000002 -11.200000000000001 9.1Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-9.1 -4.8999999999999995 Q0 -10.5 7.700000000000001 -5.6000000000000005" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(143 108) rotate(-13)"><path d="M-16 -8.8 Q0 -19.2 12.8 -9.6 L16 7.2 Q0 17.6 -12.8 10.4Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-10.4 -5.6 Q0 -12.0 8.8 -6.4" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(58 130) rotate(22)"><path d="M-12 -6.6000000000000005 Q0 -14.399999999999999 9.600000000000001 -7.199999999999999 L12 5.4 Q0 13.200000000000001 -9.600000000000001 7.800000000000001Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-7.800000000000001 -4.199999999999999 Q0 -9.0 6.6000000000000005 -4.800000000000001" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(100 172) rotate(-26)"><path d="M-16 -8.8 Q0 -19.2 12.8 -9.6 L16 7.2 Q0 17.6 -12.8 10.4Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-10.4 -5.6 Q0 -12.0 8.8 -6.4" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(211 173) rotate(30)"><path d="M-13 -7.15 Q0 -15.6 10.4 -7.8 L13 5.8500000000000005 Q0 14.3 -10.4 8.450000000000001Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-8.450000000000001 -4.55 Q0 -9.75 7.15 -5.2" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(155 222) rotate(18)"><path d="M-14 -7.700000000000001 Q0 -16.8 11.200000000000001 -8.4 L14 6.3 Q0 15.400000000000002 -11.200000000000001 9.1Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-9.1 -4.8999999999999995 Q0 -10.5 7.700000000000001 -5.6000000000000005" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(69 216) rotate(-3)"><path d="M-10 -5.5 Q0 -12.0 8.0 -6.0 L10 4.5 Q0 11.0 -8.0 6.5Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-6.5 -3.5 Q0 -7.5 5.5 -4.0" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(239 224) rotate(8)"><path d="M-9 -4.95 Q0 -10.799999999999999 7.2 -5.3999999999999995 L9 4.05 Q0 9.9 -7.2 5.8500000000000005Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-5.8500000000000005 -3.15 Q0 -6.75 4.95 -3.6" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(178 149) rotate(33)"><path d="M-8 -4.4 Q0 -9.6 6.4 -4.8 L8 3.6 Q0 8.8 -6.4 5.2Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-5.2 -2.8 Q0 -6.0 4.4 -3.2" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(150 43) rotate(22)"><path d="M-6 -3.3000000000000003 Q0 -7.199999999999999 4.800000000000001 -3.5999999999999996 L6 2.7 Q0 6.6000000000000005 -4.800000000000001 3.9000000000000004Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-3.9000000000000004 -2.0999999999999996 Q0 -4.5 3.3000000000000003 -2.4000000000000004" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(47 179) rotate(0)"><path d="M-7 -3.8500000000000005 Q0 -8.4 5.6000000000000005 -4.2 L7 3.15 Q0 7.700000000000001 -5.6000000000000005 4.55Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-4.55 -2.4499999999999997 Q0 -5.25 3.8500000000000005 -2.8000000000000003" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g><g transform="translate(198 245) rotate(18)"><path d="M-6 -3.3000000000000003 Q0 -7.199999999999999 4.800000000000001 -3.5999999999999996 L6 2.7 Q0 6.6000000000000005 -4.800000000000001 3.9000000000000004Z" fill="#603821" stroke="#814317" stroke-width="2"/><path d="M-3.9000000000000004 -2.0999999999999996 Q0 -4.5 3.3000000000000003 -2.4000000000000004" fill="none" stroke="#b17846" stroke-width="2" stroke-linecap="round" opacity=".65"/></g></svg></button></div>
-<p class="tap-hint">Chaque générateur rend aussi vos clics plus puissants.</p><div class="stats"><div class="stat"><b id="perClick">1</b><span>cookie par clic</span></div><div class="stat"><b id="cps">0</b><span>cookies par seconde</span></div></div>
+<div class="orbital-network" aria-label="Destinations de votre empire"><button type="button" data-destination="orbital_bakery"><span aria-hidden="true">🛰️</span><b>Orbite</b><small>À explorer</small></button><button type="button" data-destination="lunar_harvest"><span aria-hidden="true">🌙</span><b>Lune</b><small>À explorer</small></button><button type="button" data-destination="stellar_forge"><span aria-hidden="true">🌟</span><b>Étoiles</b><small>À explorer</small></button></div><p class="tap-hint">Chaque générateur rend aussi vos clics plus puissants.</p><div class="empire-summary"><button class="objective-card" id="objectiveShortcut" type="button"><span class="eyebrow">Prochain objectif →</span><b id="sceneObjective">Première fournée</b><span id="sceneProgress">0 / 25</span></button><button class="btn research-shortcut" data-open-view="research" type="button">✦ <span id="researchHint">Découvrir les recherches</span></button></div>
 <details class="session-stats"><summary>Votre parcours</summary><div class="session-row"><span><b id="clicks">0</b>clics effectués</span><span><b id="produced">0</b>cookies produits au total</span></div></details><p class="hero-foot">Espace ou Entrée pour cliquer · Sur un bouton pour l’activer</p></section>
-<div class="shop"><section class="empire-journey" aria-labelledby="empireRank"><div class="journey-heading"><div><span class="eyebrow">Votre empire</span><h2 id="empireRank">Les débuts gourmands</h2></div><span class="journey-count" id="milestoneCount">0 / 16 étapes</span></div>
+<section class="empire-journey game-view" id="view-journey" data-view="journey" aria-labelledby="empireRank" hidden><div class="journey-heading"><div><span class="eyebrow">Votre empire</span><h2 id="empireRank">Les débuts gourmands</h2></div><span class="journey-count" id="milestoneCount">0 / 28 étapes</span></div>
 <div class="next-milestone" id="nextMilestone"><span class="journey-star" aria-hidden="true">✦</span><div class="next-copy"><span class="next-label" id="nextMilestoneLabel">Votre prochaine étape</span><h3 id="nextMilestoneTitle">Première fournée</h3><p id="nextMilestoneDescription">Produire 25 cookies au total.</p></div></div>
 <div class="journey-progress"><progress id="milestoneProgress" max="100" value="0" aria-labelledby="nextMilestoneTitle" aria-valuetext="0 / 25"></progress><span id="milestoneProgressText">0 / 25</span></div>
-<a class="btn journey-shortcut" href="#productionTitle">Aller à l’atelier ↓</a>
-<details class="milestone-details" id="milestoneDetails"><summary>Voir les 16 étapes</summary><button class="btn milestone-filter" id="milestoneFilter" type="button" aria-pressed="false">Masquer les étapes franchies</button><ol id="milestoneList"></ol><p class="journey-note">Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.</p></details><p id="milestoneAnnouncement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p></section>
-<section aria-labelledby="productionTitle"><div class="section-heading"><div><span class="eyebrow">Faites tourner la boutique</span><h2 id="productionTitle">Votre atelier</h2></div><span class="section-count">PRODUCTION</span></div><div id="generatorList"></div></section>
-<section class="upgrades" aria-labelledby="upgradesTitle"><div class="section-divider" aria-hidden="true"></div><div class="section-heading"><div><span class="eyebrow">Le petit plus qui change tout</span><h2 id="upgradesTitle">Les bonnes recettes</h2></div></div><p class="section-note">Améliorations permanentes · Un seul achat, un bonus durable.</p><div id="upgradeList"></div></section></div></main>
-<footer class="footer"><div><span class="footer-brand">Fait avec du beurre &amp; de l’ambition.</span><br>Cookie Empire · Foundation 1.1</div><details class="diagnostics" id="diagnostics"><summary>Diagnostic du jeu</summary><div id="diagnosticResults"></div></details></footer></div>
+<button class="btn journey-shortcut" data-open-view="workshop" type="button">Ouvrir l’atelier →</button>
+<details class="milestone-details" id="milestoneDetails"><summary>Voir les 28 étapes</summary><button class="btn milestone-filter" id="milestoneFilter" type="button" aria-pressed="false">Masquer les étapes franchies</button><ol id="milestoneList"></ol><p class="journey-note">Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.</p></details><p id="milestoneAnnouncement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p></section>
+<section class="game-view" id="view-workshop" data-view="workshop" aria-labelledby="productionTitle" hidden><div class="section-heading"><div><span class="eyebrow">Faites tourner la boutique</span><h2 id="productionTitle">Votre atelier</h2></div><span class="section-count">PRODUCTION</span></div><div id="generatorList"></div></section>
+<section class="upgrades game-view" id="view-research" data-view="research" aria-labelledby="upgradesTitle" hidden><div class="section-divider" aria-hidden="true"></div><div class="section-heading"><div><span class="eyebrow">La recherche ouvre de nouveaux horizons</span><h2 id="upgradesTitle">Arbre des saveurs</h2></div></div><p class="section-note">Trois branches de recherche. Chaque découverte reste acquise et renforce votre empire.</p><div class="research-controls"><div class="branch-filters" aria-label="Branches de recherche"><button class="btn" data-branch="all" aria-pressed="true">Tout</button><button class="btn" data-branch="click" aria-pressed="false">✦ Clic</button><button class="btn" data-branch="generator" aria-pressed="false">❋ Atelier</button><button class="btn" data-branch="globalCps" aria-pressed="false">♨ Empire</button></div><button class="btn" id="researchFilter" aria-pressed="false">Masquer les acquises</button></div><p id="researchSummary" class="section-note"></p><div id="upgradeList"></div><p id="researchEmpty" hidden>Aucune recherche à afficher dans cette branche. Changez le filtre pour revoir vos découvertes.</p></section></main>
+<div class="quick-click" id="quickClickBar" hidden><span>Chaque clic compte</span><button id="quickCookie" type="button">🍪 <b id="quickReward">+1</b></button></div>
+<nav class="game-nav" aria-label="Navigation du jeu"><button type="button" data-nav="empire" aria-controls="view-empire" aria-current="page"><span aria-hidden="true">◉</span>Empire</button><button type="button" data-nav="workshop" aria-controls="view-workshop"><span aria-hidden="true">⚒</span>Atelier</button><button type="button" data-nav="research" aria-controls="view-research"><span aria-hidden="true">✦</span>Recherche</button><button type="button" data-nav="journey" aria-controls="view-journey"><span aria-hidden="true">◎</span>Parcours</button></nav>
+<footer class="footer"><div><span class="footer-brand">Fait avec du beurre &amp; de l’ambition.</span><br>Cookie Empire · Foundation 2.0 · Constellation</div><details class="diagnostics" id="diagnostics"><summary>Diagnostic du jeu</summary><div id="diagnosticResults"></div></details></footer></div>
 
 <script>
 'use strict';
@@ -227,7 +240,10 @@ const GENERATORS=Object.freeze({
   grandma:Object.freeze({id:'grandma',name:'Grand-mère',icon:'👵',baseCost:'100',growthRate:'1.15',baseCps:'1'}),
   oven:Object.freeze({id:'oven',name:'Four artisanal',icon:'🔥',baseCost:'1100',growthRate:'1.15',baseCps:'8'}),
   cocoa_mine:Object.freeze({id:'cocoa_mine',name:'Mine de cacao',icon:'⛏️',baseCost:'12000',growthRate:'1.15',baseCps:'47'}),
-  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',baseCost:'250000',growthRate:'1.15',baseCps:'230'})
+  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',baseCost:'250000',growthRate:'1.15',baseCps:'230'}),
+  orbital_bakery:Object.freeze({id:'orbital_bakery',name:'Boulangerie orbitale',icon:'🛰️',baseCost:'5000000',growthRate:'1.15',baseCps:'1400'}),
+  lunar_harvest:Object.freeze({id:'lunar_harvest',name:'Moisson lunaire',icon:'🌙',baseCost:'100000000',growthRate:'1.15',baseCps:'7800'}),
+  stellar_forge:Object.freeze({id:'stellar_forge',name:'Forge stellaire',icon:'🌟',baseCost:'2000000000',growthRate:'1.15',baseCps:'44000'})
 });
 
 // Content : prix fixes et effets immuables, aucune possession ici.
@@ -237,7 +253,15 @@ const UPGRADES=Object.freeze({
   grandma_recipe:Object.freeze({id:'grandma_recipe',name:'Recette de grand-mère',description:'Production des grand-mères ×2',cost:'500',effect:Object.freeze({target:'generator',generatorId:'grandma',factor:'2'})}),
   warm_ovens:Object.freeze({id:'warm_ovens',name:'Fours bien chauds',description:'Production automatique totale ×1,5',cost:'1000',effect:Object.freeze({target:'globalCps',factor:'1.5'})}),
   cocoa_excavators:Object.freeze({id:'cocoa_excavators',name:'Excavatrices de cacao',description:'Production des mines de cacao ×2',cost:'25000',effect:Object.freeze({target:'generator',generatorId:'cocoa_mine',factor:'2'})}),
-  cosmic_click:Object.freeze({id:'cosmic_click',name:'Clic cosmique',description:'Cookies par clic ×3, cumulable avec Clic renforcé',cost:'150000',effect:Object.freeze({target:'click',factor:'3'})})
+  cosmic_click:Object.freeze({id:'cosmic_click',name:'Clic cosmique',description:'Cookies par clic ×3, cumulable avec Clic renforcé',cost:'150000',effect:Object.freeze({target:'click',factor:'3'})}),
+  precision_click:Object.freeze({id:"precision_click",name:"Geste de précision",description:"Cookies par clic ×2",cost:"2000000",requires:Object.freeze(['cosmic_click']),effect:Object.freeze({"target": "click", "factor": "2"})}),
+  quantum_click:Object.freeze({id:"quantum_click",name:"Toucher quantique",description:"Cookies par clic ×2",cost:"150000000",requires:Object.freeze(['precision_click']),effect:Object.freeze({"target": "click", "factor": "2"})}),
+  singularity_click:Object.freeze({id:"singularity_click",name:"Singularité sucrée",description:"Cookies par clic ×3",cost:"15000000000",requires:Object.freeze(['quantum_click']),effect:Object.freeze({"target": "click", "factor": "3"})}),
+  lab_synergy:Object.freeze({id:"lab_synergy",name:"Alchimie du chocolat",description:"Production des laboratoires ×3",cost:"1000000",requires:Object.freeze(['cocoa_excavators']),effect:Object.freeze({"target": "generator", "factor": "3", "generatorId": "chocolate_lab"})}),
+  orbital_logistics:Object.freeze({id:"orbital_logistics",name:"Logistique orbitale",description:"Production des boulangeries orbitales ×3",cost:"25000000",requires:Object.freeze(['lab_synergy']),effect:Object.freeze({"target": "generator", "factor": "3", "generatorId": "orbital_bakery"})}),
+  lunar_crystals:Object.freeze({id:"lunar_crystals",name:"Cristaux de sucre",description:"Production des moissons lunaires ×3",cost:"1000000000",requires:Object.freeze(['orbital_logistics']),effect:Object.freeze({"target": "generator", "factor": "3", "generatorId": "lunar_harvest"})}),
+  stellar_network:Object.freeze({id:"stellar_network",name:"Réseau stellaire",description:"Production automatique totale ×2",cost:"500000000",requires:Object.freeze(['warm_ovens']),effect:Object.freeze({"target": "globalCps", "factor": "2"})}),
+  infinite_ovens:Object.freeze({id:"infinite_ovens",name:"Fours infinis",description:"Production automatique totale ×2",cost:"50000000000",requires:Object.freeze(['stellar_network']),effect:Object.freeze({"target": "globalCps", "factor": "2"})})
 });
 const owns=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
 
@@ -251,7 +275,25 @@ function validateUpgradeContent(definitions){
     if(effect.target!=='generator' && effect.generatorId!==undefined) throw new Error('Cible superflue');
   }
 }
+// Dependency graph validation is separate from saved ownership validation.
+function validateResearchGraph(definitions){
+  const visiting=new Set(),done=new Set();
+  function visit(id){
+    if(visiting.has(id)) throw new Error('Cycle de recherche');
+    if(done.has(id)) return;
+    visiting.add(id);
+    const deps=definitions[id].requires ?? [];
+    if(!Array.isArray(deps) || new Set(deps).size!==deps.length) throw new Error('Prérequis invalides');
+    for(const dependency of deps){
+      if(typeof dependency!=='string' || dependency===id || !owns(definitions,dependency)) throw new Error('Prérequis inconnu');
+      visit(dependency);
+    }
+    visiting.delete(id);done.add(id);
+  }
+  for(const id of Object.keys(definitions)) visit(id);
+}
 validateUpgradeContent(UPGRADES);
+validateResearchGraph(UPGRADES);
 
 function createInitialGeneratorState(){
   return Object.fromEntries(Object.keys(GENERATORS).map(id=>[id,0]));
@@ -367,9 +409,21 @@ const Economy = {
     if(typeof id!=='string' || !owns(UPGRADES,id)) return {status:'unknown',cost:null};
     const cost=HugeNumber.from(UPGRADES[id].cost);
     if(state.ownedUpgrades.includes(id)) return {status:'owned',cost};
+    const missing=(UPGRADES[id].requires ?? []).filter(required=>!state.ownedUpgrades.includes(required));
+    if(missing.length) return {status:'locked',cost,missing};
     return {status:Economy.compare(state.cookies,cost)<0?'insufficient':'available',cost};
   },
   compare(a,b){ return HugeNumber.from(a).compare(b); },
+  compact(value){
+    const n=HugeNumber.from(value);
+    if(n.e<3) return Economy.format(n).replace('.',',');
+    const units=['','k','M','Md','Bn','Bd','Tn'];
+    const group=Math.floor(n.e/3);
+    if(group>=units.length) return `${Number(n.m.toPrecision(3)).toString().replace('.',',')}e${n.e}`;
+    let amount=Number((n.m*Math.pow(10,n.e-group*3)).toPrecision(3));
+    if(amount>=1000 && group+1<units.length) return `1 ${units[group+1]}`;
+    return `${amount.toString().replace('.',',')} ${units[group]}`;
+  },
   format(value){
     const n=HugeNumber.from(value);
     if(n.isZero()) return '0';
@@ -398,10 +452,22 @@ const MILESTONES=Object.freeze([
   {id:'ten_mines',title:'La ruée vers le cacao',description:'Posséder 10 mines de cacao.',metric:'generator',generatorId:'cocoa_mine',target:'10'},
   {id:'hundred_thousand',title:'La grande fabrique',description:'Produire 100 000 cookies au total.',metric:'totalProduced',target:'100000'},
   {id:'million_cookies',title:'Le million gourmand',description:'Produire un million de cookies au total.',metric:'totalProduced',target:'1000000'},
-  {id:'all_recipes',title:'Maîtrise des recettes',description:'Acquérir les 6 améliorations.',metric:'upgrades',target:'6'},
+  {id:'all_recipes',title:'Maîtrise des recettes',description:'Acquérir 6 améliorations.',metric:'upgrades',target:'6'},
   {id:'ten_million',title:'Une constellation de cookies',description:'Produire dix millions de cookies au total.',metric:'totalProduced',target:'10000000'},
   {id:'first_lab',title:'Une idée fondante',description:'Posséder un laboratoire chocolatier.',metric:'generator',generatorId:'chocolate_lab',target:'1'},
-  {id:'five_labs',title:'La science des douceurs',description:'Posséder 5 laboratoires chocolatiers.',metric:'generator',generatorId:'chocolate_lab',target:'5'}
+  {id:'five_labs',title:'La science des douceurs',description:'Posséder 5 laboratoires chocolatiers.',metric:'generator',generatorId:'chocolate_lab',target:'5'},
+  {"id": "hundred_million", "title": "Au-delà du chocolat", "description": "Produire 100 millions de cookies.", "metric": "totalProduced", "target": "100000000"},
+  {"id": "first_orbit", "title": "Première mise en orbite", "description": "Posséder une boulangerie orbitale.", "metric": "generator", "target": "1", "generatorId": "orbital_bakery"},
+  {"id": "ten_orbits", "title": "Une ceinture gourmande", "description": "Posséder 10 boulangeries orbitales.", "metric": "generator", "target": "10", "generatorId": "orbital_bakery"},
+  {"id": "nine_research", "title": "Le savoir se partage", "description": "Acquérir 9 recherches.", "metric": "upgrades", "target": "9"},
+  {"id": "first_billion", "title": "Le milliard gourmand", "description": "Produire un milliard de cookies.", "metric": "totalProduced", "target": "1000000000"},
+  {"id": "first_moon", "title": "Récolter la lune", "description": "Posséder une moisson lunaire.", "metric": "generator", "target": "1", "generatorId": "lunar_harvest"},
+  {"id": "ten_moons", "title": "Les champs de lune", "description": "Posséder 10 moissons lunaires.", "metric": "generator", "target": "10", "generatorId": "lunar_harvest"},
+  {"id": "twelve_research", "title": "Académie interstellaire", "description": "Acquérir 12 recherches.", "metric": "upgrades", "target": "12"},
+  {"id": "ten_billion", "title": "Un océan de cookies", "description": "Produire 10 milliards de cookies.", "metric": "totalProduced", "target": "10000000000"},
+  {"id": "first_star", "title": "Allumer une étoile", "description": "Posséder une forge stellaire.", "metric": "generator", "target": "1", "generatorId": "stellar_forge"},
+  {"id": "ten_stars", "title": "Constellation vivante", "description": "Posséder 10 forges stellaires.", "metric": "generator", "target": "10", "generatorId": "stellar_forge"},
+  {"id": "trillion_cookies", "title": "Empire sans frontières", "description": "Produire un billion de cookies (1 000 milliards).", "metric": "totalProduced", "target": "1000000000000"}
 ].map(definition=>Object.freeze(definition)));
 const PROGRESSION_RANKS=Object.freeze([
   {at:0,title:'Les débuts gourmands'},
@@ -412,7 +478,13 @@ const PROGRESSION_RANKS=Object.freeze([
   {at:10,title:'Royaume du cacao'},
   {at:12,title:'Empire gourmand'},
   {at:14,title:'Constellation gourmande'},
-  {at:16,title:'Académie du chocolat'}
+  {at:16,title:'Académie du chocolat'},
+  {at:18,title:'Pionnier orbital'},
+  {at:20,title:'Empire en orbite'},
+  {at:22,title:'Jardinier des lunes'},
+  {at:24,title:'Académie interstellaire'},
+  {at:26,title:'Maître des étoiles'},
+  {at:28,title:'Empire sans frontières'}
 ].map(rank=>Object.freeze(rank)));
 
 function validateMilestoneContent(definitions){
@@ -935,6 +1007,70 @@ class GameUI {
     this.upgradeElements={};
     this.buildUpgradeUI();
     this.buildProgressionUI();
+    this.buildNavigation();
+  }
+
+  buildNavigation(){
+    this.activeView='empire';this.viewScroll={};this.researchBranch='all';this.hideOwnedResearch=false;
+    this.navButtons=[...document.querySelectorAll('[data-nav]')];
+    for(const button of this.navButtons){
+      button.addEventListener('click',()=>this.selectView(button.dataset.nav));
+      button.addEventListener('keydown',event=>{
+        const index=this.navButtons.indexOf(button);
+        let target;
+        if(event.key==='ArrowRight') target=(index+1)%this.navButtons.length;
+        if(event.key==='ArrowLeft') target=(index+this.navButtons.length-1)%this.navButtons.length;
+        if(event.key==='Home') target=0;
+        if(event.key==='End') target=this.navButtons.length-1;
+        if(target!==undefined){event.preventDefault();this.navButtons[target].focus();this.selectView(this.navButtons[target].dataset.nav);}
+      });
+    }
+    document.querySelectorAll('[data-open-view]').forEach(button=>button.addEventListener('click',()=>this.selectView(button.dataset.openView)));
+    document.querySelectorAll('[data-destination]').forEach(button=>button.addEventListener('click',()=>{
+      this.selectView('workshop');
+      const card=this.generatorElements[button.dataset.destination].panel;
+      card.tabIndex=-1;card.focus();card.scrollIntoView?.({block:'center',behavior:'instant'});
+    }));
+    document.getElementById('objectiveShortcut').addEventListener('click',()=>this.selectView('journey'));
+    document.getElementById('quickCookie').addEventListener('click',()=>this.handleClick());
+    document.querySelectorAll('[data-branch]').forEach(button=>button.addEventListener('click',()=>{
+      this.researchBranch=button.dataset.branch;this.renderResearchFilters();
+    }));
+    document.getElementById('researchFilter').addEventListener('click',()=>{
+      this.hideOwnedResearch=!this.hideOwnedResearch;this.renderResearchFilters();
+    });
+  }
+
+  selectView(view){
+    if(!this.navButtons.some(button=>button.dataset.nav===view)) return;
+    this.viewScroll[this.activeView]=window.scrollY || 0;
+    const focusWasInView=Boolean(document.activeElement?.closest?.('[data-view]'));
+    this.activeView=view;
+    document.querySelectorAll('[data-view]').forEach(panel=>panel.hidden=panel.dataset.view!==view);
+    this.navButtons.forEach(button=>{
+      if(button.dataset.nav===view) button.setAttribute('aria-current','page');
+      else button.removeAttribute('aria-current');
+    });
+    if(focusWasInView) this.navButtons.find(button=>button.dataset.nav===view).focus();
+    document.getElementById('quickClickBar').hidden=view==='empire';
+    document.body.dataset.activeView=view;
+    this.render();
+    window.scrollTo({top:this.viewScroll[view] || 0,behavior:'instant'});
+  }
+
+  renderResearchFilters(){
+    let visible=0;
+    document.querySelectorAll('[data-branch]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.branch===this.researchBranch)));
+    const filter=document.getElementById('researchFilter');
+    filter.setAttribute('aria-pressed',String(this.hideOwnedResearch));
+    filter.textContent=this.hideOwnedResearch?'Afficher les acquises':'Masquer les acquises';
+    for(const [id,button] of Object.entries(this.upgradeElements)){
+      const card=button.closest('.upgrade-card');
+      card.hidden=(this.researchBranch!=='all' && UPGRADES[id].effect.target!==this.researchBranch) || (this.hideOwnedResearch && this.engine.state.ownedUpgrades.includes(id));
+      if(!card.hidden) visible++;
+    }
+    for(const branch of this.$.upgradeList.querySelectorAll('.research-branch')) branch.hidden=![...branch.querySelectorAll('.upgrade-card')].some(card=>!card.hidden);
+    document.getElementById('researchEmpty').hidden=visible!==0;
   }
 
   applyTheme(theme){
@@ -975,15 +1111,19 @@ class GameUI {
   renderProgression(){
     const state=this.engine.state,progress=Progression.derive(state);
     document.getElementById('empireRank').textContent=progress.rank;
+    document.getElementById('sceneTitle').textContent=progress.rank;
+    document.getElementById('sceneChapter').textContent=state.generators.stellar_forge?'IV · Les étoiles sucrées':state.generators.lunar_harvest?'III · Les jardins de lune':state.generators.orbital_bakery?'II · La conquête orbitale':'I · L’atelier originel';
     document.getElementById('milestoneCount').textContent=`${progress.completed} / ${progress.total} étapes`;
     const next=progress.next;
+    document.getElementById('sceneObjective').textContent=next?next.definition.title:'Toutes les étapes franchies';
+    document.getElementById('sceneProgress').textContent=next?`${Economy.compact(next.shown)} / ${Economy.compact(next.target)}`:`${progress.total} étapes accomplies`;
     const note=this.showRemainingOnly && !next
       ? 'Toutes les étapes sont franchies. Affichez toutes les étapes pour revoir votre parcours.'
       : 'Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.';
     if(this.progressionNote.textContent!==note) this.progressionNote.textContent=note;
     document.getElementById('nextMilestoneLabel').textContent=next?'Votre prochaine étape':'Parcours accompli';
     document.getElementById('nextMilestoneTitle').textContent=next?next.definition.title:'Toutes les étapes franchies !';
-    document.getElementById('nextMilestoneDescription').textContent=next?next.definition.description:'Votre atelier a parcouru les seize étapes. Continuez à faire grandir votre empire.';
+    document.getElementById('nextMilestoneDescription').textContent=next?next.definition.description:'Votre atelier a parcouru les 28 étapes. Continuez à faire grandir votre empire.';
     const label=next?`${Economy.format(next.shown)} / ${Economy.format(next.target)}`:`${progress.total} / ${progress.total} étapes`;
     document.getElementById('milestoneProgressText').textContent=label;
     const bar=document.getElementById('milestoneProgress');
@@ -1021,6 +1161,7 @@ class GameUI {
         formattedBatchCost:null,
         owned:panel.querySelector('[data-role="owned"]'),
         production:panel.querySelector('[data-role="production"]'),
+        clickBonus:panel.querySelector('.click-bonus'),
         cost:panel.querySelector('[data-role="cost"]'),
         batchCost:panel.querySelector('[data-role="batch-cost"]'),
         buy1:panel.querySelector('[data-buy-mode="1"]'),
@@ -1034,14 +1175,18 @@ class GameUI {
 
   buildUpgradeUI(){
     const fragment=document.createDocumentFragment();
-    for(const definition of Object.values(UPGRADES)){
-      const panel=document.createElement('div');
-      panel.className='generator';
-      panel.classList.add('upgrade-card');
-      const icon={click:'✦',generator:'❋',globalCps:'♨'}[definition.effect.target];
-      panel.innerHTML=`<div class="generator-row"><span class="generator-icon" aria-hidden="true">${icon}</span><div class="generator-info"><h3>${definition.name}</h3><p>${definition.description}</p></div><button class="btn buy primary-buy" type="button" data-upgrade-id="${definition.id}" aria-label="Acheter ${definition.name}"></button></div>`;
-      this.upgradeElements[definition.id]=panel.querySelector('button');
-      fragment.appendChild(panel);
+    const labels={click:'La voie du clic',generator:'La voie de l’atelier',globalCps:'La voie de l’empire'};
+    for(const target of ['click','generator','globalCps']){
+      const branch=document.createElement('section');branch.className='research-branch';
+      const title=document.createElement('h3');title.textContent=labels[target];branch.appendChild(title);
+      for(const definition of Object.values(UPGRADES).filter(item=>item.effect.target===target)){
+        const panel=document.createElement('div');panel.className='generator upgrade-card';panel.id='research-'+definition.id;panel.tabIndex=-1;if(definition.requires) panel.classList.add('has-prerequisite');
+        const icon={click:'✦',generator:'❋',globalCps:'♨'}[target];
+        panel.innerHTML=`<div class="generator-row"><span class="generator-icon" aria-hidden="true">${icon}</span><div class="generator-info"><h3>${definition.name}</h3><p>${definition.description}</p></div></div><p class="research-requires">${definition.requires?'Après : '+definition.requires.map(id=>`<button class="prerequisite-link" type="button" data-research-jump="${id}">${UPGRADES[id].name}</button>`).join(', '):'Recherche fondatrice · aucun prérequis'}</p><div class="research-purchase"><span data-role="research-state"></span><button class="btn buy primary-buy" type="button" data-upgrade-id="${definition.id}" aria-label="Acheter ${definition.name}"></button></div>`;
+        this.upgradeElements[definition.id]=panel.querySelector('button[data-upgrade-id]');
+        branch.appendChild(panel);
+      }
+      fragment.appendChild(branch);
     }
     this.$.upgradeList.replaceChildren(fragment);
   }
@@ -1070,6 +1215,12 @@ class GameUI {
       this.render();
     });
     this.$.upgradeList.addEventListener('click',(event)=>{
+      const jump=event.target.closest('[data-research-jump]');
+      if(jump){
+        this.hideOwnedResearch=false;this.researchBranch='all';this.renderResearchFilters();
+        const card=document.getElementById('research-'+jump.dataset.researchJump);
+        card.focus();card.scrollIntoView?.({block:'center',behavior:'instant'});return;
+      }
       const button=event.target.closest('button[data-upgrade-id]');
       if(!button) return;
       const id=button.dataset.upgradeId;
@@ -1213,9 +1364,10 @@ class GameUI {
     const gained=this.engine.click();
     this.clickFeedback.textContent='+'+Economy.format(gained);
     this.clickFeedback.classList.add('is-visible');
+    document.getElementById('quickCookie').classList.add('is-tapped');
     clearTimeout(this.clickFeedbackTimer);
-    this.clickFeedbackTimer=setTimeout(()=>this.clickFeedback.classList.remove('is-visible'),650);
-    this.render();
+    this.clickFeedbackTimer=setTimeout(()=>{this.clickFeedback.classList.remove('is-visible');document.getElementById('quickCookie').classList.remove('is-tapped');},650);
+    this.renderResources();
   }
 
   message(text){
@@ -1224,17 +1376,28 @@ class GameUI {
     this.messageTimer=setTimeout(()=>this.$.status.textContent='',1800);
   }
 
-  render(){
-    this.renderRecovery();
-    this.renderProgression();
+  renderResources(){
     const s=this.engine.state;
-    this.$.balance.textContent=Economy.format(s.cookies);
+    this.$.balance.textContent=Economy.compact(s.cookies);
+    this.$.balance.title=Economy.format(s.cookies)+' cookies';
+    this.$.balance.setAttribute('aria-label',this.$.balance.title);
     this.$.balance.classList.toggle('long-number',this.$.balance.textContent.length>14);
     this.$.cookie.setAttribute('aria-label',`Produire ${Economy.format(s.clickReward)} cookies`);
     this.$.perClick.textContent=Economy.format(s.clickReward);
     this.$.cps.textContent=Economy.format(s.cps);
+    this.$.perClick.title=this.$.perClick.textContent+' cookies par clic';
+    this.$.cps.title=this.$.cps.textContent+' cookies par seconde';
     this.$.clicks.textContent=Economy.format(s.totalClicks);
     this.$.produced.textContent=Economy.format(s.totalProduced);
+    document.getElementById('quickReward').textContent='+'+Economy.compact(s.clickReward);
+    document.getElementById('quickCookie').setAttribute('aria-label',`Produire ${Economy.format(s.clickReward)} cookies`);
+  }
+
+  render(){
+    this.renderRecovery();
+    this.renderProgression();
+    this.renderResources();
+    const s=this.engine.state;
     const multipliers=Economy.deriveMultipliers(s);
     for(const [id,definition] of Object.entries(GENERATORS)){
       const elements=this.generatorElements[id];
@@ -1252,6 +1415,7 @@ class GameUI {
       }
       elements.owned.textContent=owned.toLocaleString('fr-FR');
       elements.production.textContent=Economy.format(Economy.generatorUnitCps(id,multipliers));
+      elements.clickBonus.textContent=`+${Economy.format(Economy.multiply(definition.baseCps,multipliers.click))} cookie/clic par unité`;
       elements.buy1.disabled=Economy.compare(s.cookies,elements.price)<0;
       elements.buy10.disabled=!elements.batchPrice || Economy.compare(s.cookies,elements.batchPrice)<0;
       elements.buyMax.disabled=elements.buy1.disabled;
@@ -1260,13 +1424,28 @@ class GameUI {
     for(const [id,button] of Object.entries(this.upgradeElements)){
       const quote=Economy.upgradeQuote(s,id);
       button.disabled=quote.status!=='available';
-      button.textContent=quote.status==='owned'?'Acquise':`Acheter · ${Economy.format(quote.cost)}`;
+      button.textContent=quote.status==='owned'?'Acquise':quote.status==='locked'?`Verrouillée · ${Economy.format(quote.cost)}`:`Rechercher · ${Economy.format(quote.cost)}`;
       button.classList.toggle('upgrade-owned',quote.status==='owned');
       const card=button.closest('.upgrade-card');
       card.classList.toggle('is-owned',quote.status==='owned');
+      card.classList.toggle('is-locked',quote.status==='locked');
+      card.querySelector('[data-role="research-state"]').textContent=quote.status==='locked'?'Prérequis à découvrir':quote.status==='owned'?'✓ Découverte':quote.status==='available'?'Disponible':'Cookies insuffisants';
       card.classList.toggle('is-available',quote.status==='available');
-      button.setAttribute('aria-label',`${UPGRADES[id].name} : ${button.textContent}`);
+      button.setAttribute('aria-label',`${UPGRADES[id].name} : ${button.textContent}${quote.missing?' ; nécessite '+quote.missing.map(id=>UPGRADES[id].name).join(', '):''}`);
     }
+    this.renderResearchFilters();
+    const ready=Object.keys(UPGRADES).filter(id=>Economy.upgradeQuote(s,id).status==='available').length;
+    document.getElementById('researchSummary').textContent=`${s.ownedUpgrades.length} / ${Object.keys(UPGRADES).length} découvertes · ${ready} disponible${ready>1?'s':''}`;
+    for(const button of document.querySelectorAll('[data-destination]')){
+      const count=s.generators[button.dataset.destination];
+      button.querySelector('small').textContent=count?`${count.toLocaleString('fr-FR')} en activité`:'À explorer';
+      button.classList.toggle('is-discovered',count>0);
+      button.setAttribute('aria-label',`${GENERATORS[button.dataset.destination].name} : ${count} possédés. Ouvrir dans l’atelier`);
+    }
+    document.getElementById('view-empire').dataset.era=s.generators.stellar_forge?'star':s.generators.lunar_harvest?'moon':s.generators.orbital_bakery?'orbit':'origin';
+    document.getElementById('researchHint').textContent=ready?`${ready} recherche${ready>1?'s':''} à découvrir`:'Explorer les recherches';
+    document.getElementById('quickReward').textContent='+'+Economy.compact(s.clickReward);
+    document.getElementById('quickCookie').setAttribute('aria-label',`Produire ${Economy.format(s.clickReward)} cookies`);
   }
 }
 
@@ -1781,7 +1960,25 @@ function runFoundationTests(){
     assert(m.click.compare(1)===0 && m.globalCps.compare(1)===0 && m.generators.cursor.compare(1)===0,'neutres');
   });
   test('contenu immuable et valide',()=>{
-    validateUpgradeContent(UPGRADES);
+    // Dependency graph validation is separate from saved ownership validation.
+function validateResearchGraph(definitions){
+  const visiting=new Set(),done=new Set();
+  function visit(id){
+    if(visiting.has(id)) throw new Error('Cycle de recherche');
+    if(done.has(id)) return;
+    visiting.add(id);
+    const deps=definitions[id].requires ?? [];
+    if(!Array.isArray(deps) || new Set(deps).size!==deps.length) throw new Error('Prérequis invalides');
+    for(const dependency of deps){
+      if(typeof dependency!=='string' || dependency===id || !owns(definitions,dependency)) throw new Error('Prérequis inconnu');
+      visit(dependency);
+    }
+    visiting.delete(id);done.add(id);
+  }
+  for(const id of Object.keys(definitions)) visit(id);
+}
+validateUpgradeContent(UPGRADES);
+validateResearchGraph(UPGRADES);
     assert(Object.isFrozen(UPGRADES),'table');
     for(const def of Object.values(UPGRADES)) assert(Object.isFrozen(def)&&Object.isFrozen(def.effect),'définition');
   });
@@ -2228,7 +2425,7 @@ function runFoundationTests(){
 
   const step=(state,id)=>Progression.derive(state).rows.find(row=>row.definition.id===id);
   test('progression : départ vide et prochaine étape déterministes',()=>{
-    const p=Progression.derive(GameState.create());assert(p.completed===0 && p.total===16,'départ');assert(p.rank==='Les débuts gourmands' && p.next.definition.id==='first_batch','orientation');assert(p.rows.every(r=>!r.done && r.percent===0),'zéro');
+    const p=Progression.derive(GameState.create());assert(p.completed===0 && p.total===28,'départ');assert(p.rank==='Les débuts gourmands' && p.next.definition.id==='first_batch','orientation');assert(p.rows.every(r=>!r.done && r.percent===0),'zéro');
   });
   test('progression : seuils de production exacts sans arrondir la condition',()=>{
     for(const [id,target] of [['first_batch',25],['thousand_cookies',1000],['ten_thousand_cookies',10000],['hundred_thousand',100000],['million_cookies',1000000],['ten_million',10000000]]){
@@ -2245,7 +2442,7 @@ function runFoundationTests(){
     const s=GameState.create();s.generators.cursor=1;const p=Progression.derive(s);assert(p.completed===1 && step(s,'first_cursor').done,'étape anticipée');assert(p.next.definition.id==='first_batch','pas de saut du premier objectif');s.totalProduced=HugeNumber.from(25);assert(Progression.derive(s).next.definition.id==='first_grandma','étape suivante');
   });
   test('progression : seuils de possessions et catalogue acquis',()=>{
-    const s=GameState.create();s.generators.cursor=9;s.generators.grandma=1;s.ownedUpgrades=['reinforced_click'];assert(step(s,'first_grandma').done && step(s,'first_upgrade').done && !step(s,'cursor_team').done,'possessions');s.generators.cursor=10;s.ownedUpgrades=Object.keys(UPGRADES);assert(step(s,'cursor_team').done && step(s,'recipe_book').done,'seuils');
+    const s=GameState.create();s.generators.cursor=9;s.generators.grandma=1;s.ownedUpgrades=['reinforced_click'];assert(step(s,'first_grandma').done && step(s,'first_upgrade').done && !step(s,'cursor_team').done,'possessions');s.generators.cursor=10;s.ownedUpgrades=['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens','cocoa_excavators','cosmic_click'];assert(step(s,'cursor_team').done && step(s,'recipe_book').done,'seuils');
   });
   test('progression : dépenser ne fait pas perdre une production atteinte',()=>{
     const s=GameState.create();s.cookies=HugeNumber.from(1000);s.totalProduced=HugeNumber.from(1000);const e=new GameEngine(s);assert(e.buyGenerator('grandma'),'achat');assert(s.cookies.compare(1000)<0 && step(s,'thousand_cookies').done,'total indépendant de réserve');
@@ -2257,13 +2454,13 @@ function runFoundationTests(){
     const s=GameState.create();s.generators.grandma=1;new GameEngine(s).applyOffline(1000);assert(step(s,'first_batch').done && step(s,'thousand_cookies').done,'production reconnue');
   });
   test('progression : titres et fin du parcours cohérents',()=>{
-    const s=GameState.create();s.totalProduced=HugeNumber.from(25);s.generators.cursor=1;assert(Progression.derive(s).rank==='Petit atelier','deux');s.generators.grandma=1;s.ownedUpgrades=['reinforced_click'];assert(Progression.derive(s).rank==='Boulangerie en essor','quatre');s.generators.cursor=10;s.totalProduced=HugeNumber.from(1000);assert(Progression.derive(s).rank==='Fabrique reconnue','six');s.ownedUpgrades=['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens'];s.totalProduced=HugeNumber.from(10000);let p=Progression.derive(s);assert(p.completed===8 && p.next.definition.id==='first_mine' && p.rank==='Empire en devenir','suite');s.generators.cocoa_mine=10;p=Progression.derive(s);assert(p.completed===10 && p.rank==='Royaume du cacao','mines');s.totalProduced=HugeNumber.from(1000000);p=Progression.derive(s);assert(p.completed===12 && p.next.definition.id==='all_recipes' && p.rank==='Empire gourmand','suite');s.ownedUpgrades=Object.keys(UPGRADES);s.totalProduced=HugeNumber.from(10000000);p=Progression.derive(s);assert(p.completed===14 && p.next.definition.id==='first_lab' && p.rank==='Constellation gourmande','suite');s.generators.chocolate_lab=5;p=Progression.derive(s);assert(p.completed===16 && p.next===null && p.rank==='Académie du chocolat','fin');
+    const s=GameState.create();s.totalProduced=HugeNumber.from(25);s.generators.cursor=1;assert(Progression.derive(s).rank==='Petit atelier','deux');s.generators.grandma=1;s.ownedUpgrades=['reinforced_click'];assert(Progression.derive(s).rank==='Boulangerie en essor','quatre');s.generators.cursor=10;s.totalProduced=HugeNumber.from(1000);assert(Progression.derive(s).rank==='Fabrique reconnue','six');s.ownedUpgrades=['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens'];s.totalProduced=HugeNumber.from(10000);let p=Progression.derive(s);assert(p.completed===8 && p.next.definition.id==='first_mine' && p.rank==='Empire en devenir','suite');s.generators.cocoa_mine=10;p=Progression.derive(s);assert(p.completed===10 && p.rank==='Royaume du cacao','mines');s.totalProduced=HugeNumber.from(1000000);p=Progression.derive(s);assert(p.completed===12 && p.next.definition.id==='all_recipes' && p.rank==='Empire gourmand','suite');s.ownedUpgrades=['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens','cocoa_excavators','cosmic_click'];s.totalProduced=HugeNumber.from(10000000);p=Progression.derive(s);assert(p.completed===14 && p.next.definition.id==='first_lab' && p.rank==='Constellation gourmande','suite');s.generators.chocolate_lab=5;p=Progression.derive(s);assert(p.completed===16 && p.next.definition.id==='hundred_million' && p.rank==='Académie du chocolat','fin');
   });
   test('progression : dérivations répétées pures et sans alias modifiable',()=>{
     const s=GameState.create();s.totalProduced=HugeNumber.from(50);const before=JSON.stringify(s),content=JSON.stringify(MILESTONES);for(let i=0;i<30;i++){const p=Progression.derive(s);p.rows[0].current.m=9;p.rows[0].target.m=9;}assert(JSON.stringify(s)===before && JSON.stringify(MILESTONES)===content,'sources intactes');assert(Object.isFrozen(MILESTONES) && MILESTONES.every(Object.isFrozen) && Object.isFrozen(PROGRESSION_RANKS),'contenu immuable');
   });
   test('progression : définitions invalides refusées au démarrage',()=>{
-    const d=MILESTONES[0];const bad=[[],[d,d],[{...d,id:''}],[{...d,metric:'balance'}],[{...d,target:'0'}],[{...d,target:'-1'}],[{...d,metric:'generator',generatorId:'unknown'}],[{...d,generatorId:'cursor'}],[{...d,metric:'generator',generatorId:'cursor',target:'.5'}],[{...d,metric:'upgrades',target:'7'}],[{...d,metric:'generator',generatorId:['cursor'],target:'1'}]];
+    const d=MILESTONES[0];const bad=[[],[d,d],[{...d,id:''}],[{...d,metric:'balance'}],[{...d,target:'0'}],[{...d,target:'-1'}],[{...d,metric:'generator',generatorId:'unknown'}],[{...d,generatorId:'cursor'}],[{...d,metric:'generator',generatorId:'cursor',target:'.5'}],[{...d,metric:'upgrades',target:'15'}],[{...d,metric:'generator',generatorId:['cursor'],target:'1'}]];
     for(const definitions of bad){let rejected=false;try{validateMilestoneContent(definitions);}catch{rejected=true;}assert(rejected,'contenu invalide '+JSON.stringify(definitions));}
   });
   test('progression : sauvegarde inchangée et étapes reconstruites',()=>{
@@ -2399,12 +2596,81 @@ function runFoundationTests(){
   });
   test('six recettes et cinq laboratoires survivent au rechargement',()=>{
     const save=new SaveSystem('late-game-roundtrip',{getItem(){return null;},setItem(){},removeItem(){}});
-    const state=GameState.create();state.generators.chocolate_lab=5;state.ownedUpgrades=Object.keys(UPGRADES);
+    const state=GameState.create();state.generators.chocolate_lab=5;state.ownedUpgrades=['reinforced_click','efficient_cursor','grandma_recipe','warm_ovens','cocoa_excavators','cosmic_click'];
     const loaded=save.decode(save.encode(state));
     assert(loaded.ownedUpgrades.length===6 && loaded.generators.chocolate_lab===5,'sources');
     assert(loaded.cps.compare(1725)===0 && loaded.clickReward.compare(6906)===0,'valeurs dérivées');
     assert(Progression.derive(loaded).rows.find(row=>row.definition.id==='five_labs').done,'étape reconstruite');
   });
+  test('recherche : achat verrouillé sans mutation',()=>{
+    const s=GameState.create();s.cookies=HugeNumber.from('1e20');const e=new GameEngine(s),before=JSON.stringify(s);
+    assert(Economy.upgradeQuote(s,'precision_click').status==='locked','statut');
+    assert(!e.buyUpgrade('precision_click') && JSON.stringify(s)===before,'aucune mutation');
+  });
+  test('recherche : seuil exact et unicité après prérequis',()=>{
+    const s=GameState.create();s.ownedUpgrades=['cosmic_click'];s.cookies=HugeNumber.from(2000000);const e=new GameEngine(s);
+    assert(e.buyUpgrade('precision_click') && s.cookies.isZero(),'achat exact');
+    assert(s.clickReward.compare(6)===0 && !e.buyUpgrade('precision_click'),'effet une fois');
+  });
+  test('recherche : chaîne de clics complète',()=>{
+    const s=GameState.create();s.cookies=HugeNumber.from('1e18');s.generators.orbital_bakery=1;const e=new GameEngine(s);
+    for(const id of ['reinforced_click','cosmic_click','precision_click','quantum_click','singularity_click']) assert(e.buyUpgrade(id),'chaîne');
+    assert(s.clickReward.compare(100872)===0,'1401 × 72');assert(s.cps.compare(1400)===0,'CPS distinct');
+    const before=s.cookies.clone();assert(e.click().compare(100872)===0 && s.cookies.compare(before.add(100872))===0,'gain réel');
+  });
+  test('recherche : une découverte sauvegardée ne perd jamais son effet',()=>{
+    const s=GameState.create();s.ownedUpgrades=['quantum_click'];new GameEngine(s);
+    assert(s.clickReward.compare(2)===0 && Economy.upgradeQuote(s,'quantum_click').status==='owned','possession préservée');
+  });
+  test('recherche : graphes invalides rejetés',()=>{
+    const bad=[{a:{requires:['a']}},{a:{requires:['b']}},{a:{requires:['b','b']},b:{}},{a:{requires:['b']},b:{requires:['a']}},{a:{requires:'b'},b:{}}];
+    for(const graph of bad){let threw=false;try{validateResearchGraph(graph);}catch{threw=true;}assert(threw,'graphe invalide');}
+    validateResearchGraph({a:{},b:{requires:['a']},c:{requires:['a','b']}});
+  });
+  test('extension : trois générateurs aux coûts exacts',()=>{
+    for(const id of ['orbital_bakery','lunar_harvest','stellar_forge']){
+      const s=GameState.create(),d=GENERATORS[id];s.cookies=HugeNumber.from(d.baseCost);const e=new GameEngine(s);
+      assert(e.buyGenerator(id) && s.cookies.isZero() && s.generators[id]===1,'achat');
+      assert(s.cps.compare(d.baseCps)===0 && s.clickReward.compare(HugeNumber.from(d.baseCps).add(1))===0,'CPS et clic');
+      assert(e.getGeneratorCost(id).compare(HugeNumber.from(d.baseCost).multiply('1.15'))===0,'prix suivant');
+    }
+  });
+  test('extension : lots et achat maximal restent cohérents',()=>{
+    const s=GameState.create(),d=GENERATORS.orbital_bakery;s.cookies=Economy.generatorBatchCost(d,0,10);const e=new GameEngine(s);
+    assert(e.buyMaxGenerator(d.id)===10 && s.generators[d.id]===10,'max exact');
+    assert(s.cps.compare(14000)===0 && s.clickReward.compare(14001)===0,'lot');
+  });
+  test('extension : anciens identifiants absents initialisés à zéro',()=>{
+    const save=new SaveSystem('old-constellation',{getItem(){return null;},setItem(){},removeItem(){}});
+    const s=GameState.create();s.generators.chocolate_lab=45;s.ownedUpgrades=['reinforced_click','cosmic_click'];
+    const raw=JSON.parse(save.encode(s));for(const id of ['orbital_bakery','lunar_harvest','stellar_forge'])delete raw.state.generators[id];
+    const loaded=save.decode(JSON.stringify(raw));assert(loaded.generators.orbital_bakery===0 && loaded.generators.lunar_harvest===0 && loaded.generators.stellar_forge===0,'zéros');
+    assert(loaded.generators.chocolate_lab===45 && loaded.clickReward.compare(62106)===0,'progression préservée');
+  });
+  test('extension : toutes les recherches survivent à la sauvegarde',()=>{
+    const save=new SaveSystem('new-constellation',{getItem(){return null;},setItem(){},removeItem(){}});
+    const s=GameState.create();s.ownedUpgrades=Object.keys(UPGRADES);s.generators.orbital_bakery=4;s.generators.lunar_harvest=2;s.generators.stellar_forge=1;
+    const e=new GameEngine(s),raw=save.encode(s),loaded=save.decode(raw);
+    assert(loaded.ownedUpgrades.length===14 && loaded.clickReward.compare(s.clickReward)===0 && loaded.cps.compare(s.cps)===0,'reconstruction');
+    assert(!Object.hasOwn(JSON.parse(raw).state,'clickReward'),'pas de cache persisté');
+  });
+  test('extension : multiplicateurs de production séparés des clics',()=>{
+    const s=GameState.create();s.cookies=HugeNumber.from('1e18');s.generators.chocolate_lab=1;s.generators.orbital_bakery=1;s.generators.lunar_harvest=1;const e=new GameEngine(s),before=s.clickReward.clone();
+    for(const id of ['cocoa_excavators','lab_synergy','orbital_logistics','lunar_crystals','warm_ovens','stellar_network','infinite_ovens'])assert(e.buyUpgrade(id),'achat');
+    assert(s.cps.compare(169740)===0 && s.clickReward.compare(before)===0,'domaines séparés');
+  });
+  test('extension : 28 objectifs et nouvelle partie',()=>{
+    const s=GameState.create();s.totalProduced=HugeNumber.from('1e12');s.ownedUpgrades=Object.keys(UPGRADES);for(const id of Object.keys(GENERATORS))s.generators[id]=10;
+    const p=Progression.derive(s);assert(p.completed===28 && !p.next && p.rank==='Empire sans frontières','final');
+    const fresh=GameState.create();assert(Progression.derive(fresh).completed===0 && fresh.clickReward.compare(1)===0,'départ');
+  });
+  test('HUD : nombres compacts sans mutation',()=>{
+    const n=HugeNumber.from('183000000'),before=JSON.stringify(n);
+    assert(Economy.compact(n)==='183 M' && JSON.stringify(n)===before,'stable');
+    assert(Economy.compact('1e1000')==='1e1000','valeur extrême');
+    assert(Economy.compact(999999)==='1 M','arrondi de frontière');
+  });
+
   const failed=results.filter(r=>!r.ok);
   const status=document.createElement('div');
   status.id='testStatus';
