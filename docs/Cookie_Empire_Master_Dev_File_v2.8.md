@@ -1881,7 +1881,7 @@ The UI caches single and ×10 cost computations per generator at each owned coun
 
 ## 36.3 Mobile lifecycle
 
-When visibility changes to hidden, checkpoint the part and remember the current wall-clock timestamp once. While hidden, skip RAF simulation. On visible again, apply at most thirty days of offline gain for the elapsed background time, reset RAF time to avoid a second gain, refresh UI and checkpoint if cookies were gained. Repeated hidden or visible events do not multiply the gain. If the clock moves back, clamp elapsed to zero. The timestamp is in-memory and not part of the v4 save; page reload still uses the existing lastSavedAt path. This does not guarantee recovery from an abrupt OS kill without a pagehide event and does not address multiple tabs writing concurrently.
+When visibility changes to hidden or `pagehide` occurs, checkpoint the part and remember the current wall-clock timestamp once. While hidden, skip RAF simulation. On visible again or `pageshow` after a browser history return, apply at most thirty days of offline gain for the elapsed background time, reset RAF time to avoid a second gain, refresh UI and checkpoint if cookies were gained. Repeated lifecycle events do not multiply the gain. If the clock moves back, clamp elapsed to zero. The timestamp is in-memory and not part of the v4 save; page reload still uses the existing lastSavedAt path. This does not guarantee recovery from an abrupt OS kill without a pagehide event and does not address multiple tabs writing concurrently.
 
 ## 36.4 Verification and remaining gate
 
