@@ -796,7 +796,7 @@ class SaveSystem {
       const state=this.decode(raw);
       if(!state) return null;
       // Les fichiers externes doivent produire des nombres canoniques utilisables.
-      for(const n of [state.cookies,state.totalProduced,state.clickPower,state.cps,state.clickReward]){
+      for(const n of [state.cookies,state.totalProduced,state.clickPower,state.prestigePoints,state.cps,state.clickReward]){
         if(!Number.isFinite(n.m) || !Number.isFinite(n.e) || !Number.isInteger(n.e) ||
           (n.m!==0 && (n.m<1 || n.m>=10))) return null;
       }
