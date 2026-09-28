@@ -1347,22 +1347,11 @@ class CookieEmpireApp {
     }
 
     this.ui.bind();
-    window.addEventListener('pagehide',()=>this.flushPendingSave());
+    window.addEventListener('pagehide',()=>this.pauseForBackground());
+    window.addEventListener('pageshow',()=>this.resumeFromBackground());
     document.addEventListener('visibilitychange',()=>{
-      if(document.hidden){
-        if(this.backgroundAt===null) this.backgroundAt=Date.now();
-        this.flushPendingSave();
-      }else if(this.backgroundAt!==null){
-        const seconds=Math.max(0,(Date.now()-this.backgroundAt)/1000);
-        this.backgroundAt=null;
-        const gain=this.engine.applyOffline(seconds);
-        this.lastFrame=performance.now();
-        this.ui.render();
-        if(!gain.isZero()){
-          this.ui.message('Retour au jeu : +'+Economy.format(gain)+' cookies.');
-          this.flushPendingSave();
-        }
-      }
+      if(document.hidden) this.pauseForBackground();
+      else this.resumeFromBackground();
     });
     this.ui.render();
     if(location.search.includes('test=1')) return;
@@ -1372,6 +1361,24 @@ class CookieEmpireApp {
   flushPendingSave(){
     // Un clic ou un achat peut survenir avant la frame suivante : sauvegarder même à compteur nul.
     if(this.saveSystem.save(this.state)) this.saveAccumulator=0;
+  }
+
+  pauseForBackground(){
+    if(this.backgroundAt===null) this.backgroundAt=Date.now();
+    this.flushPendingSave();
+  }
+
+  resumeFromBackground(){
+    if(this.backgroundAt===null || document.hidden) return;
+    const seconds=Math.max(0,(Date.now()-this.backgroundAt)/1000);
+    this.backgroundAt=null;
+    const gain=this.engine.applyOffline(seconds);
+    this.lastFrame=performance.now();
+    this.ui.render();
+    if(!gain.isZero()){
+      this.ui.message('Retour au jeu : +'+Economy.format(gain)+' cookies.');
+      this.flushPendingSave();
+    }
   }
 
   loop(time){
