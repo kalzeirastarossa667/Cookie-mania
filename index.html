@@ -49,6 +49,7 @@
 @media(max-width:760px){.topbar{flex-wrap:wrap}.brand{flex:1 1 100%;min-width:0}.brand h1{white-space:normal}.toolbar{width:100%;justify-content:flex-end}.toolbar .btn,.toolbar .settings>summary{min-width:44px}.purchase-actions .primary-buy{flex-wrap:wrap;column-gap:4px;line-height:1.25}}
 .click-feedback{position:absolute;z-index:2;bottom:5px;left:50%;transform:translateX(-50%);padding:4px 13px;border-radius:24px;background:#101f31dc;border:1px solid #ffe0a887;color:#ffe2a7;font-weight:800;font-size:16px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}.click-feedback.is-visible{opacity:1}
 .milestone-filter{margin:4px 0 10px;font-size:11px;min-height:44px}
+.journey-shortcut{margin-top:12px;font-size:11px;text-decoration:none}
 </style>
 </head>
 <body>
@@ -73,6 +74,7 @@
 <div class="shop"><section class="empire-journey" aria-labelledby="empireRank"><div class="journey-heading"><div><span class="eyebrow">Votre empire</span><h2 id="empireRank">Les débuts gourmands</h2></div><span class="journey-count" id="milestoneCount">0 / 16 étapes</span></div>
 <div class="next-milestone" id="nextMilestone"><span class="journey-star" aria-hidden="true">✦</span><div class="next-copy"><span class="next-label" id="nextMilestoneLabel">Votre prochaine étape</span><h3 id="nextMilestoneTitle">Première fournée</h3><p id="nextMilestoneDescription">Produire 25 cookies au total.</p></div></div>
 <div class="journey-progress"><progress id="milestoneProgress" max="100" value="0" aria-labelledby="nextMilestoneTitle" aria-valuetext="0 / 25"></progress><span id="milestoneProgressText">0 / 25</span></div>
+<a class="btn journey-shortcut" href="#productionTitle">Aller à l’atelier ↓</a>
 <details class="milestone-details" id="milestoneDetails"><summary>Voir les 16 étapes</summary><button class="btn milestone-filter" id="milestoneFilter" type="button" aria-pressed="false">Masquer les étapes franchies</button><ol id="milestoneList"></ol><p class="journey-note">Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.</p></details><p id="milestoneAnnouncement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p></section>
 <section aria-labelledby="productionTitle"><div class="section-heading"><div><span class="eyebrow">Faites tourner la boutique</span><h2 id="productionTitle">Votre atelier</h2></div><span class="section-count">PRODUCTION</span></div><div id="generatorList"></div></section>
 <section class="upgrades" aria-labelledby="upgradesTitle"><div class="section-divider" aria-hidden="true"></div><div class="section-heading"><div><span class="eyebrow">Le petit plus qui change tout</span><h2 id="upgradesTitle">Les bonnes recettes</h2></div></div><p class="section-note">Améliorations permanentes · Un seul achat, un bonus durable.</p><div id="upgradeList"></div></section></div></main>
@@ -949,6 +951,7 @@ class GameUI {
     this.progressionState=null;
     this.showRemainingOnly=false;
     this.announcedMilestones=new Set();
+    this.progressionNote=document.querySelector('#milestoneDetails .journey-note');
     const filter=document.getElementById('milestoneFilter');
     filter.addEventListener('click',()=>{
       this.showRemainingOnly=!this.showRemainingOnly;
@@ -974,9 +977,10 @@ class GameUI {
     document.getElementById('empireRank').textContent=progress.rank;
     document.getElementById('milestoneCount').textContent=`${progress.completed} / ${progress.total} étapes`;
     const next=progress.next;
-    document.querySelector('#milestoneDetails .journey-note').textContent=this.showRemainingOnly && !next
+    const note=this.showRemainingOnly && !next
       ? 'Toutes les étapes sont franchies. Affichez toutes les étapes pour revoir votre parcours.'
       : 'Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.';
+    if(this.progressionNote.textContent!==note) this.progressionNote.textContent=note;
     document.getElementById('nextMilestoneLabel').textContent=next?'Votre prochaine étape':'Parcours accompli';
     document.getElementById('nextMilestoneTitle').textContent=next?next.definition.title:'Toutes les étapes franchies !';
     document.getElementById('nextMilestoneDescription').textContent=next?next.definition.description:'Votre atelier a parcouru les seize étapes. Continuez à faire grandir votre empire.';
