@@ -1,7 +1,8 @@
 # Documentation actuelle
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
-- [Vérifications 2.1](Cookie_Empire_Foundation_2.1_Test_Report.md).
+- [Vérifications 2.2](Cookie_Empire_Foundation_2.2_Test_Report.md).
+- [Vérifications 2.1](Cookie_Empire_Foundation_2.1_Test_Report.md) : baseline Horizons.
 - [Recherche clickers](Cookie_Empire_GitHub_Research_2.1.md).
 - [Organisation et outils GitHub](WORKFLOW.md).
 

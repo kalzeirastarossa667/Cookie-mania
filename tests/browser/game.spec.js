@@ -37,3 +37,25 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });
+
+
+test('prestige confirmé conserve les éclats et réinitialise la partie', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-nav="journey"]').click();
+  await expect(page.locator('#prestigeButton')).toBeDisabled();
+  await page.evaluate(() => {
+    const state=window.cookieEmpire.state;
+    state.totalProduced.m=1; state.totalProduced.e=12;
+    window.cookieEmpire.ui.render();
+  });
+  await expect(page.locator('#prestigeButton')).toBeEnabled();
+  page.once('dialog', dialog => dialog.accept());
+  await page.locator('#prestigeButton').click();
+  await expect(page.locator('#prestigePoints')).toHaveText('1');
+  await expect(page.locator('#prestigeMultiplier')).toHaveText('×1.1');
+  await page.locator('[data-nav="empire"]').click();
+  await expect(page.locator('#balance')).toHaveText('0');
+  await page.reload();
+  await page.locator('[data-nav="journey"]').click();
+  await expect(page.locator('#prestigePoints')).toHaveText('1');
+});

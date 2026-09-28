@@ -1960,3 +1960,39 @@ Final automated results: **181/181 core cases**, existing interface assertions p
 Delivery HTML is 155,594 bytes versus 224,991 bytes for 2.0 (30.84% smaller); no external runtime dependency. This byte comparison is not a device startup or FPS benchmark. Timers/persistence/numeric classes unchanged. Save v4 and its key remain; old absent generator IDs initialize to zero. New research ownership is not readable by older builds; transfer forward using existing JSON export/import.
 
 No real browser/mobile layout validation claimed; earlier environment access restriction remains. Node/jsdom results demonstrate rules and simulated DOM interaction, not physical touch behavior, pixel layout or long-term balance. No browser-policy bypass or test request made during independent work. Current authority is this Master v3.0, index.html Foundation 2.1 and the 2.1 test/research reports.
+
+
+# 39. First prestige layer — Foundation 2.2
+
+Specification recorded BEFORE implementation, 2026-09-28. Baseline: Foundation 2.1 Horizons at commit `1e097e69ebb802f8cad5b9cbb9e649e11a1d2a85`. Both Foundation checks and the new Playwright Chromium checks pass on desktop and Pixel 5 emulation. The browser artifact was inspected before this design; no blocking layout failure was observed. Physical-phone validation remains distinct from emulation.
+
+## 39.1 Progression contract
+
+Foundation 2.2 introduces one permanent prestige resource, **Éclats d'empire**, represented by HugeNumber. Prestige becomes available only when the current run has produced at least **1 trillion (1e12) cookies**. The pending reward is `sqrt(totalProduced / 1e12)` Éclats; fractional values are intentional so the numeric engine remains scalable without integer truncation. The permanent production multiplier is `1 + 0.10 × prestigePoints` and applies to both automatic CPS and generator-derived click contribution. It does not multiply the base clickPower directly. The multiplier is derived in Economy and never saved as a cache.
+
+A prestige resets the run resources only: cookies, current-run totalProduced, totalClicks, clickPower, generators and owned research return to their fresh-game values. It preserves accumulated prestigePoints and increments a safe integer prestigeCount. A normal “Nouvelle partie” remains a full reset and clears prestige as well. Milestones continue to describe the current run; no existing objective semantics are silently changed.
+
+## 39.2 Persistence and transaction contract
+
+Save schema advances explicitly from v4 to **v5**. V5 adds `prestigePoints` as canonical HugeNumber JSON and `prestigeCount` as a non-negative safe integer. V1–v4 remain loadable; they migrate with zero prestige points/count. No derived multiplier is persisted.
+
+Prestige must not mutate the live GameState before the replacement save is confirmed. SaveSystem receives a dedicated commit path that protects the previous valid primary snapshot as the backup, verifies the new v5 write and enters the existing uncertain/recovery modes on ambiguous storage failures. If persistence cannot confirm the prestige, the live run remains unchanged. Import/export continues through the existing recovery envelope and accepts migrated v1–v5 states.
+
+## 39.3 UI contract
+
+The Parcours view displays accumulated Éclats, the permanent multiplier and the next prestige reward. Before 1e12 produced, the prestige action is disabled and states the remaining requirement. At or above the threshold, the action requires an explicit confirmation describing the run data that will reset and the permanent reward that will remain. After success, the UI reconnects to the new state and saves normally. No modal framework, second currency shop, prestige upgrades or automation is introduced in this milestone.
+
+## 39.4 Verification contract
+
+Add red/green coverage for v4 migration, v5 roundtrip, invalid prestige values, exact 1e12 threshold, reward scaling, multiplier separation, repeated prestige accumulation, full-new-game clearing, and storage failure leaving the live run unchanged. Rerun all 181 existing core cases and all existing jsdom/Constellation suites. Extend Playwright with a prestige-path test using a controlled valid save rather than millions of clicks, then require both Foundation and Browser workflows to pass on the feature branch. Browser emulation is reported as browser-tested, not as a physical-phone test.
+
+
+## 39.5 Implementation and verification
+
+Implemented on branch `feature/foundation-2.2-prestige`. GameState now owns `prestigePoints` (HugeNumber) and `prestigeCount`; Economy owns reward and permanent multiplier derivation; GameEngine prepares a detached prestige candidate without mutating the live run; SaveSystem alone commits the v5 replacement. V4 and older saves load with neutral prestige values. Recovery import revalidates prestigePoints as a canonical HugeNumber. The Parcours view exposes the permanent total, multiplier, pending reward and a confirmed prestige action.
+
+Observed red/green: the first implementation failed the Foundation suite because historical schema assertions still required v4. After migrating those expectations, three failures remained: one test helper unavailable inside the VM context and two exact persisted-field assertions still describing v4. Those tests were corrected without weakening their checks. A dedicated storage-failure regression then verifies that a failed primary write leaves the live run byte-for-byte unchanged and enters uncertain mode.
+
+Final automated result on the feature branch: **187/187 Foundation cases**, existing targeted interface checks pass, **56/56 Constellation/Horizons DOM checks** pass, deterministic cadence remains 20 renders and one autosave per five simulated seconds. GitHub Actions Browser checks pass in Chromium for desktop and Pixel 5 emulation, including the new prestige path: locked below threshold, confirmed reset at 1e12, one permanent Éclat, ×1.1 multiplier, zero current wallet and persistence after reload. This is real browser automation, but not a physical-phone validation.
+
+No prestige shop, second prestige tier, timed buff, extra generator, or automation was added. Balance is intentionally conservative and must be observed in a long real play session before expanding the system.
