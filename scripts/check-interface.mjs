@@ -124,6 +124,7 @@ assert.equal(document.querySelector('[data-milestone-id="ten_mines"]') !== null,
 assert.equal(document.querySelector('[data-milestone-id="million_cookies"]') !== null, true, 'objectif million présent');
 assert.equal(document.querySelector('[data-milestone-id="all_recipes"]') !== null, true, 'objectif six recettes présent');
 assert.equal(document.querySelector('[data-milestone-id="five_labs"]') !== null, true, 'objectif cinq laboratoires présent');
+assert.equal(document.querySelector('.journey-shortcut')?.getAttribute('href'), '#productionTitle', 'raccourci vers la boutique');
 const ownedBeforeMilestoneCheck = state.ownedUpgrades;
 state.ownedUpgrades = ['reinforced_click', 'efficient_cursor', 'grandma_recipe', 'warm_ovens'];
 state.totalProduced = window.eval('HugeNumber.from(1000000)');
