@@ -45,3 +45,11 @@ new Script(`
   globalThis.loopCounts=counts;
 `).runInContext(context);
 console.log(`Cadence simulation : ${context.loopCounts.render} rendus, ${context.loopCounts.save} sauvegarde sur 5 s`);
+new Script(`
+  document.hidden=true;
+  const before={...counts};
+  CookieEmpireApp.prototype.loop.call(app,6000);
+  if(counts.tick!==before.tick || counts.render!==before.render || counts.save!==before.save)
+    throw new Error('La simulation avance alors que la page est masquée');
+  document.hidden=false;
+`).runInContext(context);
