@@ -2027,3 +2027,14 @@ Expose `npm run analyze:balance`; add a bounded observatory verification to `npm
 The first CI execution completed successfully. Under the exact deterministic greedy policy defined above, a fresh zero-click scenario correctly stalls at zero. Fresh 2 clicks/s reaches 1e12 totalProduced in **31,388 s (8 h 43 min 8 s)**; fresh 5 clicks/s in **13,587 s (3 h 46 min 27 s)**. Starting a fresh run with one permanent Éclat and the same 2 clicks/s reaches the threshold in **28,538 s (7 h 55 min 38 s)**, about 9.1% sooner than the zero-Éclat 2-click scenario. All three active scenarios followed 719 purchases under this heuristic and crossed with a pending reward around 1.01 Éclat.
 
 These measurements do not establish optimal play, human click endurance, AFK pacing or final balance. The modeled manual income is continuous at the declared rate and the greedy policy values immediate modeled income per cost; a human may save for gates or stop clicking. The result nevertheless shows no structural unreachable-prestige defect and no obvious runaway from the first +10% permanent multiplier. Therefore no balance constant is changed in this milestone. Real long-play observation remains the authority before adding prestige spending or another layer.
+
+
+# 41. Multi-prestige observatory — verify long-run Rayonnement scaling
+
+Specification BEFORE implementation, 2026-09-29 UTC. Baseline is Foundation 2.2 plus the first balance observatory at commit `4554258c4a84d676da86d94951d1a2ca7b6030c3`. The first-reset pacing is measured, but a permanent additive multiplier can still create undesirable later-cycle acceleration. Measure repeated threshold prestiges before introducing spendable Éclats or another progression layer.
+
+## 41.1 Contract
+
+Extend only the development observatory. For a declared click-rate scenario, simulate a fixed sequence of prestige cycles. Each cycle must begin from the previous cycle's real `GameEngine.prestigeCandidate().state`; do not manually manufacture the next prestige total. Use the existing deterministic purchase policy and stop each run at the same 1e12 threshold. Record per-cycle duration, earned reward, cumulative prestige points and derived permanent multiplier.
+
+This remains diagnostic, not gameplay. It must not change `index.html`, Persistence, Content, save schema or balance constants. Assertions require every requested active cycle to reach threshold, positive rewards, strictly increasing prestige points/count, non-increasing cycle duration under the same deterministic policy, and finite metrics. Record results and limitations before deciding whether Foundation 2.3 should add prestige content.
