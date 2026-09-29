@@ -936,7 +936,8 @@ class SaveSystem {
         state.ownedUpgrades=this.validateUpgrades(source.ownedUpgrades);
         state.prestigePoints=this.decodePrestigeNumber(source.prestigePoints);
         state.prestigeCurrency=this.decodePrestigeNumber(source.prestigeCurrency);
-        if(!state.prestigePoints || !state.prestigeCurrency) return null;
+        if(!state.prestigePoints || !state.prestigeCurrency ||
+          state.prestigeCurrency.compare(state.prestigePoints)>0) return null;
         state.prestigeCount=source.prestigeCount;
         state.lastSavedAt=source.lastSavedAt;
       }else if(data.version===5){
