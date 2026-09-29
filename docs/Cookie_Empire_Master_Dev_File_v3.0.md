@@ -2003,3 +2003,20 @@ No prestige shop, second prestige tier, timed buff, extra generator, or automati
 Post-merge adversarial review found one v5 validation defect: `prestigePoints` used `HugeNumber.fromJSON()` directly, so a locally corrupted v5 save could supply a non-integer exponent or another non-canonical representation. A red regression reproduced the acceptance before correction. Persistence now requires canonical prestige JSON (zero exactly `{m:0,e:0}`; otherwise mantissa in [1,10) and integer exponent) before constructing the HugeNumber. This tightening is deliberately scoped to the new v5 prestige field so historical number migration semantics are not silently changed.
 
 The audit also found two verification-contract gaps rather than demonstrated runtime failures: repeated prestige accumulation and full “Nouvelle partie” clearing of permanent prestige had no dedicated tests. Both now have explicit regression coverage. The terminology in 39.1 was corrected from “1 trillion” to the French long-scale “1 billion” for 1e12, matching the game's existing French scale table and player-facing text.
+
+
+# 40. Balance observatory — development tooling before further prestige content
+
+Specification BEFORE implementation, 2026-09-29 UTC. Foundation 2.2 Rayonnement is the playable baseline at `d299d58dca358a8fc909a3715175070103aa0fcc`. The prestige mechanic is structurally verified, but its pacing has not been measured through a long deterministic economy run. Do not add a prestige shop, second prestige layer or balance changes until this measurement exists.
+
+## 40.1 Scope and source of truth
+
+Add a development-only balance simulator under `scripts/`; it must never be embedded in `index.html` and must not add runtime dependencies or saved fields. It loads the real game classes/content from the playable HTML, so generator prices, upgrades, prestige formula and HugeNumber behavior remain single-source rather than copied into the analyzer.
+
+The simulator reports clearly labelled hypothetical manual-click scenarios; no click frequency becomes an engine or UI assumption. Each scenario starts from a fresh GameState, advances deterministic simulated seconds, credits the configured manual clicks through GameEngine, and uses a deterministic greedy purchase policy. Candidate purchases are evaluated from cloned authoritative state through the real Economy/GameEngine rules. The policy selects the affordable generator or research purchase with the greatest increase in combined modeled income `CPS + clickReward × scenarioClickRate` per unit cost. Ties are stable by content order. This policy is a diagnostic heuristic, not a claim about optimal human play.
+
+## 40.2 Safety and verification
+
+The observatory must terminate under an explicit horizon, never mutate Content definitions, never use wall-clock/offline gain and never write Persistence. It reports time to first prestige threshold, wallet, total produced, CPS, click reward, purchases and pending prestige reward. Automated checks require finite/non-negative metrics, threshold consistency when reached, and monotonic expectation that the same deterministic policy with more free manual clicks does not reach the first threshold later than a lower click-rate scenario. A zero-click fresh run is expected not to self-start and is reported as such rather than treated as a game defect.
+
+Expose `npm run analyze:balance`; add a bounded observatory verification to `npm test` only if execution remains fast. Record measured outputs, limitations and any discovered anomaly before changing balance.
