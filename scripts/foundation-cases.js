@@ -1218,6 +1218,12 @@ validateResearchGraph(UPGRADES);
       assert(save.decode(JSON.stringify(invalid))===null,'wallet invalide '+JSON.stringify(value));
     }
   });
+  test('2.3 audit : v6 refuse un portefeuille supérieur au Rayonnement total',()=>{
+    const save=new SaveSystem('v6-wallet-invariant',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();
+    s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(2);const data=JSON.parse(save.encode(s));
+    data.state.prestigeCurrency={m:3,e:0};
+    assert(save.decode(JSON.stringify(data))===null,'solde impossible refusé');
+  });
   test('2.3 RED : Nouvelle partie efface puissance et portefeuille',()=>{
     const s=GameState.create();s.prestigePoints=HugeNumber.from(7);s.prestigeCurrency=HugeNumber.from(3);s.prestigeCount=5;
     const fresh=GameState.create();assert(fresh.prestigePoints.isZero() && fresh.prestigeCurrency.isZero() && fresh.prestigeCount===0,'reset complet');
