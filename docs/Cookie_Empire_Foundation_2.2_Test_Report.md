@@ -18,12 +18,16 @@ Le premier passage Foundation après implémentation a échoué, comme attendu, 
 
 ## Résultats automatiques
 
-- Foundation : **187/187**.
+- Foundation après audit post-fusion : **189/189**.
 - Interface jsdom ciblée : réussite.
 - Constellation/Horizons : **56/56**.
 - Cadence : 20 rendus et 1 sauvegarde sur 5 secondes simulées.
 - Browser checks GitHub Actions : réussite dans Chromium desktop et émulation Pixel 5.
 - Nouveau scénario navigateur : prestige verrouillé sous le seuil, déverrouillage à 1e12, confirmation, +1 Éclat, ×1.1, wallet remis à zéro, Éclat conservé après reload.
+
+## Audit post-fusion
+
+Une relecture adversariale a reproduit un défaut de validation du nouveau champ v5 `prestigePoints` : une représentation HugeNumber non canonique pouvait être acceptée depuis une sauvegarde locale corrompue. Un test rouge a confirmé le défaut avant correction. Le décodage v5 exige désormais une mantisse canonique et un exposant entier pour ce champ. Deux régressions dédiées couvrent aussi les prestiges répétés et l'effacement complet des valeurs permanentes par « Nouvelle partie ». Après correction : **189/189 Foundation**, interface ciblée réussie, **56/56 Constellation/Horizons** et Browser checks desktop/Pixel 5 réussis sur `main`.
 
 ## Limites
 
