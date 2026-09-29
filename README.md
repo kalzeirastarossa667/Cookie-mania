@@ -20,7 +20,7 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 - [Master Dev File v3.0](docs/Cookie_Empire_Master_Dev_File_v3.0.md), source de vérité.
 - [Rapport Foundation 2.1](docs/Cookie_Empire_Foundation_2.1_Test_Report.md).
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
-- Node 24 : `npm ci`, puis `npm test`.
+- Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
 La suite exécute 189 cas de règles/persistance, les vérifications d'interface existantes et 56 assertions Constellation/Horizons. Playwright vérifie aussi Chromium sur ordinateur et émulation Pixel 5. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
 
