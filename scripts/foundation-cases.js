@@ -582,7 +582,7 @@ validateResearchGraph(UPGRADES);
   });
   test('prestige : v5 rejette valeurs permanentes invalides',()=>{
     const save=new SaveSystem('prestige-v5-invalid'),state=GameState.create(),raw=JSON.parse(save.encode(state));
-    for(const value of [null,{}, {m:-1,e:0}]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigePoints=value;assert(save.decode(JSON.stringify(f))===null,'points invalides');}
+    for(const value of [null,{}, {m:-1,e:0},{m:1,e:.5},{m:10,e:0},{m:0,e:99}]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigePoints=value;assert(save.decode(JSON.stringify(f))===null,'points invalides');}
     for(const value of [-1,0.5,'1',Number.MAX_SAFE_INTEGER+1]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigeCount=value;assert(save.decode(JSON.stringify(f))===null,'compteur invalide');}
   });
 
