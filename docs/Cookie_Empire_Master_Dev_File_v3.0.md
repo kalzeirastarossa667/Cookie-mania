@@ -2049,3 +2049,30 @@ Cycle duration therefore falls from about 8 h 43 min to 4 h 34 min by cycle ten:
 Architectural consequence for future prestige spending: `prestigePoints` currently represents accumulated permanent power. A shop must not silently spend this same value unless losing multiplier power is an explicit design choice. Prefer specifying a separate spendable balance and lifetime/power source before implementing prestige purchases. This is a future schema/economy decision, not implemented here.
 
 The ten-cycle analyzer is intentionally development-only. Its temporary inclusion in routine `npm test` is removed after this measured run because it materially increases CI duration; invoke `npm run analyze:balance` when economy/prestige changes require remeasurement.
+
+
+# 42. Foundation 2.3 — Rayonnement wallet separation
+
+Specification BEFORE implementation, 2026-09-29 UTC. Baseline: Foundation 2.2 plus the ten-cycle observatory at `1e92ba272454cb394542875fa870516cce803dd7`. The observatory shows progressive rather than runaway scaling through ten threshold prestiges. The next architectural risk is currency semantics: the existing `prestigePoints` is lifetime permanent power and must not later be spent directly by a shop.
+
+## 42.1 State and economy contract
+
+Foundation 2.3 introduces `prestigeCurrency` as a second authoritative HugeNumber in GameState. `prestigePoints` retains its existing meaning and remains the sole source of the permanent `1 + 0.10 × prestigePoints` multiplier. `prestigeCurrency` is the spendable Éclat balance reserved for future prestige purchases; no shop or spending action is introduced yet.
+
+On every successful prestige candidate, the same computed reward is added independently to both `prestigePoints` and `prestigeCurrency`. The two values may diverge in future when spending exists. A normal full “Nouvelle partie” clears both because GameState.create() is the full reset authority. Prestige preserves the existing wallet and adds the new reward.
+
+## 42.2 Persistence contract
+
+Advance the save schema explicitly from v5 to **v6**. V6 persists canonical `prestigePoints` and canonical `prestigeCurrency`, plus the existing authoritative fields. V5 migration maps `prestigeCurrency = prestigePoints`: every Éclat earned before spendable currency existed becomes available, while lifetime power is unchanged. V1–v4 migrate both values to zero. Both v6 prestige HugeNumbers require the same canonical validation rule already used for v5 prestigePoints. No derived multiplier is persisted.
+
+Existing transactional prestige semantics remain unchanged: live state is replaced only after the v6 candidate save is confirmed. Failed/ambiguous writes leave the live run unchanged.
+
+## 42.3 UI and terminology contract
+
+The Parcours prestige card must distinguish **Rayonnement total** (lifetime power) from **Éclats disponibles** (future spendable wallet) and continue to show the permanent multiplier. The prestige confirmation/reward message states that earned Éclats increase both lifetime Rayonnement and available balance. No disabled fake shop controls are added.
+
+Foundation/footer version advances to 2.3. Existing 16 generators, 22 research items, 44 milestones, prestige threshold/reward formula and all economy constants remain unchanged.
+
+## 42.4 Verification contract
+
+Follow red→green. Before implementation, add regression cases proving the new requirements fail on Foundation 2.2: fresh wallet zero, prestige credits both totals, repeated prestige preserves/adds wallet, v5 migration seeds wallet from lifetime points, v6 roundtrip, rejection of invalid/non-canonical v6 wallet values, and full New Game clearing both values. Existing v5 corruption protection must remain. Then implement minimally, rerun all Foundation/jsdom/Constellation checks, rerun the balance observatory to prove unchanged pacing, and require Playwright desktop/Pixel 5 to pass with wallet persistence visible after prestige/reload. Perform a second adversarial review before merge.
