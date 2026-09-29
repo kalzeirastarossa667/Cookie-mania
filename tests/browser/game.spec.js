@@ -39,7 +39,7 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
 });
 
 
-test('prestige confirmé conserve les éclats et réinitialise la partie', async ({ page }) => {
+test('Foundation 2.3 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigeButton')).toBeDisabled();
@@ -52,10 +52,13 @@ test('prestige confirmé conserve les éclats et réinitialise la partie', async
   page.once('dialog', dialog => dialog.accept());
   await page.locator('#prestigeButton').click();
   await expect(page.locator('#prestigePoints')).toHaveText('1');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('1');
   await expect(page.locator('#prestigeMultiplier')).toHaveText('×1.1');
   await page.locator('[data-nav="empire"]').click();
   await expect(page.locator('#balance')).toHaveText('0');
   await page.reload();
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigePoints')).toHaveText('1');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('1');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')).version)).toBe(6);
 });

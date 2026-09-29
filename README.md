@@ -1,6 +1,6 @@
 # Cookie Empire
 
-**Foundation 2.2 — Rayonnement** : clicker autonome avec **16 générateurs**, **22 recherches**, **44 objectifs** et un premier système de **prestige permanent**.
+**Foundation 2.3 — Rayonnement** : clicker autonome avec **16 générateurs**, **22 recherches**, **44 objectifs** et un système de **prestige permanent** avec Rayonnement total et portefeuille d’Éclats séparés.
 
 ## Jouer
 
@@ -22,7 +22,7 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
-La suite exécute 189 cas de règles/persistance, les vérifications d'interface existantes et 56 assertions Constellation/Horizons. Playwright vérifie aussi Chromium sur ordinateur et émulation Pixel 5. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
+La suite exécute 197 cas de règles/persistance, les vérifications d'interface existantes et 56 assertions Constellation/Horizons. Playwright vérifie aussi Chromium sur ordinateur et émulation Pixel 5. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
 
 Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
 
