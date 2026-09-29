@@ -119,7 +119,52 @@ function simulateBalanceScenario(spec){
     pendingReward:Economy.format(Economy.prestigeReward(state))
   };
 }
+function simulatePrestigeSeries(clickRate,cycles){
+  let state=GameState.create(),previousSeconds=null;
+  const rows=[];
+  for(let cycle=1;cycle<=cycles;cycle++){
+    // Reuse the same run logic with the prestige total carried by the authoritative candidate.
+    const spec={name:'cycle-'+cycle,clickRate,prestigePoints:state.prestigePoints.toString?.() ?? '0'};
+    // simulateBalanceScenario creates a fresh state, so run the equivalent loop from this authoritative cycle state.
+    Economy.refreshDerived(state);
+    const engine=new GameEngine(state),horizon=365*24*60*60;
+    let seconds=0,purchases=0,steps=0;
+    while(seconds<horizon && Economy.compare(state.totalProduced,'1e12')<0 && steps<200000){
+      steps++;
+      const actions=candidateActions(state,clickRate);
+      if(actions.length){
+        actions.sort((a,b)=>Economy.compare(a.score,b.score));
+        const chosen=actions[0];
+        const ok=chosen.kind==='generator'?engine.buyGenerator(chosen.id):engine.buyUpgrade(chosen.id);
+        if(!ok) throw new Error('Action candidate prestige invalide');
+        purchases++;
+        continue;
+      }
+      const income=modeledIncome(state,clickRate);
+      if(income.isZero()) break;
+      const nextCost=nextReachableCost(state);
+      let wait=1;
+      if(nextCost && Economy.compare(state.cookies,nextCost)<0) wait=boundedSeconds(Economy.divide(Economy.subtract(nextCost,state.cookies),income),horizon-seconds);
+      wait=Math.min(wait,horizon-seconds);
+      const amount=Economy.multiply(income,wait);
+      state.cookies=Economy.add(state.cookies,amount);
+      state.totalProduced=Economy.add(state.totalProduced,amount);
+      seconds+=wait;
+    }
+    if(Economy.compare(state.totalProduced,'1e12')<0) throw new Error('Cycle prestige non atteint');
+    const candidate=engine.prestigeCandidate();
+    if(!candidate || candidate.reward.isZero()) throw new Error('Récompense prestige absente');
+    const multiplier=Economy.prestigeMultiplier(candidate.state);
+    const row={cycle,seconds,purchases,steps,reward:Economy.format(candidate.reward),prestigePoints:Economy.format(candidate.state.prestigePoints),multiplier:Economy.format(multiplier),prestigeCount:candidate.state.prestigeCount};
+    if(previousSeconds!==null && seconds>previousSeconds) throw new Error('Un cycle prestige devient plus lent sous politique identique');
+    previousSeconds=seconds;
+    rows.push(row);
+    state=candidate.state;
+  }
+  return rows;
+}
 globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
+globalThis.__prestigeSeries=simulatePrestigeSeries(2,10);
 `,{filename:'balance-observatory'}).runInContext(context);
 
 const results=context.__balanceResults;
@@ -133,4 +178,5 @@ if(!byName['fresh-2-clicks'].reached || !byName['fresh-5-clicks'].reached) throw
 if(byName['fresh-5-clicks'].seconds>byName['fresh-2-clicks'].seconds) throw new Error('Plus de clics gratuits ralentissent le scénario déterministe');
 
 console.table(results);
+console.table(context.__prestigeSeries);
 console.log('Balance observatory: PASS');
