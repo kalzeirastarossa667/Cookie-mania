@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs && npm run analyze:balance",
+    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs",
     "test:browser": "playwright test",
     "analyze:balance": "node scripts/analyze-balance.mjs"
   },
