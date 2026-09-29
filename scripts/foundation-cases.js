@@ -586,6 +586,22 @@ validateResearchGraph(UPGRADES);
     for(const value of [-1,0.5,'1',Number.MAX_SAFE_INTEGER+1]){const f=JSON.parse(JSON.stringify(raw));f.state.prestigeCount=value;assert(save.decode(JSON.stringify(f))===null,'compteur invalide');}
   });
 
+  test('prestige : deux rayonnements accumulent les éclats sans fuite du run',()=>{
+    const state=GameState.create();state.totalProduced=HugeNumber.from('1e12');
+    const first=new GameEngine(state).prestigeCandidate();assert(first && first.state.prestigePoints.compare(1)===0 && first.state.prestigeCount===1,'premier');
+    first.state.totalProduced=HugeNumber.from('4e12');
+    const second=new GameEngine(first.state).prestigeCandidate();
+    assert(second && second.reward.compare(2)===0 && second.state.prestigePoints.compare(3)===0 && second.state.prestigeCount===2,'second');
+    assert(second.state.cookies.isZero() && second.state.totalProduced.isZero() && second.state.ownedUpgrades.length===0,'run neuf');
+  });
+  test('prestige : nouvelle partie efface les valeurs permanentes',()=>{
+    const storage=memoryStore(),save=new SaveSystem('prestige-full-reset',storage),state=GameState.create();
+    state.prestigePoints=HugeNumber.from('12.5');state.prestigeCount=7;
+    assert(save.save(state),'sauvegarde prestige');
+    const fresh=GameState.create();assert(save.newGame(fresh),'nouvelle partie');
+    const loaded=save.load();assert(loaded && loaded.prestigePoints.isZero() && loaded.prestigeCount===0,'prestige effacé');
+  });
+
   function memoryStore(initial={}){
     const data=new Map(Object.entries(initial));
     return {data,failGet:null,failSet:null,failRemove:null,writes:[],
