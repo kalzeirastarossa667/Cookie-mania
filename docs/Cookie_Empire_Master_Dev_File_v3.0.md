@@ -2038,3 +2038,14 @@ Specification BEFORE implementation, 2026-09-29 UTC. Baseline is Foundation 2.2 
 Extend only the development observatory. For a declared click-rate scenario, simulate a fixed sequence of prestige cycles. Each cycle must begin from the previous cycle's real `GameEngine.prestigeCandidate().state`; do not manually manufacture the next prestige total. Use the existing deterministic purchase policy and stop each run at the same 1e12 threshold. Record per-cycle duration, earned reward, cumulative prestige points and derived permanent multiplier.
 
 This remains diagnostic, not gameplay. It must not change `index.html`, Persistence, Content, save schema or balance constants. Assertions require every requested active cycle to reach threshold, positive rewards, strictly increasing prestige points/count, non-increasing cycle duration under the same deterministic policy, and finite metrics. Record results and limitations before deciding whether Foundation 2.3 should add prestige content.
+
+
+## 41.2 Measured ten-cycle baseline
+
+The observatory was deliberately re-enabled in the Foundation CI gate for one measurement run. At a constant hypothetical 2 clicks/s and the same deterministic purchase policy, cycles 1→10 reached the threshold in: **31,388; 28,515; 26,133; 24,040; 22,356; 20,877; 19,526; 18,382; 17,360; 16,427 seconds**. Cumulative prestige points progressed to about **10.1** and the permanent multiplier to about **×2.01**. Each threshold run earned about 1.01 Éclat under this policy.
+
+Cycle duration therefore falls from about 8 h 43 min to 4 h 34 min by cycle ten: material but progressive acceleration, consistent with the additive `1 + 0.10 × prestigePoints` formula rather than an observed runaway. No economy constant is changed.
+
+Architectural consequence for future prestige spending: `prestigePoints` currently represents accumulated permanent power. A shop must not silently spend this same value unless losing multiplier power is an explicit design choice. Prefer specifying a separate spendable balance and lifetime/power source before implementing prestige purchases. This is a future schema/economy decision, not implemented here.
+
+The ten-cycle analyzer is intentionally development-only. Its temporary inclusion in routine `npm test` is removed after this measured run because it materially increases CI duration; invoke `npm run analyze:balance` when economy/prestige changes require remeasurement.
