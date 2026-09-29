@@ -32,6 +32,7 @@ function cloneBalanceState(source){
   state.generators={...source.generators};
   state.ownedUpgrades=[...source.ownedUpgrades];
   state.prestigePoints=source.prestigePoints.clone();
+  state.prestigeCurrency=source.prestigeCurrency.clone();
   state.prestigeCount=source.prestigeCount;
   Economy.refreshDerived(state);
   return state;
