@@ -1968,7 +1968,7 @@ Specification recorded BEFORE implementation, 2026-09-28. Baseline: Foundation 2
 
 ## 39.1 Progression contract
 
-Foundation 2.2 introduces one permanent prestige resource, **Éclats d'empire**, represented by HugeNumber. Prestige becomes available only when the current run has produced at least **1 trillion (1e12) cookies**. The pending reward is `sqrt(totalProduced / 1e12)` Éclats; fractional values are intentional so the numeric engine remains scalable without integer truncation. The permanent production multiplier is `1 + 0.10 × prestigePoints` and applies to both automatic CPS and generator-derived click contribution. It does not multiply the base clickPower directly. The multiplier is derived in Economy and never saved as a cache.
+Foundation 2.2 introduces one permanent prestige resource, **Éclats d'empire**, represented by HugeNumber. Prestige becomes available only when the current run has produced at least **1 billion (1e12) cookies**. The pending reward is `sqrt(totalProduced / 1e12)` Éclats; fractional values are intentional so the numeric engine remains scalable without integer truncation. The permanent production multiplier is `1 + 0.10 × prestigePoints` and applies to both automatic CPS and generator-derived click contribution. It does not multiply the base clickPower directly. The multiplier is derived in Economy and never saved as a cache.
 
 A prestige resets the run resources only: cookies, current-run totalProduced, totalClicks, clickPower, generators and owned research return to their fresh-game values. It preserves accumulated prestigePoints and increments a safe integer prestigeCount. A normal “Nouvelle partie” remains a full reset and clears prestige as well. Milestones continue to describe the current run; no existing objective semantics are silently changed.
 
@@ -1996,3 +1996,10 @@ Observed red/green: the first implementation failed the Foundation suite because
 Final automated result on the feature branch: **187/187 Foundation cases**, existing targeted interface checks pass, **56/56 Constellation/Horizons DOM checks** pass, deterministic cadence remains 20 renders and one autosave per five simulated seconds. GitHub Actions Browser checks pass in Chromium for desktop and Pixel 5 emulation, including the new prestige path: locked below threshold, confirmed reset at 1e12, one permanent Éclat, ×1.1 multiplier, zero current wallet and persistence after reload. This is real browser automation, but not a physical-phone validation.
 
 No prestige shop, second prestige tier, timed buff, extra generator, or automation was added. Balance is intentionally conservative and must be observed in a long real play session before expanding the system.
+
+
+## 39.6 Post-merge audit correction
+
+Post-merge adversarial review found one v5 validation defect: `prestigePoints` used `HugeNumber.fromJSON()` directly, so a locally corrupted v5 save could supply a non-integer exponent or another non-canonical representation. A red regression reproduced the acceptance before correction. Persistence now requires canonical prestige JSON (zero exactly `{m:0,e:0}`; otherwise mantissa in [1,10) and integer exponent) before constructing the HugeNumber. This tightening is deliberately scoped to the new v5 prestige field so historical number migration semantics are not silently changed.
+
+The audit also found two verification-contract gaps rather than demonstrated runtime failures: repeated prestige accumulation and full “Nouvelle partie” clearing of permanent prestige had no dedicated tests. Both now have explicit regression coverage. The terminology in 39.1 was corrected from “1 trillion” to the French long-scale “1 billion” for 1e12, matching the game's existing French scale table and player-facing text.
