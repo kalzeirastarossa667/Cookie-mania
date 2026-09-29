@@ -925,6 +925,10 @@ class SaveSystem {
         state.clickPower=HugeNumber.fromJSON(source.clickPower);
         state.generators=this.validateGenerators(source.generators,true);
         state.ownedUpgrades=this.validateUpgrades(source.ownedUpgrades);
+        if(!source.prestigePoints || typeof source.prestigePoints!=='object' ||
+          !Number.isFinite(source.prestigePoints.m) || !Number.isInteger(source.prestigePoints.e) ||
+          source.prestigePoints.m<0 || source.prestigePoints.m>=10 ||
+          (source.prestigePoints.m===0 ? source.prestigePoints.e!==0 : source.prestigePoints.m<1)) return null;
         state.prestigePoints=HugeNumber.fromJSON(source.prestigePoints);
         state.prestigeCount=source.prestigeCount;
         state.lastSavedAt=source.lastSavedAt;
