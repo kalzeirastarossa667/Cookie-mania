@@ -1184,6 +1184,45 @@ validateResearchGraph(UPGRADES);
     const ids=GENERATOR_ERAS.flatMap(era=>era.ids);assert(ids.length===16 && new Set(ids).size===16 && ids.every(id=>owns(GENERATORS,id)),'partition');
   });
 
+
+  test('2.3 RED : portefeuille Éclats initialisé à zéro',()=>{
+    const s=GameState.create();assert(s.prestigeCurrency && s.prestigeCurrency.isZero(),'prestigeCurrency zéro');
+  });
+  test('2.3 RED : prestige crédite puissance et portefeuille',()=>{
+    const s=GameState.create();s.totalProduced=HugeNumber.from('1e12');const candidate=new GameEngine(s).prestigeCandidate();
+    assert(candidate && candidate.state.prestigePoints.compare(1)===0,'puissance');
+    assert(candidate.state.prestigeCurrency && candidate.state.prestigeCurrency.compare(1)===0,'portefeuille');
+  });
+  test('2.3 RED : prestige répété conserve et ajoute le portefeuille',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from('0.5');s.prestigeCount=2;s.totalProduced=HugeNumber.from('4e12');
+    const candidate=new GameEngine(s).prestigeCandidate();
+    assert(candidate.state.prestigePoints.compare(4)===0,'puissance cumulée');
+    assert(candidate.state.prestigeCurrency.compare('2.5')===0,'solde cumulé');
+  });
+  test('2.3 RED : migration v5 initialise le portefeuille depuis le total permanent',()=>{
+    const save=new SaveSystem('v5-wallet',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from('3.5');s.prestigeCount=3;
+    const legacy=JSON.parse(save.encode(s));legacy.version=5;delete legacy.state.prestigeCurrency;
+    const loaded=save.decode(JSON.stringify(legacy));
+    assert(loaded && loaded.prestigePoints.compare('3.5')===0 && loaded.prestigeCurrency.compare('3.5')===0,'migration');
+  });
+  test('2.3 RED : sauvegarde v6 roundtrip du portefeuille',()=>{
+    const save=new SaveSystem('v6-wallet',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(5);s.prestigeCurrency=HugeNumber.from('1.25');s.prestigeCount=4;
+    const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
+    assert(parsed.version===6,'version 6');
+    assert(loaded && loaded.prestigeCurrency.compare('1.25')===0 && loaded.prestigePoints.compare(5)===0,'roundtrip');
+  });
+  test('2.3 RED : v6 refuse les portefeuilles non canoniques',()=>{
+    const save=new SaveSystem('v6-invalid',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();const base=JSON.parse(save.encode(s));base.version=6;
+    for(const value of [{m:1,e:.5},{m:10,e:0},{m:.5,e:0},{m:0,e:4},{m:-1,e:0}]){
+      const invalid=JSON.parse(JSON.stringify(base));invalid.state.prestigeCurrency=value;
+      assert(save.decode(JSON.stringify(invalid))===null,'wallet invalide '+JSON.stringify(value));
+    }
+  });
+  test('2.3 RED : Nouvelle partie efface puissance et portefeuille',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(7);s.prestigeCurrency=HugeNumber.from(3);s.prestigeCount=5;
+    const fresh=GameState.create();assert(fresh.prestigePoints.isZero() && fresh.prestigeCurrency.isZero() && fresh.prestigeCount===0,'reset complet');
+  });
+
   const failed=results.filter(r=>!r.ok);
   const status=document.createElement('div');
   status.id='testStatus';
