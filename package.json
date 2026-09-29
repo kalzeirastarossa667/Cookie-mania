@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs",
-    "test:browser": "playwright test"
+    "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs && npm run analyze:balance",
+    "test:browser": "playwright test",
+    "analyze:balance": "node scripts/analyze-balance.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
