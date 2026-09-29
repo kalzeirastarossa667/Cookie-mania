@@ -2076,3 +2076,18 @@ Foundation/footer version advances to 2.3. Existing 16 generators, 22 research i
 ## 42.4 Verification contract
 
 Follow red→green. Before implementation, add regression cases proving the new requirements fail on Foundation 2.2: fresh wallet zero, prestige credits both totals, repeated prestige preserves/adds wallet, v5 migration seeds wallet from lifetime points, v6 roundtrip, rejection of invalid/non-canonical v6 wallet values, and full New Game clearing both values. Existing v5 corruption protection must remain. Then implement minimally, rerun all Foundation/jsdom/Constellation checks, rerun the balance observatory to prove unchanged pacing, and require Playwright desktop/Pixel 5 to pass with wallet persistence visible after prestige/reload. Perform a second adversarial review before merge.
+
+
+## 42.5 Implementation, audit and verification
+
+Implemented on `feature/foundation-2.3-prestige-wallet`. GameState now owns `prestigeCurrency` separately from lifetime `prestigePoints`. Prestige candidates add the same reward to both values while the permanent multiplier continues to read only lifetime points. Save schema is v6; v5 migration clones existing lifetime points into the new wallet, and v1–v4 remain neutral. The Parcours card exposes Rayonnement total, available Éclats and multiplier separately. No spending action or economy constant was added.
+
+Red→green evidence: the seven initial 2.3 cases produced a deliberate **190/196** Foundation failure before implementation. After implementation, three old exact-schema assertions were the only failures and were updated from v5 to v6 without weakening derived-cache exclusions. The resulting suite passed 196/196.
+
+The required second adversarial review then found a real validation gap: canonical v6 values allowed `prestigeCurrency > prestigePoints`, impossible under the current earning-only wallet model. A dedicated red CI run reproduced this as **196/197**, with only the new invariant failing. V6 decode now rejects wallet values above lifetime Rayonnement. The temporary red-run trigger was not retained.
+
+Final instrumented verification passes **197/197 Foundation**, targeted interface checks and **56/56 Constellation/Horizons DOM checks**. The balance observatory was deliberately rerun after carrying the new authoritative wallet through simulation clones: first 2-click/s threshold remains 31,388 s and cycle ten remains 16,427 s, so Foundation 2.3 does not alter measured pacing. The observatory was then removed from routine `npm test` again.
+
+Playwright coverage is updated to require both lifetime Rayonnement and available wallet to show 1 after a threshold prestige, survive reload, and persist under save v6. Chromium desktop and Pixel 5 emulation are the browser validation surfaces; physical-phone validation remains separate.
+
+Next progression work may define a small data-driven prestige shop, but only against the separated wallet. Spending must reduce `prestigeCurrency` transactionally while never reducing `prestigePoints` unless a future design explicitly changes that lifetime-power contract.
