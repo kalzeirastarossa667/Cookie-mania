@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "node scripts/check-foundation.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "analyze:balance": "node scripts/analyze-balance.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
