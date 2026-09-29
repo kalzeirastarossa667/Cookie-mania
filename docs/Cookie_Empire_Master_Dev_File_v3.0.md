@@ -2020,3 +2020,10 @@ The simulator reports clearly labelled hypothetical manual-click scenarios; no c
 The observatory must terminate under an explicit horizon, never mutate Content definitions, never use wall-clock/offline gain and never write Persistence. It reports time to first prestige threshold, wallet, total produced, CPS, click reward, purchases and pending prestige reward. Automated checks require finite/non-negative metrics, threshold consistency when reached, and monotonic expectation that the same deterministic policy with more free manual clicks does not reach the first threshold later than a lower click-rate scenario. A zero-click fresh run is expected not to self-start and is reported as such rather than treated as a game defect.
 
 Expose `npm run analyze:balance`; add a bounded observatory verification to `npm test` only if execution remains fast. Record measured outputs, limitations and any discovered anomaly before changing balance.
+
+
+## 40.3 First measured baseline
+
+The first CI execution completed successfully. Under the exact deterministic greedy policy defined above, a fresh zero-click scenario correctly stalls at zero. Fresh 2 clicks/s reaches 1e12 totalProduced in **31,388 s (8 h 43 min 8 s)**; fresh 5 clicks/s in **13,587 s (3 h 46 min 27 s)**. Starting a fresh run with one permanent Éclat and the same 2 clicks/s reaches the threshold in **28,538 s (7 h 55 min 38 s)**, about 9.1% sooner than the zero-Éclat 2-click scenario. All three active scenarios followed 719 purchases under this heuristic and crossed with a pending reward around 1.01 Éclat.
+
+These measurements do not establish optimal play, human click endurance, AFK pacing or final balance. The modeled manual income is continuous at the declared rate and the greedy policy values immediate modeled income per cost; a human may save for gates or stop clicking. The result nevertheless shows no structural unreachable-prestige defect and no obvious runaway from the first +10% permanent multiplier. Therefore no balance constant is changed in this milestone. Real long-play observation remains the authority before adding prestige spending or another layer.
