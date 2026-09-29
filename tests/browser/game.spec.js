@@ -39,7 +39,7 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
 });
 
 
-test('prestige confirmé conserve les éclats et réinitialise la partie', async ({ page }) => {
+test('Foundation 2.3 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigeButton')).toBeDisabled();
