@@ -52,10 +52,13 @@ test('prestige confirmé conserve les éclats et réinitialise la partie', async
   page.once('dialog', dialog => dialog.accept());
   await page.locator('#prestigeButton').click();
   await expect(page.locator('#prestigePoints')).toHaveText('1');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('1');
   await expect(page.locator('#prestigeMultiplier')).toHaveText('×1.1');
   await page.locator('[data-nav="empire"]').click();
   await expect(page.locator('#balance')).toHaveText('0');
   await page.reload();
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigePoints')).toHaveText('1');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('1');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')).version)).toBe(6);
 });
