@@ -121,14 +121,27 @@ function simulateBalanceScenario(spec){
     pendingReward:Economy.format(Economy.prestigeReward(state))
   };
 }
+function prestigePolicyOrder(policy){
+  const catalogue=Object.keys(PRESTIGE_UPGRADES);
+  if(policy==='hold') return [];
+  if(policy==='sequential') return catalogue;
+  const preferred=policy==='click-priority'
+    ? ['radiant_click','radiant_precision','radiant_production','harmonic_resonance','radiant_convergence']
+    : policy==='production-priority'
+      ? ['radiant_click','radiant_production','harmonic_resonance','radiant_precision','radiant_convergence']
+      : null;
+  if(!preferred) throw new Error('Politique prestige inconnue');
+  return [...preferred.filter(id=>catalogue.includes(id)),...catalogue.filter(id=>!preferred.includes(id))];
+}
 function spendPrestigeShop(state,policy){
   const before=state.prestigeCurrency.clone(),pointsBefore=state.prestigePoints.clone(),purchased=[];
-  if(policy==='sequential'){
+  const order=prestigePolicyOrder(policy);
+  if(order.length){
     const engine=new GameEngine(state);
     let progressed=true;
     while(progressed){
       progressed=false;
-      for(const id of Object.keys(PRESTIGE_UPGRADES)){
+      for(const id of order){
         if(Economy.prestigeUpgradeQuote(state,id).status==='available'){
           const cost=HugeNumber.from(PRESTIGE_UPGRADES[id].cost),walletBefore=state.prestigeCurrency.clone();
           if(!engine.buyPrestigeUpgrade(id)) throw new Error('Achat prestige annoncé disponible mais refusé');
@@ -138,7 +151,7 @@ function spendPrestigeShop(state,policy){
         }
       }
     }
-  }else if(policy!=='hold') throw new Error('Politique prestige inconnue');
+  }
   if(Economy.compare(state.prestigeCurrency,0)<0 || Economy.compare(state.prestigeCurrency,state.prestigePoints)>0) throw new Error('Portefeuille prestige invalide');
   return {walletBefore:Economy.format(before),walletAfter:Economy.format(state.prestigeCurrency),purchased};
 }
@@ -184,6 +197,8 @@ function simulatePrestigeSeries(clickRate,cycles,policy='hold'){
 globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
 globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
 globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
+globalThis.__prestigeClickSeries=simulatePrestigeSeries(2,15,'click-priority');
+globalThis.__prestigeProductionSeries=simulatePrestigeSeries(2,15,'production-priority');
 `,{filename:'balance-observatory'}).runInContext(context);
 
 const results=context.__balanceResults;
@@ -206,11 +221,27 @@ for(let i=0;i<shop.length;i++){
   if(!Array.isArray(row.purchasedPrestigeUpgrades)||!Array.isArray(row.ownedPrestigeUpgrades)) throw new Error('Traçage boutique absent');
   if(i && row.ownedPrestigeUpgrades.length<shop[i-1].ownedPrestigeUpgrades.length) throw new Error('Possession prestige non monotone');
 }
-const expected=['radiant_click','radiant_production','harmonic_resonance'];
-const finalOwned=shop.at(-1).ownedPrestigeUpgrades;
-if(finalOwned.some(id=>!expected.includes(id))) throw new Error('Achat prestige inconnu dans la série');
-for(let i=0;i<finalOwned.length;i++) if(finalOwned[i]!==expected[i]) throw new Error('Ordre/prérequis prestige invalide');
+function assertValidPrestigeSeries(rows,label){
+  let previous=new Set();
+  for(const row of rows){
+    const owned=new Set(row.ownedPrestigeUpgrades);
+    if(owned.size!==row.ownedPrestigeUpgrades.length) throw new Error(label+': doublon prestige');
+    for(const id of owned){
+      if(!PRESTIGE_UPGRADES[id]) throw new Error(label+': achat prestige inconnu');
+      if(!(PRESTIGE_UPGRADES[id].requires ?? []).every(dep=>owned.has(dep))) throw new Error(label+': prérequis absent');
+    }
+    for(const id of previous) if(!owned.has(id)) throw new Error(label+': possession non monotone');
+    previous=owned;
+  }
+}
+const click=context.__prestigeClickSeries,production=context.__prestigeProductionSeries;
+assertValidPrestigeSeries(shop,'sequential');
+assertValidPrestigeSeries(click,'click-priority');
+assertValidPrestigeSeries(production,'production-priority');
+if(!click.at(-1).ownedPrestigeUpgrades.includes('radiant_convergence') || !production.at(-1).ownedPrestigeUpgrades.includes('radiant_convergence')) throw new Error('Les politiques de branche doivent pouvoir converger');
 console.table(results);
 console.table(hold);
 console.table(shop);
+console.table(click);
+console.table(production);
 console.log('Balance observatory: PASS');
