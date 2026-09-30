@@ -2293,3 +2293,16 @@ Bug workflow was followed on the current baseline:
 - Browser checks / Playwright passed on the corrected runtime using the updated GitHub Actions v7 toolchain.
 
 No Economy, GameState, save-schema or persistence semantics changed. This correction is presentation-cache invalidation only. The older Foundation 2.5 audit PR #11 is superseded by this revalidated 2.7 correction and must not be merged separately.
+
+
+# 47. Foundation 2.7.1 — stability and playability checkpoint
+
+Foundation 2.7.1 is a patch-level stabilization release on top of Foundation 2.7. It does **not** change save schema v7, prestige costs, multiplier factors, generator balance, research balance or milestone thresholds.
+
+A second presentation-cache dependency defect was reproduced red-first on the actual 2.7 baseline. `Economy.deriveMultipliers()` depends on `ownedUpgrades`, `ownedPrestigeUpgrades` and lifetime `prestigePoints`. The UI cache key now includes all three authoritative inputs. Red commit `c337ad518cfbd5ab5cd13b3bfeb65ec5afb9ac08` reached 220/220 Foundation rules and then failed exactly on the stale-Rayonnement display assertion. Runtime fix `ce7ad59f3ff62fbe05e2af37e16221339fa03edf` changed only cache invalidation.
+
+For playability, prestige nodes now include data-driven branch metadata and the Journey UI visibly identifies **Voie commune**, **Voie clic**, **Voie production** and **Convergence**. Branch semantics remain non-exclusive and unchanged economically.
+
+Verification on commit `b47a39d8efd3fe4de27e3da0f0c457b6862b1d8e`: **220/220 Foundation**, targeted interface PASS, **56/56 Constellation/Horizons DOM**, and **10/10 Playwright** (5 desktop Chromium + 5 Pixel 5 emulation). The added browser scenario exercises the branch path through convergence and verifies exact remaining Éclats and unchanged lifetime Rayonnement. Physical-phone testing remains unperformed.
+
+The detailed evidence is recorded in `docs/Cookie_Empire_Foundation_2.7.1_Stability_Report.md`. Foundation 2.8 must not change economy/progression until this 2.7.1 checkpoint is merged and post-merge CI is green.
