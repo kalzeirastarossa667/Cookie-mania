@@ -2363,3 +2363,18 @@ Final branch verification after the release-marker correction:
 The first browser attempt had **10 PASS / 2 FAIL** only because a historical prestige scenario still asserted the literal footer label “Foundation 2.7.1 · Stable”. No Formspree behavior failed. The assertion was updated to the new release marker without weakening the prestige path, after which all 12 browser scenarios passed.
 
 Automated Formspree requests are mocked/intercepted. End-to-end delivery to the project owner's actual mailbox is therefore intentionally **not yet verified**. After deployment, one manual feedback submission and mailbox confirmation is the remaining acceptance check for external delivery. Gameplay remains usable if Formspree is unavailable.
+
+
+## 48.6 User end-to-end validation — 2026-09-30
+
+User report: « Tout marche bien c'est magnifique ».
+
+This confirms the Foundation 2.7.2 feedback flow in real use after GitHub Pages deployment:
+- the public game loads correctly;
+- the in-game feedback form is usable;
+- a real submission was accepted;
+- Formspree delivered the feedback through to the project owner's e-mail successfully.
+
+This closes the only remaining external acceptance check recorded in section 48.4/48.5. Foundation 2.7.2 Feedback is now the latest user-validated public baseline. Save schema remains v7 and no gameplay/economy change is implied by this acceptance.
+
+Automated evidence remains: 220/220 Foundation, targeted interface PASS, 56/56 Constellation/Horizons DOM, and 12/12 Playwright on the merged runtime. Physical-device coverage beyond the user's successful real-use confirmation is not claimed exhaustively.
