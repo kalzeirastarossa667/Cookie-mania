@@ -91,7 +91,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.7.1 · Stable');
+  await expect(page.locator('footer')).toContainText('Foundation 2.7.2 · Feedback');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -127,4 +127,46 @@ test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu
   await expect(convergence).toHaveText('Acquis');
   await expect(page.locator('#prestigePoints')).toHaveText('20');
   await expect(page.locator('#prestigeCurrency')).toHaveText('6');
+});
+
+
+test('Foundation 2.7.2 : le feedback est envoyé sans quitter ni modifier la partie', async ({ page }) => {
+  let intercepted = null;
+  await page.route('https://formspree.io/f/mdekjdqz', async route => {
+    const request = route.request();
+    intercepted = { method: request.method(), body: request.postData() || '' };
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+
+  await page.goto('/');
+  const form = page.locator('#feedbackForm');
+  await expect(form).toBeVisible();
+  await expect(form).toHaveAttribute('action', 'https://formspree.io/f/mdekjdqz');
+
+  const before = await page.evaluate(() => ({
+    cookies: window.cookieEmpire.state.cookies.toJSON(),
+    produced: window.cookieEmpire.state.totalProduced.toJSON(),
+    clicks: window.cookieEmpire.state.totalClicks,
+  }));
+  const urlBefore = page.url();
+
+  await page.locator('#feedbackName').fill('Testeur Playwright');
+  await page.locator('#feedbackRating').selectOption('5');
+  await page.locator('#feedbackMessage').fill('Le formulaire fonctionne sans toucher à ma partie.');
+  await page.locator('#feedbackSubmit').click();
+
+  await expect(page.locator('#feedbackStatus')).toContainText('Merci');
+  await expect(page.locator('#feedbackMessage')).toHaveValue('');
+  expect(page.url()).toBe(urlBefore);
+  expect(intercepted?.method).toBe('POST');
+  expect(intercepted?.body).toContain('Le formulaire fonctionne sans toucher');
+  expect(await page.evaluate(() => ({
+    cookies: window.cookieEmpire.state.cookies.toJSON(),
+    produced: window.cookieEmpire.state.totalProduced.toJSON(),
+    clicks: window.cookieEmpire.state.totalClicks,
+  }))).toEqual(before);
 });

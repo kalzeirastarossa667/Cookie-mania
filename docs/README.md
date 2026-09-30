@@ -1,6 +1,7 @@
 # Documentation actuelle
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
+- [Feedback 2.7.2](Cookie_Empire_Foundation_2.7.2_Feedback_Report.md) : formulaire joueur Formspree, isolation du GameState et vérification navigateur.
 - [Stabilisation 2.7.1](Cookie_Empire_Foundation_2.7.1_Stability_Report.md) : cache de multiplicateurs, lisibilité des branches et vérification navigateur.
 - [Analyse de balance 2.6](Cookie_Empire_Foundation_2.6_Balance_Report.md) : politiques de dépense d’Éclats sur dix cycles.
 - [Vérifications 2.5](Cookie_Empire_Foundation_2.5_Test_Report.md).
