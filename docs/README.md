@@ -1,6 +1,7 @@
 # Documentation actuelle
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
+- [Timing 2.8.1](Cookie_Empire_Foundation_2.8.1_Timing_Report.md) : correction de la perte de production automatique lors des rafales de clics.
 - [Qualité 2.8](Cookie_Empire_Foundation_2.8_Quality_Report.md) : tests génératifs, correction HugeNumber, axe Playwright et audit de portée.
 - [Feedback 2.7.2](Cookie_Empire_Foundation_2.7.2_Feedback_Report.md) : formulaire joueur Formspree, isolation du GameState et vérification navigateur.
 - [Stabilisation 2.7.1](Cookie_Empire_Foundation_2.7.1_Stability_Report.md) : cache de multiplicateurs, lisibilité des branches et vérification navigateur.
