@@ -207,3 +207,21 @@ test('Foundation 2.8 : aucune violation axe sérieuse ou critique dans les vues 
     .map(violation => ({ id: violation.id, impact: violation.impact, targets: violation.nodes.map(node => node.target) }));
   expect(feedbackViolations, JSON.stringify(feedbackViolations, null, 2)).toEqual([]);
 });
+
+
+test('Foundation 2.8 : le thème clair reste sans violation axe sérieuse ou critique', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#themeButton').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  for (const view of ['empire', 'workshop', 'research', 'journey']) {
+    await page.locator(`[data-nav="${view}"]`).click();
+    await expect(page.locator(`#view-${view}`)).toBeVisible();
+    const violations = await seriousAccessibilityViolations(page);
+    expect(violations, `light/${view}: ${JSON.stringify(violations, null, 2)}`).toEqual([]);
+  }
+  const feedbackResults = await new AxeBuilder({ page }).include('#feedbackForm').analyze();
+  const feedbackViolations = feedbackResults.violations
+    .filter(violation => ['serious', 'critical'].includes(violation.impact))
+    .map(violation => ({ id: violation.id, impact: violation.impact, targets: violation.nodes.map(node => node.target) }));
+  expect(feedbackViolations, `light/feedback: ${JSON.stringify(feedbackViolations, null, 2)}`).toEqual([]);
+});
