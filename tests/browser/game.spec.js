@@ -114,6 +114,37 @@ test('Foundation 2.9 B : le jeu explique les blocages, le prestige et la prochai
 });
 
 
+
+test('Foundation 2.9 C : la couche visuelle reste sûre et distingue les quatre ères', async ({ page }) => {
+  await page.goto('/');
+
+  const safety = await page.evaluate(() => ({
+    cookieAnimation: getComputedStyle(document.getElementById('cookieButton')).animationName,
+    topbarBackdrop: getComputedStyle(document.querySelector('.topbar')).backdropFilter,
+    webkitTopbarBackdrop: getComputedStyle(document.querySelector('.topbar')).webkitBackdropFilter,
+    heroAmbient: getComputedStyle(document.querySelector('.hero'), '::after').animationName,
+  }));
+  expect(safety.cookieAnimation).toBe('none');
+  expect([safety.topbarBackdrop, safety.webkitTopbarBackdrop].filter(Boolean).every(value => value === 'none')).toBe(true);
+  expect(safety.heroAmbient).not.toBe('none');
+
+  await page.locator('[data-nav="workshop"]').click();
+  const eraVisuals = await page.locator('#generatorList .generator').evaluateAll(cards => {
+    const entries = [];
+    for (const era of [...new Set(cards.map(card => card.dataset.era))]) {
+      const card = cards.find(item => item.dataset.era === era);
+      entries.push([era, getComputedStyle(card).getPropertyValue('--era-accent').trim()]);
+    }
+    return Object.fromEntries(entries);
+  });
+  expect(Object.keys(eraVisuals)).toHaveLength(4);
+  expect(new Set(Object.values(eraVisuals).filter(Boolean)).size).toBe(4);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.hero'), '::after').animationName)).toBe('none');
+});
+
+
 test('Foundation 2.5 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
