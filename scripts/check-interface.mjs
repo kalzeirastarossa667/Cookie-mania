@@ -115,6 +115,12 @@ assert.equal(state.clickReward.compare(window.eval('HugeNumber.from(366)')), 0, 
 cosmic.click();
 assert.equal(state.clickReward.compare(window.eval('HugeNumber.from(1098)')), 0, 'achat cosmique triple les clics');
 assert.equal(app.saveSystem.decode(app.saveSystem.encode(state))?.clickReward.compare(window.eval('HugeNumber.from(1098)')), 0, 'clic recalculé après rechargement');
+const cursorUnitBeforePrestige=document.querySelector('[data-generator-id="cursor"] [data-role="production"]').textContent;
+state.prestigePoints=window.eval('HugeNumber.from(3)');state.prestigeCurrency=window.eval('HugeNumber.from(3)');
+assert.equal(app.engine.buyPrestigeUpgrade('radiant_click'),true,'premier achat prestige pour test cache');
+assert.equal(app.engine.buyPrestigeUpgrade('radiant_production'),true,'second achat prestige pour test cache');
+app.ui.render();
+assert.notEqual(document.querySelector('[data-generator-id="cursor"] [data-role="production"]').textContent,cursorUnitBeforePrestige,'achat prestige invalide le cache des taux générateurs');
 
 assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 44, 'progression prolongée');
 assert.match(document.getElementById('milestoneCount').textContent, /44 étapes/, 'nouveau total visible');
