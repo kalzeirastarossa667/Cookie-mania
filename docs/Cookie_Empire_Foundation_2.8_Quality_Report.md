@@ -137,3 +137,17 @@ No balance observatory rerun is required because no economy formula or constant 
 ## Next logical step
 
 After merge and post-merge CI, Foundation 2.8 becomes the quality baseline. The next gameplay milestone should be specified separately and should use player feedback plus measured pacing before adding another broad multiplier or prestige tier. External incremental-game repositories remain design references, not code templates.
+
+
+## Merge and deployment acceptance
+
+PR #19 was squash-merged into `main` as `1045cb26e64e0d9c4f4482347234f56fece2b459`.
+
+Post-merge checks on that exact commit:
+- Foundation checks: **SUCCESS**;
+- Browser checks: **SUCCESS**;
+- GitHub Pages build and deployment: **SUCCESS**.
+
+The packaged `index.html` and `archive/releases/cookie-empire-foundation-2.8-quality.html` share Git blob `ef9cbfe849eaeee605c4f2d0978a142bfd5ad66b`.
+
+Foundation 2.8 Quality is the current merged/deployed baseline. Physical-device screen-reader validation remains outside the automated evidence.
