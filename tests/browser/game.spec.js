@@ -273,30 +273,32 @@ test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendan
 test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Régression spécifique au viewport mobile');
   await page.goto('/');
+
+  async function expectAboveNav(selector) {
+    const target = page.locator(selector).last();
+    await target.evaluate(element => element.scrollIntoView({ block: 'end', behavior: 'instant' }));
+    const clearance = await target.evaluate(element => {
+      const nav = document.querySelector('.game-nav').getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
+      return {
+        targetBottom: rect.bottom,
+        navTop: nav.top,
+        viewportHeight: innerHeight,
+        scrollY,
+      };
+    });
+    expect(clearance.targetBottom, selector + ' ' + JSON.stringify(clearance)).toBeLessThanOrEqual(clearance.navTop - 8);
+  }
+
   await expect(page.locator('#view-empire')).toBeVisible();
-
-  const clearance = await page.evaluate(() => {
-    const target = document.getElementById('objectiveShortcut');
-    target.scrollIntoView({ block: 'end', behavior: 'instant' });
-    const nav = document.querySelector('.game-nav').getBoundingClientRect();
-    const rect = target.getBoundingClientRect();
-    return {
-      targetBottom: rect.bottom,
-      navTop: nav.top,
-      viewportHeight: innerHeight,
-      scrollY,
-    };
-  });
-
-  expect(clearance.targetBottom, JSON.stringify(clearance)).toBeLessThanOrEqual(clearance.navTop - 8);
+  await expectAboveNav('#objectiveShortcut');
 
   await page.locator('[data-nav="workshop"]').click();
-  const lastGenerator = page.locator('#generatorList .generator').last();
-  await lastGenerator.evaluate(element => element.scrollIntoView({ block: 'end', behavior: 'instant' }));
-  const workshopOverlap = await page.evaluate(() => {
-    const nav = document.querySelector('.game-nav').getBoundingClientRect();
-    const target = document.querySelector('#generatorList .generator:last-child').getBoundingClientRect();
-    return target.bottom - nav.top;
-  });
-  expect(workshopOverlap).toBeLessThanOrEqual(-8);
+  await expectAboveNav('#generatorList .generator');
+
+  await page.locator('[data-nav="research"]').click();
+  await expectAboveNav('#upgradeList .upgrade-card');
+
+  await page.locator('[data-nav="journey"]').click();
+  await expectAboveNav('#milestoneDetails');
 });
