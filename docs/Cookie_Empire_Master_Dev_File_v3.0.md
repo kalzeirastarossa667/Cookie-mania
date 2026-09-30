@@ -2549,3 +2549,26 @@ Required evidence:
 - Foundation/property/interface/Constellation suites remain green;
 - no horizontal overflow introduced;
 - user should recheck the public page on the physical Android browser that produced the recording.
+
+## 51.4 Red/green evidence and implementation — 2026-09-30
+
+Video analysis and the CSS cascade were checked before implementation. The fixed navigation begins at y=656 in the Pixel 5 viewport used by Playwright while the Empire target ended at y=711 when brought to the viewport end. The red regression therefore measured **55 px of overlap**. All historical browser scenarios were green in that red run; only the new mobile-layout assertion failed.
+
+The CSS repair is presentation-only:
+- introduce one `--bottom-nav-clearance` value equal to 82 px plus the platform safe-area inset;
+- use that value for the floating quick-click offset;
+- add viewport `scroll-padding-bottom` equal to the navigation clearance plus an 8 px visual gap;
+- remove the old feedback-only 76 px bottom-margin workaround;
+- preserve the existing Constellation 2.0 document-end padding rather than stacking a second redundant page padding.
+
+A post-implementation audit caught and removed an earlier redundant `.app` padding override before acceptance. The final patch therefore contains no dead duplicate padding rule.
+
+Green evidence on commit `2a2a2a933b756694161dd72ffb072ac50c4ea892`:
+- **220/220 Foundation PASS**;
+- deterministic cadence remains 20 renders / 1 autosave over 5 s;
+- Foundation 2.8 properties PASS;
+- targeted interface PASS;
+- **56/56 Constellation/Horizons DOM PASS**;
+- Playwright: **19 PASS + 1 expected desktop skip in 46.1 s**. The 2.8.2 regression is deliberately mobile-only and passes on Pixel 5 emulation after checking Empire, Atelier, Recherche and Parcours.
+
+No GameState field, Economy formula, GameEngine timing rule, HugeNumber behavior, persistence field/schema, generator/research/prestige data, Formspree endpoint or autosave cadence changed. Physical Android validation remains required after deployment because the defect was originally observed in a user-provided phone recording.

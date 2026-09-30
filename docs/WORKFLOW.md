@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.1 Timing, dérivée de Foundation 2.8 Quality. Save schema v7 inchangé. Le correctif ne touche qu’au temps actif visible : aucun temps monotone visible n’est jeté lorsqu’une frame est retardée. GameState, économie, contenu, persistence et Formspree restent inchangés.
+Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.2 Mobile, dérivée de Foundation 2.8.1 Timing. Save schema v7 inchangé. Le correctif 2.8.2 est exclusivement CSS/layout : il ajoute un dégagement cohérent pour la navigation basse fixe et ne touche ni GameState, économie, moteur de temps, contenu, persistence ni Formspree.
 
 ## Rangement
 
@@ -35,3 +35,6 @@ Foundation 2.7.2 a validé **12/12 scénarios Playwright** en 16,4 s sur la bran
 
 
 Foundation 2.8.1 : **18/18 Playwright PASS en 44,7 s** sur la branche de correction, soit 9 desktop Chromium + 9 Pixel 5 émulé. Le test timing occupe volontairement le thread ~1,2 s tout en cliquant et vérifie que le CPS continue d’être crédité.
+
+
+Foundation 2.8.2 : 20 cas Playwright déclarés, **19 PASS + 1 skip attendu** sur la branche de correction. Le cas mobile-only vérifie que les éléments de fin d’Empire, Atelier, Recherche et Parcours restent au-dessus de la navigation fixe sous émulation Pixel 5. Foundation reste **220/220**, propriétés PASS, interface PASS et Constellation **56/56**.
