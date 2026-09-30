@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Audit du 28 septembre 2026 UTC. Version jouable : Foundation 2.5 Éclat Shop. Baseline de développement : Foundation 2.6 Shop Balance Model (diagnostic, sans changement runtime).
+Checkpoint du 30 septembre 2026 UTC. Version jouable et baseline de développement : Foundation 2.7 Branching Prestige Progression. Save schema v7. Le merge `175cb19789a42adf29b38ad0ff48469c2de0b60c` a été revalidé sur `main` par Foundation checks et Browser checks.
 
 ## Rangement
 
@@ -8,8 +8,8 @@ index.html reste à la racine et ne change pas pendant ce rangement. scripts/ co
 
 ## Outils configurés
 
-- GitHub Actions : npm ci et npm test, cache npm fondé sur package-lock.json, limite de dix minutes, annulation des anciennes exécutions du même événement et de la même branche. Les changements purement documentaires ne déclenchent pas la suite ; lancement manuel disponible.
-- Dependabot : contrôle hebdomadaire de npm et des actions GitHub, propositions limitées et mises à jour mineures/correctives npm regroupées. Aucune fusion automatique.
+- GitHub Actions : npm ci et npm test, cache npm fondé sur package-lock.json, limite de dix minutes, annulation des anciennes exécutions du même événement et de la même branche. Les feature branches sont vérifiées par pull_request ; les push déclenchent les suites sur main afin d’éviter les doublons de CI. Les changements purement documentaires ne déclenchent pas la suite ; lancement manuel disponible.
+- Dependabot : contrôle mensuel de npm et des actions GitHub, mises à jour routinières regroupées, limites de PR ouvertes réduites. Aucune fusion automatique ; les mécanismes de sécurité ne sont pas volontairement désactivés.
 - .nvmrc : Node 24. .editorconfig : encodage et fins de ligne cohérents. .gitignore : dépendances et fichiers temporaires hors dépôt.
 - AGENTS.md : orientation immédiate vers les sources actuelles et règles de travail.
 - API Git tree/commit/ref : publication groupée en un commit, avec vérification de la branche et mise à jour sans force.
