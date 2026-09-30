@@ -1185,6 +1185,40 @@ validateResearchGraph(UPGRADES);
   });
 
 
+  test('2.5 RED : boutique prestige vide au départ',()=>{
+    const s=GameState.create();assert(Array.isArray(s.ownedPrestigeUpgrades) && s.ownedPrestigeUpgrades.length===0,'possession vide');
+    assert(Object.keys(PRESTIGE_UPGRADES).length===3,'trois achats');
+  });
+  test('2.5 RED : achat Éclat débite le portefeuille sans réduire le Rayonnement',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(3);s.prestigeCurrency=HugeNumber.from(3);const e=new GameEngine(s);
+    assert(e.buyPrestigeUpgrade('radiant_click'),'achat');
+    assert(s.prestigeCurrency.compare(2)===0 && s.prestigePoints.compare(3)===0,'séparation');
+    assert(s.clickReward.compare('1.1')===0,'bonus clic');
+  });
+  test('2.5 RED : achats invalides ne mutent rien',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(1);s.prestigeCurrency=HugeNumber.from(1);const e=new GameEngine(s);
+    for(const id of ['radiant_production','missing']){const before=JSON.stringify(s);assert(!e.buyPrestigeUpgrade(id) && JSON.stringify(s)===before,id);}
+    assert(e.buyPrestigeUpgrade('radiant_click'),'premier achat');const before=JSON.stringify(s);
+    assert(!e.buyPrestigeUpgrade('radiant_click') && !e.buyPrestigeUpgrade('radiant_production') && JSON.stringify(s)===before,'doublon et fonds insuffisants');
+  });
+  test('2.5 RED : prestige conserve les achats permanents',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(1);s.ownedPrestigeUpgrades=['radiant_click'];s.totalProduced=HugeNumber.from('1e12');
+    const candidate=new GameEngine(s).prestigeCandidate();assert(candidate && candidate.state.ownedPrestigeUpgrades.join(',')==='radiant_click','conservé');
+    assert(candidate.state.prestigeCurrency.compare(2)===0 && candidate.state.prestigePoints.compare(3)===0,'récompense');
+  });
+  test('2.5 RED : v6 migre vers v7 sans achat prestige',()=>{
+    const save=new SaveSystem('v6-to-v7',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(1);
+    const legacy=JSON.parse(save.encode(s));legacy.version=6;delete legacy.state.ownedPrestigeUpgrades;
+    const loaded=save.decode(JSON.stringify(legacy));assert(loaded && loaded.ownedPrestigeUpgrades.length===0,'migration');
+  });
+  test('2.5 RED : v7 roundtrip et schéma autoritaire',()=>{
+    const save=new SaveSystem('v7-shop',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(3);s.prestigeCurrency=HugeNumber.from(2);s.ownedPrestigeUpgrades=['radiant_click'];new GameEngine(s);
+    const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
+    assert(parsed.version===7 && parsed.state.ownedPrestigeUpgrades.join(',')==='radiant_click','v7');
+    assert(loaded && loaded.ownedPrestigeUpgrades.join(',')==='radiant_click' && loaded.clickReward.compare('1.1')===0,'roundtrip');
+    assert(!Object.hasOwn(parsed.state,'prestigeShopMultiplier'),'pas de cache');
+  });
+
   test('2.4 : quatre synergies sont définies et inactives au départ',()=>{
     assert(Object.keys(SYNERGIES).length===4,'catalogue');
     const s=GameState.create();assert(Economy.deriveActiveSynergies(s).length===0,'aucune synergie gratuite');
