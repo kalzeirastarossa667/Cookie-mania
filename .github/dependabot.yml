@@ -3,13 +3,26 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-    open-pull-requests-limit: 3
+      interval: monthly
+    open-pull-requests-limit: 2
     groups:
-      npm-minor-patch:
-        update-types: [minor, patch]
+      npm-routine:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    labels:
+      - dependencies
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-    open-pull-requests-limit: 2
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      actions-routine:
+        patterns:
+          - "*"
+    labels:
+      - dependencies
