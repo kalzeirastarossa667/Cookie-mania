@@ -47,7 +47,7 @@ test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruir
 
   const cards = page.locator('#generatorList .generator');
   await expect(cards).toHaveCount(16);
-  const cursor = page.locator('[data-generator-id="cursor"]');
+  const cursor = page.locator('#generatorList .generator[data-generator-id="cursor"]');
   await expect(cursor.locator('.generator-description')).toContainText('Automatise les premiers gestes');
   const details = cursor.locator('details.generator-details');
   await expect(details).not.toHaveAttribute('open', '');
@@ -81,7 +81,7 @@ test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruir
   await expect(cursor.locator('[data-buy-mode="1"]')).toBeVisible();
   await expect(cursor.locator('[data-buy-mode="10"]')).toBeVisible();
   await expect(cursor.locator('[data-buy-mode="max"]')).toBeVisible();
-  expect(await page.evaluate(() => window.__a3CursorCard === document.querySelector('[data-generator-id="cursor"]'))).toBe(true);
+  expect(await page.evaluate(() => window.__a3CursorCard === document.querySelector('#generatorList .generator[data-generator-id="cursor"]'))).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
 });
 
