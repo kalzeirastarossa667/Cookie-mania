@@ -2,6 +2,7 @@ name: Foundation checks
 
 on:
   push:
+    branches: [main]
     paths:
       - 'index.html'
       - 'scripts/**'

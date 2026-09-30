@@ -1185,9 +1185,53 @@ validateResearchGraph(UPGRADES);
   });
 
 
+
+  test('2.7 RED : validation prestige indépendante de l’ordre sérialisé',()=>{
+    const save=new SaveSystem('v7-branch-order',{getItem(){return null;},setItem(){},removeItem(){}});
+    const canonical=['radiant_click','radiant_production','harmonic_resonance'];
+    const reordered=['harmonic_resonance','radiant_click','radiant_production'];
+    assert(save.validatePrestigeUpgrades(reordered).join(',')===canonical.join(','),'canonicalisation');
+  });
+  test('2.7 RED : prérequis prestige validés comme ensemble',()=>{
+    const save=new SaveSystem('v7-branch-deps',{getItem(){return null;},setItem(){},removeItem(){}});
+    let threw=false;try{save.validatePrestigeUpgrades(['radiant_production']);}catch{threw=true;}
+    assert(threw,'prérequis absent rejeté');
+  });
+
+
+  test('2.7 : les deux branches sont disponibles après la racine',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(10);s.prestigeCurrency=HugeNumber.from(10);const e=new GameEngine(s);
+    assert(e.buyPrestigeUpgrade('radiant_click'),'racine');
+    assert(Economy.prestigeUpgradeQuote(s,'radiant_production').status==='available','branche production');
+    assert(Economy.prestigeUpgradeQuote(s,'radiant_precision').status==='available','branche clic');
+  });
+  test('2.7 : chaque branche peut être achetée en premier sans verrouiller l’autre',()=>{
+    for(const first of ['radiant_production','radiant_precision']){
+      const other=first==='radiant_production'?'radiant_precision':'radiant_production';
+      const s=GameState.create();s.prestigePoints=HugeNumber.from(10);s.prestigeCurrency=HugeNumber.from(10);const e=new GameEngine(s);
+      assert(e.buyPrestigeUpgrade('radiant_click') && e.buyPrestigeUpgrade(first),'première branche');
+      assert(Economy.prestigeUpgradeQuote(s,other).status==='available' && e.buyPrestigeUpgrade(other),'autre branche');
+    }
+  });
+  test('2.7 : convergence exige les deux voies et conserve des débits exacts',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(20);s.prestigeCurrency=HugeNumber.from(20);const e=new GameEngine(s);
+    for(const id of ['radiant_click','radiant_production','harmonic_resonance'])assert(e.buyPrestigeUpgrade(id),id);
+    assert(Economy.prestigeUpgradeQuote(s,'radiant_convergence').status==='locked','clic manquant');
+    assert(e.buyPrestigeUpgrade('radiant_precision'),'branche clic');
+    const points=s.prestigePoints.clone(),wallet=s.prestigeCurrency.clone();
+    assert(e.buyPrestigeUpgrade('radiant_convergence'),'convergence');
+    assert(s.prestigePoints.compare(points)===0 && Economy.subtract(wallet,s.prestigeCurrency).compare(5)===0,'débit sans perte de Rayonnement');
+  });
+  test('2.7 : sauvegarde v7 historique reste compatible',()=>{
+    const save=new SaveSystem('v7-old-shop',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();
+    s.prestigePoints=HugeNumber.from(10);s.prestigeCurrency=HugeNumber.from(3);s.ownedPrestigeUpgrades=['radiant_click','radiant_production','harmonic_resonance'];new GameEngine(s);
+    const loaded=save.decode(save.encode(s));
+    assert(loaded && loaded.ownedPrestigeUpgrades.join(',')==='radiant_click,radiant_production,harmonic_resonance','ancienne possession');
+  });
+
   test('2.5 RED : boutique prestige vide au départ',()=>{
     const s=GameState.create();assert(Array.isArray(s.ownedPrestigeUpgrades) && s.ownedPrestigeUpgrades.length===0,'possession vide');
-    assert(Object.keys(PRESTIGE_UPGRADES).length===3,'trois achats');
+    assert(Object.keys(PRESTIGE_UPGRADES).length===5,'cinq achats');
   });
   test('2.5 RED : achat Éclat débite le portefeuille sans réduire le Rayonnement',()=>{
     const s=GameState.create();s.prestigePoints=HugeNumber.from(3);s.prestigeCurrency=HugeNumber.from(3);const e=new GameEngine(s);

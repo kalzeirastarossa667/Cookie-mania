@@ -1,6 +1,7 @@
 name: Browser checks
 on:
   push:
+    branches: [main]
     paths: ['index.html', 'tests/browser/**', 'scripts/serve-test.mjs', 'playwright.config.js', 'package*.json', '.github/workflows/browser.yml']
   pull_request:
     paths: ['index.html', 'tests/browser/**', 'scripts/serve-test.mjs', 'playwright.config.js', 'package*.json', '.github/workflows/browser.yml']
