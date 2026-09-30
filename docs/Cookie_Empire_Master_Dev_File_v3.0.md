@@ -2261,3 +2261,21 @@ Red→green is required before runtime changes. Add tests for: both branch nodes
 Extend the balance observatory with deterministic branch policies (at minimum click-priority and production-priority) in addition to hold. Measure acquisition timing and cycle times before accepting final costs/effects. Neither modeled branch should be strictly worse under every modeled condition merely because of implementation order, and the combined tree must not cause uncontrolled prestige-cycle compression.
 
 Because runtime/UI will change, final verification requires the full Foundation/interface/Constellation suites plus Playwright desktop Chromium and Pixel 5 emulation. Physical-phone testing remains separate.
+
+
+## 46.4 Implementation, architecture correction and measured verification
+
+Foundation 2.7 keeps save schema **v7**. The catalogue now contains five permanent purchases: the existing `radiant_click` root and `radiant_production` branch, a new click branch `radiant_precision` (cost 2, click ×1.08), the existing `harmonic_resonance`, and `radiant_convergence` (cost 5, requires both the click path and resonance path, global CPS ×1.04). Purchases remain non-exclusive; branch choice affects timing/order, not eventual reachability.
+
+The pre-2.7 persistence validator contained an architectural flaw: prerequisite validity depended on the serialized array order. A dedicated red test failed first. Persistence now validates uniqueness/known IDs as a set, validates every prerequisite against that complete ownership set, then returns ownership canonicalized to catalogue order. This preserves deterministic serialization while making prerequisite semantics independent of incidental JSON ordering. Existing Foundation 2.5 v7 ownership `radiant_click,radiant_production,harmonic_resonance` remains valid without migration.
+
+Automated Foundation verification after the correction reached **220/220**. Playwright on the runtime-changing branch passed in GitHub Actions for desktop Chromium and Pixel 5 emulation. Physical-phone validation remains unperformed.
+
+The shop-aware observatory was temporarily restored to CI for the 2.7 measurement, then removed again from routine CI. Full observatory: **PASS**. The historical hold baseline remains cycle 1 **25,141 s** and cycle 10 **13,148 s** at 2 clicks/s. Under the five-node tree, deterministic click-priority and production-priority both acquire the common root after cycle 1 and converge on all five purchases after cycle 14. At cycle 15 the modeled times are **8,349 s** for click-priority and **8,341 s** for production-priority. The near-equal late result does not prove human balance, but it shows no gross implementation-order domination in this deterministic model. Sequential cycle 10 is **10,653 s**. Wallet debit, unchanged lifetime Rayonnement, prerequisite validity and monotonic ownership are asserted by the analyzer.
+
+## 46.5 CI / Dependabot maintenance performed alongside 2.7
+
+Repository CI previously ran the same Foundation/Browser work on both feature-branch `push` and `pull_request`, creating duplicate runs, cancellations and notification noise. Feature-branch push checks are now suppressed: `push` workflows target `main`, while feature branches are validated through their pull request. Main still receives post-merge push verification and manual `workflow_dispatch` remains available.
+
+Dependabot itself was not failing: the existing `actions/setup-node` and `actions/checkout` update PRs had successful Foundation checks when inspected. To reduce routine notification volume without disabling security handling, scheduled npm and GitHub Actions version updates are changed from weekly to monthly, routine updates are grouped, and simultaneous open PR limits are reduced. Security alerts/updates are not intentionally disabled by this maintenance.
+
