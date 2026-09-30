@@ -2623,3 +2623,46 @@ Green pre-packaging evidence on `b36387604ef68d148e75fd9fc0ef30e1329369bb`:
 Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. Physical Android validation remains required after public deployment because the defect was originally exposed by the user’s phone screenshot.
 
 Release packaging updates only visible version metadata/documentation and archives a byte-identical copy of the playable file. Foundation and Browser workflows must pass again on the packaged runtime before merge.
+
+# 53. Foundation 2.9 — visual identity refresh
+
+## 53.1 Purpose and scope
+
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: Foundation 2.8.3 Menu.
+
+The goal is a presentation-only redesign inspired by the clarity, spectacle and progression staging of modern science/evolution incremental games such as Cell to Singularity, without copying its assets, code, exact layout or visual identity. Cookie Empire keeps its own galactic pastry identity.
+
+The redesign must leave GameState, Economy, GameEngine, HugeNumber, persistence key/schema v7, generator/research/prestige formulas, offline rules, timing semantics, Formspree endpoint and progression thresholds unchanged.
+
+## 53.2 Visual and interaction contract
+
+- Galaxy mode remains the default visual identity; light mode remains fully supported.
+- Empire must be the visual focal point: strong cookie scene, visible progression/destinations, clear next objective and direct route to research.
+- The sticky resource HUD must establish a clear hierarchy between reserve, per-click income and CPS without hiding the settings menu. Foundation 2.8.3 stacking behavior remains mandatory.
+- Bottom navigation remains the primary route between Empire, Atelier, Recherche and Parcours. Foundation 2.8.2 mobile clearance and safe-area behavior remain mandatory.
+- Workshop generator cards must be more informative and easier to scan. Each card must show a short role description, effective per-unit production, per-unit click contribution, owned count, purchase prices and wait/availability information.
+- Research cards must keep effect, prerequisites and ownership state visible; visual styling may make branches feel more like a progression tree but must not change dependency logic.
+- Parcours/prestige must clearly distinguish current-run progress, permanent Rayonnement and spendable Éclats.
+- Depth may use layered gradients, glows, borders and restrained CSS-only ambient motion. Motion must not interfere with input and must be disabled by prefers-reduced-motion.
+- No external game assets or copied code are introduced. Icons remain emoji/SVG/CSS already owned by this standalone file.
+
+## 53.3 Generator guidance metadata
+
+Add one immutable presentation-only `description` string to each of the 16 generator definitions. Descriptions explain the fantasy/role of the generator and help the player understand progression. They are not saved, do not participate in calculations and do not alter generator IDs, base costs, growth rates or base CPS.
+
+## 53.4 Verification contract
+
+The implementation must:
+- prove all 16 generator cards render a non-empty role description;
+- keep all existing Foundation/property/interface/Constellation checks green;
+- keep the existing Pixel 5 bottom-navigation and settings-menu hit-testing regressions green;
+- keep serious/critical axe violations at zero in dark and light themes across Empire, Atelier, Recherche, Parcours and feedback;
+- keep the document within viewport width on desktop and mobile;
+- audit the diff for any unintended state, save-schema, economy, timing or progression change.
+
+A balance-observatory rerun is not required when formulas/constants remain byte-for-byte unchanged.
+
+## 53.5 Acceptance gate
+
+Automated browser emulation is development evidence, not physical-device certification. Final visual acceptance still requires a real-phone/user inspection of readability, hierarchy, menu actions, scrolling, generator cards and bottom navigation.
+
