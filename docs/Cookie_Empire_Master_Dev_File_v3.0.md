@@ -2279,3 +2279,17 @@ Repository CI previously ran the same Foundation/Browser work on both feature-br
 
 Dependabot itself was not failing: the existing `actions/setup-node` and `actions/checkout` update PRs had successful Foundation checks when inspected. To reduce routine notification volume without disabling security handling, scheduled npm and GitHub Actions version updates are changed from weekly to monthly, routine updates are grouped, and simultaneous open PR limits are reduced. Security alerts/updates are not intentionally disabled by this maintenance.
 
+
+
+## 46.6 Post-merge audit correction — prestige UI multiplier cache
+
+A stale presentation-cache defect was revalidated against the actual Foundation 2.7 `main`, rather than assumed from the older Foundation 2.5 audit branch. The UI generator-rate cache signature depended only on `ownedUpgrades`, although `Economy.deriveMultipliers` also depends on `ownedPrestigeUpgrades`. Authoritative `cps` and `clickReward` were correct after an Éclat purchase, but displayed per-unit generator rates could remain stale until another cache invalidation or reload.
+
+Bug workflow was followed on the current baseline:
+- red commit `736595dd7ecb0e7d9e921f62434e0be0efcd9b93` added the targeted interface assertion only;
+- GitHub Actions failed exactly on `achat prestige invalide le cache des taux générateurs`;
+- runtime fix `dc68544d52d1c8d4de25d1de680fef24f320ec6b` changed only the presentation cache signature so it includes both normal research ownership and permanent prestige ownership;
+- Foundation regression returned **220/220**, targeted interface simulation passed, and Constellation returned **56** DOM checks;
+- Browser checks / Playwright passed on the corrected runtime using the updated GitHub Actions v7 toolchain.
+
+No Economy, GameState, save-schema or persistence semantics changed. This correction is presentation-cache invalidation only. The older Foundation 2.5 audit PR #11 is superseded by this revalidated 2.7 correction and must not be merged separately.
