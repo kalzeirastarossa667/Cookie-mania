@@ -222,7 +222,7 @@ const feedbackForm = document.getElementById('feedbackForm');
 assert.ok(feedbackForm, 'section de feedback présente');
 assert.equal(feedbackForm.method.toLowerCase(), 'post', 'feedback utilise POST');
 assert.equal(feedbackForm.action, 'https://formspree.io/f/mdekjdqz', 'endpoint Formspree exact');
-assert.equal(feedbackForm.querySelector('input[name="game_version"]')?.value, 'Foundation 2.8.1', 'métadonnée version feedback actualisée');
+assert.equal(feedbackForm.querySelector('input[name="game_version"]')?.value, 'Foundation 2.8.2', 'métadonnée version feedback actualisée');
 const feedbackMessage = document.getElementById('feedbackMessage');
 const feedbackSubmit = document.getElementById('feedbackSubmit');
 const feedbackStatus = document.getElementById('feedbackStatus');

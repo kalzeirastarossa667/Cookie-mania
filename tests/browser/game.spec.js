@@ -92,7 +92,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.8.1 · Timing');
+  await expect(page.locator('footer')).toContainText('Foundation 2.8.2 · Mobile');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -267,4 +267,38 @@ test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendan
   expect(result.cps).toEqual({ m: 1, e: 0 });
   expect(result.automatic.e).toBe(0);
   expect(result.automatic.m).toBeGreaterThan(1.1);
+});
+
+
+test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Régression spécifique au viewport mobile');
+  await page.goto('/');
+
+  async function expectAboveNav(selector) {
+    const target = page.locator(selector).last();
+    await target.evaluate(element => element.scrollIntoView({ block: 'end', behavior: 'instant' }));
+    const clearance = await target.evaluate(element => {
+      const nav = document.querySelector('.game-nav').getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
+      return {
+        targetBottom: rect.bottom,
+        navTop: nav.top,
+        viewportHeight: innerHeight,
+        scrollY,
+      };
+    });
+    expect(clearance.targetBottom, selector + ' ' + JSON.stringify(clearance)).toBeLessThanOrEqual(clearance.navTop - 8);
+  }
+
+  await expect(page.locator('#view-empire')).toBeVisible();
+  await expectAboveNav('#objectiveShortcut');
+
+  await page.locator('[data-nav="workshop"]').click();
+  await expectAboveNav('#generatorList .generator');
+
+  await page.locator('[data-nav="research"]').click();
+  await expectAboveNav('#upgradeList .upgrade-card');
+
+  await page.locator('[data-nav="journey"]').click();
+  await expectAboveNav('#milestoneDetails');
 });
