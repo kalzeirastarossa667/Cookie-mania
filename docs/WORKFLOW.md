@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Audit du 28 septembre 2026 UTC. Version jouable : Foundation 2.2 Rayonnement.
+Audit du 28 septembre 2026 UTC. Version jouable : Foundation 2.4 Synergies.
 
 ## Rangement
 
