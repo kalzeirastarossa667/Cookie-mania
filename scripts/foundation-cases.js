@@ -1185,23 +1185,45 @@ validateResearchGraph(UPGRADES);
   });
 
 
-  test('2.4 RED : quatre synergies sont définies et inactives au départ',()=>{
+  test('2.4 : quatre synergies sont définies et inactives au départ',()=>{
     assert(Object.keys(SYNERGIES).length===4,'catalogue');
-    const s=GameState.create(),active=Economy.deriveActiveSynergies(s);
-    assert(active.length===0,'aucune synergie gratuite');
+    const s=GameState.create();assert(Economy.deriveActiveSynergies(s).length===0,'aucune synergie gratuite');
   });
-  test('2.4 RED : maîtrise artisanale récompense deux spécialisations voisines',()=>{
+  test('2.4 : Atelier complice applique exactement ses deux facteurs',()=>{
     const s=GameState.create();s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];new GameEngine(s);
-    const before=Economy.deriveValues(s),active=Economy.deriveActiveSynergies(s);
-    assert(active.some(item=>item.id==='artisan_duo'),'synergie active');
-    assert(s.cps.compare(before.cps)>0 && s.clickReward.compare(before.clickReward)>0,'bonus CPS et clic');
+    assert(Economy.deriveActiveSynergies(s).map(item=>item.id).join(',')==='artisan_duo','activation unique');
+    assert(s.cps.compare('24.2')===0,'22 CPS ×1.10');
+    assert(s.clickReward.compare('25.3')===0,'(1 + 22) ×1.10');
   });
-  test('2.4 RED : synergies restent dérivées et survivent au rechargement',()=>{
+  test('2.4 : une moitié de paire ne déclenche aucun bonus',()=>{
+    const s=GameState.create();s.generators.cursor=10;s.ownedUpgrades=['expert_cursor'];new GameEngine(s);
+    assert(Economy.deriveActiveSynergies(s).length===0,'inactive');
+    assert(s.cps.compare(2)===0 && s.clickReward.compare(3)===0,'économie historique');
+  });
+  test('2.4 : plusieurs synergies se cumulent et le recalcul reste idempotent',()=>{
+    const s=GameState.create();for(const id of ['cursor','grandma','oven','cocoa_mine'])s.generators[id]=10;
+    s.ownedUpgrades=['expert_cursor','expert_grandma','expert_oven','expert_cocoa_mine'];new GameEngine(s);
+    assert(Economy.deriveActiveSynergies(s).length===2,'deux synergies');
+    const cps=s.cps.clone(),click=s.clickReward.clone();for(let i=0;i<40;i++)Economy.refreshDerived(s);
+    assert(s.cps.compare(cps)===0 && s.clickReward.compare(click)===0,'pas de cumul fantôme');
+  });
+  test('2.4 : synergies restent dérivées et survivent au rechargement',()=>{
     const save=new SaveSystem('synergy-24',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();
     s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];new GameEngine(s);
     const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
-    assert(!Object.hasOwn(parsed.state,'activeSynergies'),'aucun cache persisté');
+    assert(parsed.version===6 && !Object.hasOwn(parsed.state,'activeSynergies'),'schéma v6 inchangé');
     assert(Economy.deriveActiveSynergies(loaded).some(item=>item.id==='artisan_duo'),'reconstruction');
+    assert(loaded.cps.compare('24.2')===0 && loaded.clickReward.compare('25.3')===0,'effets reconstruits');
+  });
+  test('2.4 : catalogue de synergies invalide rejeté',()=>{
+    const valid=SYNERGIES.artisan_duo,bad=[
+      {x:{...valid,id:'x',requires:['expert_cursor']}},
+      {x:{...valid,id:'x',requires:['expert_cursor','expert_cursor']}},
+      {x:{...valid,id:'x',requires:['expert_cursor','missing']}},
+      {x:{...valid,id:'x',cpsFactor:'0.9'}},
+      {x:{...valid,id:'x',clickFactor:'0.5'}}
+    ];
+    for(const definitions of bad){let threw=false;try{validateSynergyContent(definitions);}catch{threw=true;}assert(threw,'invalide');}
   });
 
   test('2.3 RED : portefeuille Éclats initialisé à zéro',()=>{
