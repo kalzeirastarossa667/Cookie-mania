@@ -36,7 +36,7 @@ const progressionSpecs=[
     description:'Exerce réellement ×10 puis Max dès que leur contrat déterministe est atteignable, puis revient aux achats unitaires/recherches par coût/gain.',
     clickRate:2,
     mode:'prestige-cycles',
-    prestigeCycles:3,
+    prestigeCycles:1,
     controlOrder:['x10','max']
   },
   {
@@ -44,7 +44,7 @@ const progressionSpecs=[
     description:'Exerce réellement Max puis ×10 dès que leur contrat déterministe est atteignable, puis revient aux achats unitaires/recherches par coût/gain.',
     clickRate:2,
     mode:'prestige-cycles',
-    prestigeCycles:3,
+    prestigeCycles:1,
     controlOrder:['max','x10']
   },
   {
