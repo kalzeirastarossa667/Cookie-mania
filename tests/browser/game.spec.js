@@ -219,3 +219,39 @@ test('Foundation 2.8 : le thème clair reste sans violation axe sérieuse ou cri
     .map(violation => ({ id: violation.id, impact: violation.impact, targets: violation.nodes.map(node => node.target) }));
   expect(feedbackViolations, `light/feedback: ${JSON.stringify(feedbackViolations, null, 2)}`).toEqual([]);
 });
+
+
+test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendant un retard de frame', async ({ page }) => {
+  await page.goto('/?test=1');
+  const result = await page.evaluate(() => {
+    const app = window.cookieEmpire;
+    const state = app.state;
+    state.cookies = HugeNumber.zero();
+    state.totalProduced = HugeNumber.zero();
+    state.totalClicks = 0;
+    state.generators.grandma = 1;
+    Economy.refreshDerived(state);
+
+    const clickReward = state.clickReward.clone();
+    for (let i = 0; i < 10; i++) document.getElementById('cookieButton').click();
+
+    const originalRaf = window.requestAnimationFrame;
+    window.requestAnimationFrame = () => 0;
+    app.lastFrame = 1000;
+    app.loop(2500);
+    window.requestAnimationFrame = originalRaf;
+
+    const manual = clickReward.multiply(state.totalClicks);
+    const automatic = Economy.subtract(state.totalProduced, manual);
+    return {
+      clicks: state.totalClicks,
+      cps: state.cps.toJSON(),
+      automatic: automatic.toJSON(),
+      totalProduced: state.totalProduced.toJSON(),
+    };
+  });
+
+  expect(result.clicks).toBe(10);
+  expect(result.cps).toEqual({ m: 1, e: 0 });
+  expect(result.automatic).toEqual({ m: 1.5, e: 0 });
+});
