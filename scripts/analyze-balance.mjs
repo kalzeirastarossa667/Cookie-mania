@@ -194,6 +194,7 @@ function simulatePrestigeSeries(clickRate,cycles,policy='hold'){
   }
   return rows;
 }
+globalThis.__prestigeCatalogue=Object.fromEntries(Object.entries(PRESTIGE_UPGRADES).map(([id,d])=>[id,{requires:[...(d.requires ?? [])]}]));
 globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
 globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
 globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
@@ -221,14 +222,15 @@ for(let i=0;i<shop.length;i++){
   if(!Array.isArray(row.purchasedPrestigeUpgrades)||!Array.isArray(row.ownedPrestigeUpgrades)) throw new Error('Traçage boutique absent');
   if(i && row.ownedPrestigeUpgrades.length<shop[i-1].ownedPrestigeUpgrades.length) throw new Error('Possession prestige non monotone');
 }
+const prestigeCatalogue=context.__prestigeCatalogue;
 function assertValidPrestigeSeries(rows,label){
   let previous=new Set();
   for(const row of rows){
     const owned=new Set(row.ownedPrestigeUpgrades);
     if(owned.size!==row.ownedPrestigeUpgrades.length) throw new Error(label+': doublon prestige');
     for(const id of owned){
-      if(!PRESTIGE_UPGRADES[id]) throw new Error(label+': achat prestige inconnu');
-      if(!(PRESTIGE_UPGRADES[id].requires ?? []).every(dep=>owned.has(dep))) throw new Error(label+': prérequis absent');
+      if(!prestigeCatalogue[id]) throw new Error(label+': achat prestige inconnu');
+      if(!(prestigeCatalogue[id].requires ?? []).every(dep=>owned.has(dep))) throw new Error(label+': prérequis absent');
     }
     for(const id of previous) if(!owned.has(id)) throw new Error(label+': possession non monotone');
     previous=owned;
