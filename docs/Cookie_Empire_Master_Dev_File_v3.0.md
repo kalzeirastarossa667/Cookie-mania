@@ -2345,8 +2345,21 @@ A targeted interface regression was committed before the runtime implementation.
 
 After implementation, routine Foundation CI passes again: **220/220 Foundation**, targeted interface feedback submission with a mocked Formspree request, and **56/56 Constellation/Horizons DOM checks**. The mocked request verifies the exact endpoint, POST method, JSON response negotiation, success message, form reset and absence of gameplay-state mutation.
 
-Playwright adds a network-intercepted Formspree scenario so automated browser testing never sends a real e-mail. It verifies the visible form, exact endpoint, POST body, same-page behavior, success clearing, and unchanged gameplay state on both configured browser projects. Final browser result is recorded after CI completes.
+Playwright adds a network-intercepted Formspree scenario so automated browser testing never sends a real e-mail. It verifies the visible form, exact endpoint, POST body, same-page behavior, success clearing, and unchanged gameplay state on both configured browser projects. Final browser result: **12/12 PASS in 16.4 s** — 6 desktop Chromium + 6 Pixel 5 emulation.
 
 ## 48.4 Remaining limits
 
 Formspree is an external service only for feedback delivery. Service outage, quota exhaustion, spam filtering, CORS/policy changes or a disabled Formspree form can prevent comments from arriving while the game itself continues to function. Automated tests mock/intercept Formspree; they do not prove delivery into the owner's actual mailbox. One manual real submission should be used to verify end-to-end e-mail delivery after deployment. Physical-phone layout remains distinct from Pixel 5 browser emulation.
+
+
+## 48.5 Final pre-merge checkpoint
+
+Final branch verification after the release-marker correction:
+- Foundation rules: **220/220 PASS**;
+- targeted interface suite: PASS, including exact Formspree endpoint, POST semantics, success reset, duplicate-submit blocking, failure message, retained comment after failure and no gameplay-state mutation;
+- Constellation/Horizons DOM: **56/56 PASS**;
+- Playwright: **12/12 PASS in 16.4 s**, split into 6 desktop Chromium and 6 Pixel 5 emulation scenarios.
+
+The first browser attempt had **10 PASS / 2 FAIL** only because a historical prestige scenario still asserted the literal footer label “Foundation 2.7.1 · Stable”. No Formspree behavior failed. The assertion was updated to the new release marker without weakening the prestige path, after which all 12 browser scenarios passed.
+
+Automated Formspree requests are mocked/intercepted. End-to-end delivery to the project owner's actual mailbox is therefore intentionally **not yet verified**. After deployment, one manual feedback submission and mailbox confirmation is the remaining acceptance check for external delivery. Gameplay remains usable if Formspree is unavailable.
