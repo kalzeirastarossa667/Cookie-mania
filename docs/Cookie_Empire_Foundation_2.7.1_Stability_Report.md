@@ -35,4 +35,4 @@ Final tested runtime/documentation HEAD before the report commit: `b47a39d8efd3f
 
 ## Stability status
 
-Foundation 2.7.1 is a stabilization patch, not an economy expansion. It preserves save schema v7 and all Foundation 2.7 economic values. The release is suitable for player testing once the final PR and post-merge CI are green. Human long-play balance and testing on a physical phone remain separate evidence requirements.
+Foundation 2.7.1 is a stabilization patch, not an economy expansion. It preserves save schema v7 and all Foundation 2.7 economic values. PR #17 was squash-merged as `5d20d9b5eb4ddfcb156b2a763a4179f77cb66477`; Foundation checks and Browser checks both passed again after the merge on `main`. The archived playable snapshot has the same Git blob SHA (`195aafec98021b40a2bdb0ca4dfaf8151d605311`) as `index.html`, so the delivered HTML is byte-identical to the tested runtime. Human long-play balance and testing on a physical phone remain separate evidence requirements.
