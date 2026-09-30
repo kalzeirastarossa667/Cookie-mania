@@ -39,6 +39,10 @@ assert.equal(
   '2.8 RED: HugeNumber interprète mal un coefficient scientifique < 1 au-delà de Number.MAX_VALUE',
 );
 
+assert.equal(HugeNumber.from('.001e1000').compare(tinyHugeExpected), 0, 'notation sans zéro initial incorrecte');
+assert.equal(HugeNumber.from('000123e1000').compare(HugeNumber.from('1.23e1002')), 0, 'zéros initiaux incorrects');
+assert.equal(HugeNumber.from('0.000e1000').compare(HugeNumber.zero()), 0, 'zéro scientifique incorrect');
+
 const seed = 20260930;
 const scalar = fc.record({
   mantissa: fc.integer({ min: 1, max: 9_999_999 }),

@@ -168,17 +168,17 @@ class HugeNumber {
       if(Number.isFinite(n)) return HugeNumber.from(n);
       const match=raw.match(/^\+?(\d+(?:\.\d*)?|\.\d+)(?:e([+-]?\d+))?$/i);
       if(!match) throw new Error('Nombre invalide');
-      const digits=match[1].replace(/^0+(?=\d)/,'');
-      const parts=digits.split('.');
-      const integer=parts[0] || '0';
-      const fraction=parts[1] || '';
-      const first=integer.replace(/^0+/,'') || (fraction.match(/[1-9]/)?.[0] || '0');
-      if(first==='0') return HugeNumber.zero();
-      let all=(integer+fraction).replace(/^0+/,'');
-      const leadingZeros=integer.length-integer.replace(/^0+/,'').length;
-      let exponent=(match[2] ? Number(match[2]) : 0) + integer.replace(/^0+/,'').length-1;
-      const mantissa=Number(all.slice(0,17))/Math.pow(10,Math.min(all.length,17)-1);
-      if(!Number.isFinite(exponent)) throw new Error('Exposant invalide');
+      const coefficient=match[1];
+      const explicitExponent=match[2] ? Number(match[2]) : 0;
+      if(!Number.isFinite(explicitExponent)) throw new Error('Exposant invalide');
+      const [integer='',fraction='']=coefficient.split('.');
+      const digits=integer+fraction;
+      const firstNonZero=digits.search(/[1-9]/);
+      if(firstNonZero===-1) return HugeNumber.zero();
+      const exponent=explicitExponent+integer.length-firstNonZero-1;
+      const significant=digits.slice(firstNonZero);
+      const kept=significant.slice(0,17);
+      const mantissa=Number(kept)/Math.pow(10,kept.length-1);
       return new HugeNumber(mantissa,exponent);
     }
     throw new Error('Type numérique invalide');
