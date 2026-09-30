@@ -52,7 +52,7 @@ const progressionSpecs=[
   },
   {
     name:'late-run-5-clicks',
-    description:'Sonde continue sans prestige : achète une première unité de chaque générateur dans l’ordre du catalogue pour dater le franchissement des quatre ères.',
+    description:'Sonde continue sans prestige : porte d’abord le Curseur à 10 unités pour dater l’accès à une spécialisation, puis achète une première unité de chaque générateur restant dans l’ordre du catalogue pour dater les quatre ères.',
     clickRate:5,
     mode:'continuous',
     strategy:'unlock-order',
@@ -206,6 +206,11 @@ function pendingControl(policyState){
 }
 
 function unlockOrderCandidate(state,clickRate){
+  if(state.generators.cursor<10){
+    const cost=Economy.generatorCost(GENERATORS.cursor,state.generators.cursor);
+    if(Economy.compare(state.cookies,cost)<0) return null;
+    return evaluateAction(state,clickRate,{kind:'generator',mode:'single',id:'cursor'});
+  }
   for(const id of Object.keys(GENERATORS)){
     if(state.generators[id]>0) continue;
     const cost=Economy.generatorCost(GENERATORS[id],0);
@@ -216,6 +221,7 @@ function unlockOrderCandidate(state,clickRate){
 }
 
 function unlockOrderNextCost(state){
+  if(state.generators.cursor<10) return Economy.generatorCost(GENERATORS.cursor,state.generators.cursor);
   for(const id of Object.keys(GENERATORS)){
     if(state.generators[id]===0) return Economy.generatorCost(GENERATORS[id],0);
   }
