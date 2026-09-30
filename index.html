@@ -2032,7 +2032,8 @@ class CookieEmpireApp {
       requestAnimationFrame((next)=>this.loop(next));
       return;
     }
-    const delta=Math.min(0.5,Math.max(0,(time-this.lastFrame)/1000));
+    const rawDelta=(time-this.lastFrame)/1000;
+    const delta=Number.isFinite(rawDelta)?Math.max(0,rawDelta):0;
     this.lastFrame=time;
     this.engine.tick(delta);
     this.saveAccumulator+=delta;
