@@ -2232,3 +2232,32 @@ Green measurement at 2 clicks/s over 10 prestige cycles:
 PR #12 was squash-merged to `main` as `e3421a0e6a576eca76d168830d57fdbff21ed491` after final routine Foundation CI passed. No runtime file changed in Foundation 2.6, so Foundation 2.5 remains the latest player-facing/browser-verified gameplay build while the source-of-truth development baseline advances to Foundation 2.6 diagnostics.
 
 Interpretation: the current three-item permanent shop produces a meaningful but controlled deterministic acceleration rather than a progression collapse over the measured 10 cycles. This is evidence for cautiously expanding prestige progression later, not proof of human-optimal balance. The next design should preserve comparable incremental gains and introduce choices/branches rather than simply stacking larger global multipliers.
+
+
+# 46. Foundation 2.7 — branching prestige progression
+
+Specification BEFORE implementation, 2026-09-30 UTC. Baseline: Foundation 2.6 diagnostic checkpoint on `main` at `01158e84f65170c83b9cfd207e8a17c9fe420f79`; latest player-facing runtime remains Foundation 2.5 with save schema v7.
+
+## 46.1 Purpose and scope
+
+Foundation 2.7 turns the first linear three-item Éclat shop into the smallest meaningful prestige tree. The objective is choice of purchase order and specialization timing, not permanent exclusion. Every branch may eventually be owned. No respec/refund system and no second prestige currency/tier are introduced.
+
+Preserve save schema v7 if the tree can be represented entirely by the existing authoritative `ownedPrestigeUpgrades` array. Existing valid v7 saves must remain valid and retain their exact purchases. New derived effects are never persisted.
+
+## 46.2 Tree contract
+
+Keep `radiant_click` as the common root. After the root, expose two independent branches:
+- a click-oriented branch whose first node requires `radiant_click`;
+- a production-oriented branch whose first node requires `radiant_click`.
+
+A later convergence/synergy node may require both branch nodes. Foundation 2.7 must prefer modest conditional/specialized effects over large unconditional global multipliers. Existing IDs should be preserved when their meaning remains compatible so current v7 ownership does not require a schema migration.
+
+Prerequisites are semantic ownership requirements. Validation must reject unknown IDs, duplicates and ownership sets missing prerequisites, but a valid save must not depend on incidental array ordering. Runtime ownership should be canonicalized to catalogue order when needed so branching does not create multiple equivalent serialized representations.
+
+## 46.3 Verification gate
+
+Red→green is required before runtime changes. Add tests for: both branch nodes becoming available from the common root; buying either branch first; the other branch remaining obtainable; convergence remaining locked until both prerequisites are owned; exact wallet debit and no lifetime-Rayonnement loss; invalid purchases remaining atomic; existing Foundation 2.5 v7 ownership loading unchanged; valid branched ownership accepted regardless of serialized order and canonicalized deterministically; missing-prerequisite ownership rejected.
+
+Extend the balance observatory with deterministic branch policies (at minimum click-priority and production-priority) in addition to hold. Measure acquisition timing and cycle times before accepting final costs/effects. Neither modeled branch should be strictly worse under every modeled condition merely because of implementation order, and the combined tree must not cause uncontrolled prestige-cycle compression.
+
+Because runtime/UI will change, final verification requires the full Foundation/interface/Constellation suites plus Playwright desktop Chromium and Pixel 5 emulation. Physical-phone testing remains separate.
