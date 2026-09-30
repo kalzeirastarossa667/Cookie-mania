@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('clics, achat réel et sauvegarde après rechargement', async ({ page }) => {
   const errors = [];
@@ -169,4 +170,33 @@ test('Foundation 2.7.2 : le feedback est envoyé sans quitter ni modifier la par
     produced: window.cookieEmpire.state.totalProduced.toJSON(),
     clicks: window.cookieEmpire.state.totalClicks,
   }))).toEqual(before);
+});
+
+
+async function seriousAccessibilityViolations(page) {
+  const results = await new AxeBuilder({ page }).analyze();
+  return results.violations
+    .filter(violation => ['serious', 'critical'].includes(violation.impact))
+    .map(violation => ({
+      id: violation.id,
+      impact: violation.impact,
+      help: violation.help,
+      targets: violation.nodes.map(node => node.target),
+    }));
+}
+
+test('Foundation 2.8 : aucune violation axe sérieuse ou critique dans les vues principales', async ({ page }) => {
+  await page.goto('/');
+  for (const view of ['empire', 'workshop', 'research', 'journey']) {
+    await page.locator(`[data-nav="${view}"]`).click();
+    await expect(page.locator(`#view-${view}`)).toBeVisible();
+    const violations = await seriousAccessibilityViolations(page);
+    expect(violations, `${view}: ${JSON.stringify(violations, null, 2)}`).toEqual([]);
+  }
+  await expect(page.locator('#feedbackForm')).toBeVisible();
+  const feedbackResults = await new AxeBuilder({ page }).include('#feedbackForm').analyze();
+  const feedbackViolations = feedbackResults.violations
+    .filter(violation => ['serious', 'critical'].includes(violation.impact))
+    .map(violation => ({ id: violation.id, impact: violation.impact, targets: violation.nodes.map(node => node.target) }));
+  expect(feedbackViolations, JSON.stringify(feedbackViolations, null, 2)).toEqual([]);
 });
