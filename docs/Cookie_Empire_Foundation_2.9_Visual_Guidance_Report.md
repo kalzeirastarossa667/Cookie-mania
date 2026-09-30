@@ -1,10 +1,13 @@
-# Cookie Empire — Foundation 2.9 Visual & Guidance — Release Candidate Report
+# Cookie Empire — Foundation 2.9 Visual & Guidance — Final Checkpoint Report
 
 Date: 2026-09-30  
 Baseline: Foundation 2.8.3 Menu (`29dfe1d8a409961101e17510533212b9c67d24fb`)  
 Release-candidate branch: `release/foundation-2.9-rc`  
-Current `main` revalidated before final packaging: `bfc46e721940086fd67e5ffc3d93cc3f2343128c`  
-Foundation 2.9 C resynchronized head: `26e7c8a176b1b00f344d88d8271a3f0df33b422a`
+`main` revalidated before final packaging: `bfc46e721940086fd67e5ffc3d93cc3f2343128c`  
+Foundation 2.9 C resynchronized head: `26e7c8a176b1b00f344d88d8271a3f0df33b422a`  
+Final packaged RC head: `02c62e659c532f20fe6fb5925f30c0d4f5c227db`  
+Final integration PR: **#32 — merged**  
+Foundation 2.9 integration commit on `main`: `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`
 
 ## 1. Scope
 
@@ -146,17 +149,19 @@ The presentation keeps Cookie Empire's galaxy identity while introducing distinc
 
 Ambient motion is decorative only and reduced-motion aware. The click target itself is not continuously transformed.
 
-## 5. Remaining validation boundary
+## 5. Validation boundary and physical Android result
 
-Automated Chromium desktop and Pixel 5 emulation are green. This does **not** replace validation on the physical Android browser that originally exposed the Foundation 2.8.3 menu-layering defect.
+Automated Chromium desktop and Pixel 5 emulation are green, but they remain distinct from real-device evidence.
 
-Physical-device validation should therefore be recorded separately after deployment or an equivalent testable build is made available.
+After the successful GitHub Pages deployment of Foundation 2.9, the project owner manually tested the deployed version on a physical Android phone and reported that the game appeared to function correctly, notably the `⋯` menu and its accessibility. This is recorded as **user physical-Android validation on the tested device/browser**.
 
-## 6. Merge policy
+This manual result does **not** certify all Android devices, browser engines, viewport sizes, accessibility configurations or assistive technologies. Automated emulation and physical-device validation remain separately identified evidence.
 
-The final integration PR must be reviewed against `main` and must run Foundation + Browser workflows again after release metadata/documentation packaging.
+## 6. Merge policy — historical outcome
 
-PR #25 remains a prototype reference and should not be merged.
+The release-candidate policy required the final integration PR to be reviewed against `main` and to rerun Foundation + Browser after release metadata/documentation packaging. PR #32 satisfied that gate and was merged.
+
+PR #25 remains a prototype reference and was not used as the integration source.
 
 
 ## 7. Final RC packaging checkpoint
@@ -167,6 +172,27 @@ Before opening the final integration PR, the C branch was merged non-destructive
 - Browser: **26 PASS + 2 expected viewport skips** across desktop Chromium and Pixel 5 emulation;
 - Foundation 2.8.3 mobile settings-menu hit-testing remains green.
 
-A final browser regression is added during RC packaging for the Master 53.9 boundary: advanced generator metric text must stay finite with **zero CPS** and with an **extreme HugeNumber prestige value (`1e1000`)**. The final integration PR must run Foundation + Browser once more on the packaged state.
+A final browser regression was added during RC packaging for the Master 53.9 boundary: advanced generator metric text must stay finite with **zero CPS** and with an **extreme HugeNumber prestige value (`1e1000`)**. The final integration PR was required to run Foundation + Browser once more on the packaged state.
 
-The packaged playable archive is required to be byte-identical to the root `index.html`. Physical Android validation remains separate and is not implied by these automated results.
+The packaged playable archive was required to be byte-identical to the root `index.html`. At this RC checkpoint, physical Android validation was still separate and had not yet been recorded.
+
+## 8. Final merged/deployed checkpoint
+
+PR #32 integrated the packaged RC head `02c62e659c532f20fe6fb5925f30c0d4f5c227db` into `main`. The Foundation 2.9 runtime integration commit is `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`.
+
+Post-merge evidence on that exact integration commit:
+
+- Foundation checks workflow `36774955501`: **SUCCESS**;
+- Foundation rules: **224/224 PASS**;
+- deterministic properties: PASS;
+- targeted interface checks: PASS;
+- Constellation: **169/169 PASS**;
+- Browser checks workflow `36774955560`: **SUCCESS**;
+- Playwright: **28 PASS + 2 expected viewport skips**;
+- zero-CPS and extreme-`HugeNumber` (`1e1000`) generator-metric regression: PASS on desktop and mobile projects;
+- Foundation 2.8.3 mobile settings-menu hit-testing: PASS;
+- GitHub Pages workflow `36774955023`: **SUCCESS**;
+- deployed version metadata: **Foundation 2.9 · Visual**;
+- archived playable file remains byte-identical to root `index.html` at the integration checkpoint.
+
+After deployment, the project owner performed the physical Android check described in section 5. No runtime, economy, save-schema or gameplay change is introduced by the final documentation checkpoint.

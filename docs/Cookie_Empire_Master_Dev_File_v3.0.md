@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.8.3 MENU / SOURCE OF TRUTH
-Last audit: 2026-09-30
+Status: FOUNDATION 2.9 VISUAL & GUIDANCE / SOURCE OF TRUTH
+Last audit: 2026-09-30 — final post-merge checkpoint
 
 ## 0. Purpose
 
@@ -2646,7 +2646,7 @@ The deployed 2.8.3 runtime therefore satisfies automated desktop Chromium + Pixe
 
 # 53. Foundation 2.9 — visual clarity and player guidance
 
-Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: merged/deployed Foundation 2.8.3 Menu. Runtime implementation is intentionally deferred until the 2.8.3 top-right menu is rechecked on the physical Android browser that exposed the defect, unless a later explicit project decision accepts emulation as sufficient.
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline at specification time: merged/deployed Foundation 2.8.3 Menu. At that time, runtime implementation was intentionally deferred until the 2.8.3 top-right menu could be rechecked on the physical Android browser that exposed the defect, unless a later explicit project decision accepted emulation as sufficient. This paragraph is historical pre-implementation context; the final Foundation 2.9 state is recorded in section 53.11.
 
 ## 53.1 Product goal
 
@@ -2796,7 +2796,7 @@ Before accepting Phase A:
 Browser emulation and physical-device validation must continue to be reported separately.
 
 
-## 53.10 Implementation and release-candidate evidence — 2026-09-30
+## 53.10 Historical implementation and release-candidate evidence — 2026-09-30
 
 Foundation 2.9 was implemented in the staged chain required above rather than as the older monolithic visual prototype:
 
@@ -2826,6 +2826,30 @@ Green evidence on that resynchronized integration state:
 
 Static scope audit against current `main` found byte-identical `HugeNumber`, `GameState`, `SaveSystem`, `GameEngine`, application orchestration and active-session loop. Existing Economy methods for costs, prestige, multipliers, CPS and derived values are byte-identical. Save schema remains **v7** and storage key remains `cookie-empire-foundation-v2`. Foundation 2.9 adds Content metadata, Economy-owned presentation helpers, UI guidance/presentation and tests; it does not rebalance the game.
 
-RC packaging adds explicit browser coverage that advanced generator metric text remains finite at **zero CPS** and under an extreme `HugeNumber` value (`1e1000`). The packaged RC must pass Foundation + Browser again before merge.
+RC packaging added explicit browser coverage that advanced generator metric text remains finite at **zero CPS** and under an extreme `HugeNumber` value (`1e1000`). At this RC checkpoint, the packaged state was required to pass Foundation + Browser again before merge.
 
-Automated desktop Chromium and Pixel 5 emulation are evidence of browser behavior, not physical-device validation. Physical Android verification remains a separate acceptance result and must not be inferred from CI.
+At this RC checkpoint, automated desktop Chromium and Pixel 5 emulation were browser evidence only; physical Android verification had not yet been recorded. The final post-merge and physical-device result is documented in section 53.11.
+
+## 53.11 Final merged, deployed and user-validated checkpoint — 2026-09-30
+
+Foundation 2.9 Visual & Guidance completed its integration without expanding the 2.9 scope:
+
+- final packaged RC head: `02c62e659c532f20fe6fb5925f30c0d4f5c227db`;
+- integration PR: **#32**, merged into `main`;
+- Foundation 2.9 runtime integration commit on `main`: `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`;
+- Foundation checks post-merge workflow `36774955501`: **SUCCESS**;
+- Foundation rules: **224/224 PASS**;
+- deterministic properties: PASS;
+- targeted interface checks: PASS;
+- Constellation: **169/169 PASS**;
+- Browser checks post-merge workflow `36774955560`: **SUCCESS**;
+- Playwright final result: **28 PASS + 2 expected viewport skips**;
+- the explicit advanced-metric regression passes at **zero CPS** and with `1e1000`;
+- Foundation 2.8.1 timing, 2.8.2 bottom-navigation and 2.8.3 settings-menu regressions remain covered;
+- GitHub Pages build/deployment workflow `36774955023`: **SUCCESS** for the integration commit;
+- the published runtime identifies itself as **Foundation 2.9 · Visual**;
+- `archive/releases/cookie-empire-foundation-2.9-visual.html` remains byte-identical to the root `index.html` at the integration checkpoint.
+
+After the successful GitHub Pages deployment, the project owner manually checked the deployed version on a physical Android phone and reported that the game appeared to function correctly, notably the `⋯` menu and its accessibility. Record this as **user physical-Android validation of Foundation 2.9 on the tested device/browser**. It is not an exhaustive certification of all Android devices, browser engines, viewport sizes, accessibility configurations or assistive technologies.
+
+This closes the Foundation 2.9 stability checkpoint at the level of automated Foundation/browser checks, deployment evidence and one owner-performed physical Android validation. No post-2.9 mechanic is part of this checkpoint. Save schema remains **v7**, storage key remains `cookie-empire-foundation-v2`, and the documentation-only final checkpoint must not modify runtime, economy, saves or gameplay.

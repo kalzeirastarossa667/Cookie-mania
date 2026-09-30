@@ -4,6 +4,8 @@ Date: 2026-09-30
 Baseline: Foundation 2.8.3 Menu, merged and deployed  
 Runtime status: specification only; no 2.9 gameplay/UI implementation in this document
 
+> **Historical implementation note — 2026-09-30:** this file remains the pre-implementation specification and its future-tense wording is intentionally preserved. Foundation 2.9 was subsequently implemented, merged through PR #32, deployed, and manually checked by the project owner on a physical Android device. See [Cookie_Empire_Foundation_2.9_Visual_Guidance_Report.md](Cookie_Empire_Foundation_2.9_Visual_Guidance_Report.md) for the final checkpoint and evidence.
+
 ## Goal
 
 Make Cookie Empire easier to understand and more attractive without changing its economy. The first implementation slice focuses on generator clarity because the current generator cards expose numbers but do not carry explanatory Content metadata.

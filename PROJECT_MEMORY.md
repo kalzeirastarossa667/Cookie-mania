@@ -173,6 +173,22 @@ The A1 → A2 → A3 → B chain was deliberately incremental. The older #25 Vis
 
 A future AI must revalidate these PRs. Do not assume their present state, merge status or correctness from this file.
 
+### 10.1 Foundation 2.9 final checkpoint — 2026-09-30
+
+The creation-time snapshot above remains historical and must not be rewritten.
+
+Later on 2026-09-30, Foundation 2.9 Visual & Guidance completed the staged A1 → A2 → A3 → B → C path and final packaging. PR #32 was merged. The Foundation 2.9 runtime integration commit on `main` is `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`.
+
+Post-merge evidence recorded for that integration commit:
+- Foundation checks: **SUCCESS**, including **224/224 Foundation** and **169/169 Constellation**;
+- Browser checks: **SUCCESS**, final result **28 PASS + 2 expected viewport skips**, including zero-CPS / `1e1000` advanced generator metrics;
+- GitHub Pages deployment: **SUCCESS**;
+- deployed runtime: **Foundation 2.9 · Visual**.
+
+After deployment, the project owner manually checked the GitHub Pages version on a physical Android phone and reported that the game appeared to function correctly, notably the `⋯` menu and its accessibility. Treat this as **user validation on the tested physical Android device/browser**, not as certification of every Android device, browser, viewport or accessibility setup.
+
+This checkpoint closes Foundation 2.9 before post-2.9 work. The sequencing principle in section 16 remains **stability → observability → extensibility → new mechanics → deeper endgame**. Do not treat the candidate feature pool as permission to skip observability/extensibility preparation.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:
