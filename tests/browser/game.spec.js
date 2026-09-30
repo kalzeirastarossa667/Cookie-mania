@@ -86,6 +86,34 @@ test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruir
 });
 
 
+
+test('Foundation 2.9 B : le jeu explique les blocages, le prestige et la prochaine action', async ({ page }) => {
+  await page.goto('/');
+
+  await page.locator('[data-nav="research"]').click();
+  await expect(page.locator('#research-precision_click [data-role="research-state"]')).toContainText('Clic cosmique');
+
+  await page.locator('[data-nav="journey"]').click();
+  await expect(page.locator('[data-prestige-impact="lost"]')).toContainText('PERDU');
+  await expect(page.locator('[data-prestige-impact="lost"]')).toContainText('générateurs');
+  await expect(page.locator('[data-prestige-impact="kept"]')).toContainText('CONSERVÉ');
+  await expect(page.locator('[data-prestige-impact="kept"]')).toContainText('Rayonnement');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('GAGNÉ');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('Aucun Éclat');
+
+  await expect(page.locator('#nextActionHint')).toContainText('cookie');
+  await expect(page.locator('#nextActionHint')).toContainText('atelier');
+
+  await page.evaluate(() => {
+    const state=window.cookieEmpire.state;
+    state.totalProduced.m=1;state.totalProduced.e=12;
+    window.cookieEmpire.ui.render();
+  });
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('+1 Éclat');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('×1.1');
+});
+
+
 test('Foundation 2.5 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
