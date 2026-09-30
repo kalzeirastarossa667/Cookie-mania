@@ -237,3 +237,82 @@ Important technical knowledge belongs in GitHub.
 Important durable product intent belongs in project documentation.
 Tests preserve verified behavior.
 Chats are useful working context, but they must never be the only place where a critical project decision exists.
+
+
+## 16. Candidate long-term product vision and future feature pool
+
+These are **candidate directions**, not committed scope and not permission to implement them automatically.
+
+Before implementing any item, revalidate the current architecture, specify the mechanic, identify authoritative versus derived state, assess save compatibility, model balance impact, add appropriate tests, and obtain product-direction confirmation when the choice materially changes the game.
+
+The broad progression fantasy worth exploring is:
+
+**Cookie → Atelier → industrial empire → Orbite → space empire → Cosmos → galactic exploration → Infini → endgame challenges.**
+
+The cookie/clicker identity should remain recognizable while the scale and strategic depth grow.
+
+Candidate systems:
+
+1. **Gameplay eras** — Atelier, Orbite, Cosmos and Infini can eventually become mechanically distinct progression eras rather than visual categories only. Each era should add understandable depth instead of arbitrary complexity.
+2. **Generator mastery** — generators can gain long-term mastery or milestone progression so early generators remain relevant. Prefer derived progress where possible and avoid grind without meaningful decisions.
+3. **Deeper generator specialization** — future branches could support production, click, synergy, efficiency or other play styles. Avoid false choices where one branch is mathematically dominant in every situation.
+4. **Constellations / generator sets** — combinations of generators could activate thematic synergies, creating intermediate strategic targets without necessarily requiring a new currency.
+5. **Dynamic missions** — short contextual goals can create decisions between major purchases. They should complement, not replace, the 44-objective progression.
+6. **Tiered achievements** — collection/progression achievements may provide long-term goals. If rewards exist, keep them controlled so achievement farming does not become mandatory.
+7. **Cosmic events** — occasional temporary events such as meteor showers, anomalies, portals or supernova-like effects can vary play. Timing must remain centralized and deterministic/testable where possible.
+8. **Unlockable automation** — auto-buy or configurable automation can become a late progression reward. It should not remove meaningful early-game decisions and must use existing Engine/Economy purchase contracts rather than bypass them.
+9. **Higher prestige layer** — a future endgame reset above current Rayonnement/Éclats may be considered only after the current prestige loop is measured and proven. This would be a structural feature requiring explicit state/save/migration design.
+10. **Cosmic map / exploration** — a future map of planets, systems or regions could become a major identity feature for Cookie Empire. It should connect to existing progression rather than becoming an unrelated second game.
+11. **Expeditions** — timed missions from the exploration layer could create useful return/offline decisions. They require careful time, persistence and clock-manipulation contracts before implementation.
+12. **Cosmic artifacts** — rare collectible/equippable modifiers could support build diversity. Keep inventory/state bounded and effects owned by Economy.
+13. **Challenge universes** — temporary runs with altered constraints can reuse the existing engine for endgame content. Challenge state must be isolated so normal saves and progression cannot be corrupted.
+14. **Empire Codex** — a discovery/collection interface could explain generators, research, constellations, artifacts, events and world progression while reinforcing player comprehension.
+15. **Advanced statistics** — total play time, lifetime production, best CPS, prestige history, generator contribution and related metrics may help both players and balancing. Persist only metrics that cannot be safely reconstructed and have a clear product purpose.
+
+### Architectural preparation for future systems
+
+Do not implement the entire feature pool at once.
+
+Before major expansion, audit the current concentration of HTML, CSS, Content, HugeNumber, Economy, GameState, GameEngine, Persistence, UI and application orchestration in `index.html`. Prefer incremental extraction/modularization protected by regression tests over a large rewrite.
+
+Target responsibility flow remains:
+
+**Content → Economy → Game Engine → Persistence → UI**
+
+A future feature must have a clear owner. UI must not recreate formulas. New independent timers should not bypass the central time model. HugeNumber values should not be converted to ordinary Number prematurely.
+
+Do not create a save-schema v8 merely to prepare for possible features. Introduce a new schema only when a confirmed mechanic requires new authoritative persisted state, with explicit migration and import/export/corruption coverage.
+
+### Progression observability before large economic expansion
+
+Extend the deterministic balance observatory before substantial economy changes. Useful milestones include:
+
+- start → first generator;
+- first ×10 / Max purchase;
+- first researches;
+- era transitions;
+- specialization access;
+- advanced generators;
+- first prestige;
+- approximate prestige-cycle duration;
+- acceleration of subsequent cycles;
+- late-game progression.
+
+Use the real Economy rules rather than duplicating formulas in the analyzer.
+
+The observatory should help detect progression walls, runaway acceleration, obsolete purchases, excessive dead time, weak/overpowered prestige and dangerous numeric growth.
+
+### Preferred sequencing principle
+
+The default strategic order for future development is:
+
+**stability → observability → extensibility → new mechanics → deeper endgame**
+
+A plausible future sequence, subject to revalidation and product decisions, is:
+- strengthen observability/modularity;
+- generator mastery / constellations / richer achievements or missions;
+- era-specific mechanics and carefully earned automation;
+- cosmic map / exploration / expeditions / artifacts;
+- challenge universes and only then consider a higher prestige layer.
+
+This ordering is guidance, not a frozen roadmap. Prefer the smallest next feature that creates meaningful player decisions without destabilizing the validated foundation.
