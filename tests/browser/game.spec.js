@@ -91,6 +91,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('footer')).toContainText('Foundation 2.7.1 · Stable');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
