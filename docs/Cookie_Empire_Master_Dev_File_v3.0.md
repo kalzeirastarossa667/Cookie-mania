@@ -2430,3 +2430,18 @@ Follow red → green for any reproduced defect. Final branch must pass:
 - automated axe scan for the selected views/states.
 
 Audit after implementation must verify no unintended GameState/save/economy/content change. If only development tests plus a narrowly proven HugeNumber parser fix change, no balance observatory rerun is required because formulas/constants remain unchanged. Browser evidence remains automated emulation/Chromium evidence, not exhaustive physical-device accessibility validation.
+
+
+## 49.7 Implementation, red/green evidence and audit — 2026-09-30
+
+GitHub research is recorded in `docs/Cookie_Empire_GitHub_Research_2.8.md`. Development-only dependencies are pinned to `fast-check 4.9.0` and `@axe-core/playwright 4.13.0`; neither is imported by the standalone runtime.
+
+Numerical red proof at commit `99333b532ef34aa8fd91eabfb2237d742f170106`: all historical Foundation cases reached **220/220**, then the new regression failed exactly because `HugeNumber.from('0.001e1000')` did not equal `1e997`. The fix at `30120e0bcc006f554b5d155a8c69921f9be9e9cc` changes only fallback scientific-string parsing for values that overflow native Number. It locates the first significant digit across the coefficient and derives the exponent from that position; save JSON decoding and schema v7 are unchanged. Deterministic fast-check properties then pass for normalization/comparison/arithmetic and bounded generator-cost/max-affordable invariants.
+
+Accessibility red proof: adding the axe Playwright gate left the 12 historical browser scenarios green but failed one new desktop and one new Pixel 5 scenario on serious color-contrast violations for prestige branch badges in Parcours. The presentation repair centralizes click/production badge colors into light/dark theme tokens. A second axe scenario explicitly tests the light theme. Final browser run on commit `14e50a39533a194ef748169c2e1570ab752d9647`: **16/16 PASS in 41.4 s**, split 8 desktop Chromium + 8 Pixel 5 emulation, including dark/light axe scans of Empire, Atelier, Recherche, Parcours and the feedback form.
+
+Final pre-packaging Foundation evidence on the same runtime: `npm ci` installed 44 packages and reported 0 vulnerabilities; **220/220 Foundation**, deterministic 20-render/1-autosave probe, property suite PASS, targeted interface PASS and **56/56 Constellation/Horizons DOM**. Diff audit confirms no GameState field, save key/schema, generator/research/synergy/prestige economy constant, offline cap, cadence or Formspree endpoint changed. No balance observatory rerun is required because balance formulas/constants are untouched.
+
+Foundation 2.8 is not a full accessibility certification and does not claim physical-phone/screen-reader validation. It keeps the documented ~15-significant-digit HugeNumber precision model. Firefox/WebKit, Lighthouse budgets, IndexedDB, Workbox/PWA, compression and replacing HugeNumber remain deferred.
+
+Release packaging updates only the visible/version feedback metadata to **Foundation 2.8 · Quality** and archives a byte-identical playable snapshot. Both Foundation and Browser workflows must pass again on that exact release commit before merge. Detailed evidence: `docs/Cookie_Empire_Foundation_2.8_Quality_Report.md`.

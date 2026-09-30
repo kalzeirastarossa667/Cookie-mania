@@ -92,7 +92,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.7.2 · Feedback');
+  await expect(page.locator('footer')).toContainText('Foundation 2.8 · Quality');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -165,6 +165,7 @@ test('Foundation 2.7.2 : le feedback est envoyé sans quitter ni modifier la par
   expect(page.url()).toBe(urlBefore);
   expect(intercepted?.method).toBe('POST');
   expect(intercepted?.body).toContain('Le formulaire fonctionne sans toucher');
+  expect(intercepted?.body).toContain('Foundation 2.8');
   expect(await page.evaluate(() => ({
     cookies: window.cookieEmpire.state.cookies.toJSON(),
     produced: window.cookieEmpire.state.totalProduced.toJSON(),
