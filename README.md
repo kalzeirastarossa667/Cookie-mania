@@ -30,9 +30,11 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
-Sur la phase C verte, la suite exécute **224/224** cas Foundation, les propriétés déterministes, les vérifications d’interface ciblées et **169** assertions Constellation. Playwright déclare 28 cas : **26 PASS** et **2 skips attendus** selon le viewport. Elle couvre notamment axe en thèmes sombre/clair, les régressions 2.8.1/2.8.2/2.8.3, les métriques de générateur, le guidage prestige/recherche et les garde-fous visuels Foundation 2.9. Le test physique Android reste une validation séparée de l’émulation Pixel 5.
+Sur le HEAD d’intégration Foundation 2.9 `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`, les vérifications post-fusion de `main` sont vertes : Foundation **224/224**, propriétés déterministes PASS, interface ciblée PASS, Constellation **169/169**, Browser **28 PASS + 2 skips de viewport attendus**, et déploiement GitHub Pages **SUCCESS**. Le Browser post-merge couvre notamment les métriques avancées à CPS nul et avec un HugeNumber extrême (`1e1000`), axe en thèmes sombre/clair et les régressions 2.8.1/2.8.2/2.8.3. La PR #32 a été fusionnée dans `main`.
 
-Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
+Après ce déploiement, le propriétaire du projet a effectué un contrôle manuel sur un téléphone Android physique et a indiqué que le jeu lui paraissait fonctionner correctement, notamment le menu `⋯` et son accessibilité. Cette validation utilisateur concerne l’appareil et le navigateur effectivement testés ; elle ne constitue pas une certification exhaustive de tous les appareils Android, navigateurs, tailles d’écran ou technologies d’assistance.
+
+Les résultats automatisés et ce contrôle réel sont des preuves complémentaires, pas une certification universelle. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
 
 ## Organisation du dépôt
 

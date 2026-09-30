@@ -1,9 +1,9 @@
 # Documentation actuelle
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
-- [Rapport Foundation 2.9 RC](Cookie_Empire_Foundation_2.9_Visual_Guidance_Report.md) : implémentation A1 → A2 → A3 → B → C, audit de portée et preuves automatisées avant intégration.
+- [Rapport final Foundation 2.9 Visual & Guidance](Cookie_Empire_Foundation_2.9_Visual_Guidance_Report.md) : historique A1 → A2 → A3 → B → C, packaging RC, PR #32 fusionnée, vérifications post-merge, déploiement GitHub Pages et validation utilisateur Android physique.
 - [Menu 2.8.3](Cookie_Empire_Foundation_2.8.3_Menu_Report.md) : menu d’options au-dessus du HUD de ressources et hit-testing Pixel 5.
-- [Spécification Foundation 2.9](Cookie_Empire_Foundation_2.9_Visual_Guidance_Spec.md) : refonte visuelle progressive et guidage joueur, en commençant par la clarté des générateurs.
+- [Spécification historique Foundation 2.9](Cookie_Empire_Foundation_2.9_Visual_Guidance_Spec.md) : contrat pré-implémentation de la refonte visuelle progressive et du guidage joueur ; elle a été implémentée par Foundation 2.9 et doit être lue avec le rapport final ci-dessus.
 - [Mobile 2.8.2](Cookie_Empire_Foundation_2.8.2_Mobile_Report.md) : dégagement de la navigation fixe et test Pixel 5 sur les quatre vues.
 - [Timing 2.8.1](Cookie_Empire_Foundation_2.8.1_Timing_Report.md) : correction de la perte de production automatique lors des rafales de clics.
 - [Qualité 2.8](Cookie_Empire_Foundation_2.8_Quality_Report.md) : tests génératifs, correction HugeNumber, axe Playwright et audit de portée.
