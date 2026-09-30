@@ -1754,7 +1754,7 @@ class GameUI {
     this.renderProgression();
     this.renderResources();
     const s=this.engine.state;
-    const signature=s.ownedUpgrades.join('|')+'::'+s.ownedPrestigeUpgrades.join('|');
+    const signature=s.ownedUpgrades.join('|')+'::'+s.ownedPrestigeUpgrades.join('|')+'::'+s.prestigePoints.m+':'+s.prestigePoints.e;
     if(this.multiplierSignature!==signature){
       this.multiplierSignature=signature;this.displayMultipliers=Economy.deriveMultipliers(s);
     }
