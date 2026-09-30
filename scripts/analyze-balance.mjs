@@ -167,6 +167,7 @@ function simulatePrestigeSeries(clickRate,cycles){
 }
 globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
 globalThis.__prestigeSeries=simulatePrestigeSeries(2,10);
+if(!globalThis.__prestigeSeries.some(row=>Array.isArray(row.purchasedPrestigeUpgrades))) throw new Error('2.6 RED: observatoire sans politique de dépense Éclats');
 `,{filename:'balance-observatory'}).runInContext(context);
 
 const results=context.__balanceResults;
