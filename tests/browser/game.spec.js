@@ -87,3 +87,44 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
   const saved=await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')));
   expect(saved.version).toBe(7);expect(saved.state.ownedPrestigeUpgrades).toEqual(['radiant_click']);
 });
+
+
+test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('footer')).toContainText('Foundation 2.7.1 · Stable');
+  await page.evaluate(() => {
+    const state=window.cookieEmpire.state;
+    state.prestigePoints.m=2;state.prestigePoints.e=1;
+    state.prestigeCurrency.m=2;state.prestigeCurrency.e=1;
+    window.cookieEmpire.ui.render();
+  });
+  await page.locator('[data-nav="journey"]').click();
+
+  const root=page.locator('button[data-prestige-upgrade-id="radiant_click"]');
+  const production=page.locator('button[data-prestige-upgrade-id="radiant_production"]');
+  const clickBranch=page.locator('button[data-prestige-upgrade-id="radiant_precision"]');
+  const resonance=page.locator('button[data-prestige-upgrade-id="harmonic_resonance"]');
+  const convergence=page.locator('button[data-prestige-upgrade-id="radiant_convergence"]');
+
+  await expect(root).toBeEnabled();
+  await expect(page.locator('[data-prestige-branch="click"] .prestige-branch')).toHaveText('Voie clic');
+  await expect(page.locator('[data-prestige-branch="production"]').first().locator('.prestige-branch')).toHaveText('Voie production');
+  await expect(production).toBeDisabled();
+  await expect(clickBranch).toBeDisabled();
+  await root.click();
+
+  await expect(production).toBeEnabled();
+  await expect(clickBranch).toBeEnabled();
+  await clickBranch.click();
+  await expect(production).toBeEnabled();
+  await expect(convergence).toBeDisabled();
+
+  await production.click();
+  await expect(resonance).toBeEnabled();
+  await resonance.click();
+  await expect(convergence).toBeEnabled();
+  await convergence.click();
+  await expect(convergence).toHaveText('Acquis');
+  await expect(page.locator('#prestigePoints')).toHaveText('20');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('6');
+});
