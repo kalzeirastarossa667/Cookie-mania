@@ -249,6 +249,32 @@ assert.equal(feedbackRequest?.options?.method, 'POST', 'AJAX utilise POST');
 assert.equal(feedbackRequest?.options?.headers?.Accept, 'application/json', 'réponse JSON demandée');
 assert.match(feedbackStatus.textContent, /Merci/i, 'succès visible après envoi');
 assert.equal(feedbackMessage.value, '', 'formulaire vidé après succès');
+
+let releaseFeedback;
+let feedbackCalls = 0;
+window.fetch = () => {
+  feedbackCalls++;
+  return new Promise(resolve => {
+    releaseFeedback = () => resolve({ ok: true, json: async () => ({ ok: true }) });
+  });
+};
+feedbackMessage.value = 'Un seul envoi même avec un double clic.';
+feedbackForm.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+feedbackForm.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+assert.equal(feedbackCalls, 1, 'double soumission bloquée pendant la requête');
+assert.equal(feedbackSubmit.disabled, true, 'bouton désactivé pendant envoi');
+releaseFeedback();
+await new Promise(resolve => window.setTimeout(resolve, 0));
+assert.equal(feedbackSubmit.disabled, false, 'bouton réactivé après envoi');
+
+const retainedFeedback = 'Conserver ce commentaire si le réseau tombe.';
+window.fetch = async () => ({ ok: false, status: 503, json: async () => ({ errors: [{ message: 'indisponible' }] }) });
+feedbackMessage.value = retainedFeedback;
+feedbackForm.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+await new Promise(resolve => window.setTimeout(resolve, 0));
+assert.match(feedbackStatus.textContent, /impossible/i, 'échec réseau expliqué');
+assert.equal(feedbackMessage.value, retainedFeedback, 'commentaire conservé après échec réseau');
+
 assert.deepEqual({
   cookies: state.cookies.toJSON(),
   produced: state.totalProduced.toJSON(),
