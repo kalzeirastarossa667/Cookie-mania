@@ -66,6 +66,13 @@ Unchanged:
 - Formspree feedback;
 - autosave/render cadence.
 
-## Remaining acceptance
+## Final merge/deployment acceptance
 
-The packaged 2.8.3 runtime must pass Foundation + Browser workflows again before merge. Pixel 5 remains browser emulation; the public deployment must then be rechecked on the physical Android browser that exposed the defect.
+PR #23 was squash-merged to `main` as `29dfe1d8a409961101e17510533212b9c67d24fb`.
+
+On that exact merged commit:
+- Foundation workflow **SUCCESS** with **220/220** rules/persistence, cadence **20 renders / 1 autosave over 5 s**, properties PASS, targeted interface PASS and **56/56** Constellation DOM checks;
+- Browser workflow **SUCCESS** with **20 PASS + 2 expected desktop skips in 45.9 s**;
+- GitHub Pages build/deployment **SUCCESS**.
+
+Remaining acceptance is now limited to physical Android validation of the public deployment. Pixel 5 is browser emulation and is not reported as a real-device result.
