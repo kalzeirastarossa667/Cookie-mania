@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.5 ÉCLAT SHOP IN DEVELOPMENT / SOURCE OF TRUTH
+Status: FOUNDATION 2.5 ÉCLAT SHOP / SOURCE OF TRUTH
 Last audit: 2026-09-30
 
 ## 0. Purpose
@@ -2177,4 +2177,4 @@ The balance analyzer was updated to clone `ownedPrestigeUpgrades`. Its no-shop-s
 
 The first new Playwright run exposed only an ambiguous test locator (shop card and button shared the same data attribute); all six historical scenarios passed. The locator was narrowed to the button without runtime changes. Corrected browser automation then passed **8/8**: four desktop Chromium scenarios and four Pixel 5 emulation scenarios, including exact Éclat spending, unchanged lifetime Rayonnement, permanent click effect, v7 save ownership and reload persistence. Physical-phone validation remains separate.
 
-Before merge, final branch HEAD must rerun routine Foundation and Browser workflows green. Foundation 2.5 remains limited to three permanent purchases; do not expand factors or add another prestige tier without human long-play observation and a shop-aware balance model.
+Final feature HEAD `3abac3d2bc9e8bd759141dbbaa744c3e56adedd3` reran routine Foundation and Browser workflows green and PR #10 was squash-merged to `main` as `823ca5a65d2b1e6e8f4cfab8fa32ca8910e0522d`. Foundation 2.5 remains limited to three permanent purchases; do not expand factors or add another prestige tier without human long-play observation and a shop-aware balance model.
