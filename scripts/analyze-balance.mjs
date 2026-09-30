@@ -28,7 +28,7 @@ const progressionSpecs=[
     description:'Achats unitaires et recherches classés par rendement immédiat coût/gain ; aucun contrôle bulk forcé.',
     clickRate:2,
     mode:'prestige-cycles',
-    prestigeCycles:5,
+    prestigeCycles:3,
     controlOrder:[]
   },
   {
@@ -36,7 +36,7 @@ const progressionSpecs=[
     description:'Exerce réellement ×10 puis Max dès que leur contrat déterministe est atteignable, puis revient aux achats unitaires/recherches par coût/gain.',
     clickRate:2,
     mode:'prestige-cycles',
-    prestigeCycles:5,
+    prestigeCycles:3,
     controlOrder:['x10','max']
   },
   {
@@ -44,14 +44,15 @@ const progressionSpecs=[
     description:'Exerce réellement Max puis ×10 dès que leur contrat déterministe est atteignable, puis revient aux achats unitaires/recherches par coût/gain.',
     clickRate:2,
     mode:'prestige-cycles',
-    prestigeCycles:5,
+    prestigeCycles:3,
     controlOrder:['max','x10']
   },
   {
     name:'late-run-5-clicks',
-    description:'Partie continue sans prestige, destinée à observer les générateurs/ères tardifs avec la même politique d’achat unitaire.',
+    description:'Sonde continue sans prestige : achète une première unité de chaque générateur dans l’ordre du catalogue pour dater le franchissement des quatre ères.',
     clickRate:5,
     mode:'continuous',
+    strategy:'unlock-order',
     horizonSeconds:10*365*24*60*60,
     targetProduced:null,
     stopGeneratorId:'origin_crucible',
@@ -194,13 +195,30 @@ function pendingControl(policyState){
   return policyState.controlOrder.find(control=>!policyState.usedControls.has(control)) ?? null;
 }
 
+function unlockOrderCandidate(state,clickRate){
+  for(const id of Object.keys(GENERATORS)){
+    if(state.generators[id]>0) continue;
+    return evaluateAction(state,clickRate,{kind:'generator',mode:'single',id});
+  }
+  return null;
+}
+
+function unlockOrderNextCost(state){
+  for(const id of Object.keys(GENERATORS)){
+    if(state.generators[id]===0) return Economy.generatorCost(GENERATORS[id],0);
+  }
+  return null;
+}
+
 function chooseProgressionAction(state,clickRate,policyState){
+  if(policyState.strategy==='unlock-order') return unlockOrderCandidate(state,clickRate);
   const control=pendingControl(policyState);
   if(control) return forcedControlCandidate(state,clickRate,control);
   return bestByScore(candidateActions(state,clickRate));
 }
 
 function progressionNextCost(state,policyState){
+  if(policyState.strategy==='unlock-order') return unlockOrderNextCost(state);
   const control=pendingControl(policyState);
   return control?controlTargetCost(state,control):nextReachableCost(state);
 }
@@ -449,7 +467,7 @@ function timelineSummary(tracker){
 function simulateProgressionTimeline(spec){
   let state=GameState.create();
   const tracker=createTimelineTracker(spec);
-  const policyState={controlOrder:[...(spec.controlOrder ?? [])],usedControls:new Set()};
+  const policyState={strategy:spec.strategy ?? 'efficiency',controlOrder:[...(spec.controlOrder ?? [])],usedControls:new Set()};
   const cycles=[];
   let elapsedSeconds=0;
   observeSpecializationAccess(tracker,state,0,1);
