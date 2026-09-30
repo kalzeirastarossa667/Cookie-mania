@@ -2445,3 +2445,12 @@ Final pre-packaging Foundation evidence on the same runtime: `npm ci` installed 
 Foundation 2.8 is not a full accessibility certification and does not claim physical-phone/screen-reader validation. It keeps the documented ~15-significant-digit HugeNumber precision model. Firefox/WebKit, Lighthouse budgets, IndexedDB, Workbox/PWA, compression and replacing HugeNumber remain deferred.
 
 Release packaging updates only the visible/version feedback metadata to **Foundation 2.8 · Quality** and archives a byte-identical playable snapshot. Both Foundation and Browser workflows must pass again on that exact release commit before merge. Detailed evidence: `docs/Cookie_Empire_Foundation_2.8_Quality_Report.md`.
+
+
+## 49.8 Final merge acceptance — 2026-09-30
+
+PR #19 was squash-merged to `main` as `1045cb26e64e0d9c4f4482347234f56fece2b459`. The exact merged runtime then passed post-merge **Foundation checks** and **Browser checks**. GitHub Pages build/deployment also completed successfully from that commit.
+
+The archived playable file `archive/releases/cookie-empire-foundation-2.8-quality.html` and `index.html` were created from the same Git blob `ef9cbfe849eaeee605c4f2d0978a142bfd5ad66b`, proving the archived delivery is byte-identical to the packaged runtime.
+
+Foundation 2.8 Quality is therefore the current merged/deployed quality baseline. Evidence is automated Chromium desktop + Pixel 5 emulation plus the existing user's prior real-use validation of the 2.7.2 deployment; Foundation 2.8 itself is not claimed as independently validated with a physical-device screen reader. Save schema remains v7 and gameplay/economy constants remain unchanged.
