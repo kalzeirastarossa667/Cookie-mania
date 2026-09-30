@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.6 SHOP BALANCE MODEL / SOURCE OF TRUTH
+Status: FOUNDATION 2.8.3 MENU / SOURCE OF TRUTH
 Last audit: 2026-09-30
 
 ## 0. Purpose
@@ -2801,5 +2801,5 @@ The user explicitly requested direct implementation of the Cookie Empire visual 
 
 Implementation stays reviewable on a dedicated pull request and does not merge into `main` before automated checks and user visual review. The current work must preserve the Foundation 2.8.2 bottom-navigation clearance and Foundation 2.8.3 menu hit-testing contracts.
 
-The first implementation branch combines the required generator description metadata with presentation scaffolding. Before acceptance it must also satisfy the Phase-A derived-details contract (owned-stack metrics and generator-bound specialization guidance), then pass the complete automated baseline. Any visual polish already present remains presentation-only and does not relax the Phase-A verification requirements.
+The implementation includes generator description metadata, progressive generator details, explicit research-lock wording, prestige loss/keep/gain guidance and presentation polish. Acceptance still requires the complete automated baseline plus user visual review; no economy, save-schema or timing contract is relaxed.
 
