@@ -15,10 +15,12 @@ const document = window.document;
 assert.ok(app, 'application démarrée');
 
 const cards = [...document.querySelectorAll('#generatorList .generator')];
-assert.equal(cards.length, 16, 'seize générateurs affichés');\nassert.equal(cards.filter(card => card.querySelector('.generator-description')?.textContent.trim()).length, 16, 'seize descriptions de générateurs affichées');
+assert.equal(cards.length, 16, 'seize générateurs affichés');
+assert.equal(cards.filter(card => card.querySelector('.generator-description')?.textContent.trim()).length, 16, 'seize descriptions de générateurs affichées');
 assert.equal(cards.filter(card => card.querySelector('.generator-details')).length, 16, 'seize panneaux de détails générateurs');
 assert.equal(cards.filter(card => !/NaN|Infinity/.test(card.querySelector('.generator-details').textContent)).length, 16, 'aucune métrique générateur invalide au départ');
-assert.match(cards[0].querySelector('[data-role="specialization"]').textContent, /Gestes experts/, 'spécialisation curseur dérivée des recherches');\nassert.match(cards[0].querySelector('.generator-description').textContent, /production|clic/i, 'description du curseur pédagogique');
+assert.match(cards[0].querySelector('[data-role="specialization"]').textContent, /Gestes experts/, 'spécialisation curseur dérivée des recherches');
+assert.match(cards[0].querySelector('.generator-description').textContent, /production|clic/i, 'description du curseur pédagogique');
 assert.match(cards[2].querySelector('.click-bonus').textContent, /8 cookie\/clic/, 'contribution du four lisible');
 assert.match(cards[3].querySelector('.click-bonus').textContent, /47 cookie\/clic/, 'contribution de la mine lisible');
 assert.throws(()=>window.eval("validateGeneratorContent({test:{id:'test',name:'Test',icon:'x',description:'',baseCost:'1',growthRate:'1.15',baseCps:'1'}})"),/générateur/i,'description générateur vide rejetée');

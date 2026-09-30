@@ -10,7 +10,8 @@ test('clics, achat réel et sauvegarde après rechargement', async ({ page }) =>
   await expect(page.locator('#balance')).toHaveText('15');
   await page.locator('[data-nav="workshop"]').click();
   await page.locator('button[data-generator-id="cursor"][data-buy-mode="1"]').click();
-  await expect(page.locator('[data-generator-id="cursor"] [data-role="owned"]')).toHaveText('1');\n  await expect(page.locator('[data-generator-id="cursor"] .generator-description')).not.toBeEmpty();
+  await expect(page.locator('[data-generator-id="cursor"] [data-role="owned"]')).toHaveText('1');
+  await expect(page.locator('[data-generator-id="cursor"] .generator-description')).not.toBeEmpty();
   const cursorDetails = page.locator('[data-generator-id="cursor"] .generator-details');
   await expect(cursorDetails.locator('summary')).toHaveText(/Comprendre ce générateur/);
   await cursorDetails.locator('summary').click();
