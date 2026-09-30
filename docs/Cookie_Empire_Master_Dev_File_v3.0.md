@@ -2623,3 +2623,174 @@ Green pre-packaging evidence on `b36387604ef68d148e75fd9fc0ef30e1329369bb`:
 Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. Physical Android validation remains required after public deployment because the defect was originally exposed by the user’s phone screenshot.
 
 Release packaging updates only visible version metadata/documentation and archives a byte-identical copy of the playable file. Foundation and Browser workflows must pass again on the packaged runtime before merge.
+
+
+## 52.5 Final merge and deployment acceptance — 2026-09-30
+
+PR #23 was squash-merged to `main` as `29dfe1d8a409961101e17510533212b9c67d24fb`.
+
+Post-merge evidence on that exact merged commit:
+- Foundation workflow `36763315354`: **SUCCESS**;
+- Foundation rules/persistence remain **220/220 PASS**;
+- deterministic cadence remains **20 renders / 1 autosave over 5 s**;
+- Foundation 2.8 HugeNumber/generator-cost properties PASS;
+- targeted interface PASS;
+- **56/56 Constellation DOM checks PASS**;
+- Browser workflow `36763315286`: **SUCCESS**;
+- Playwright: **20 PASS + 2 expected desktop skips in 45.9 s**;
+- the Foundation 2.8.3 Pixel 5 menu hit-testing regression passes;
+- GitHub Pages build/deployment `36763314258`: **SUCCESS**.
+
+The deployed 2.8.3 runtime therefore satisfies automated desktop Chromium + Pixel 5 emulation acceptance and is the current merged/deployed baseline. Physical Android validation remains pending and must be reported separately; automated emulation is not treated as proof of the user's real browser/device behavior.
+
+
+# 53. Foundation 2.9 — visual clarity and player guidance
+
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: merged/deployed Foundation 2.8.3 Menu. Runtime implementation is intentionally deferred until the 2.8.3 top-right menu is rechecked on the physical Android browser that exposed the defect, unless a later explicit project decision accepts emulation as sufficient.
+
+## 53.1 Product goal
+
+The next presentation phase must make Cookie Empire more attractive without sacrificing comprehension. A new player should be able to answer, from the interface itself:
+- what a generator represents;
+- what it produces right now;
+- what the owned stack contributes to the empire;
+- what the next purchase will add and cost;
+- what future specialization or unlock is associated with it;
+- why a research or prestige action is locked;
+- what will be lost, kept and gained before prestige.
+
+This is not an economy rebalance. Existing prices, base CPS, multipliers, prestige rules, save schema v7 and timing semantics remain authoritative unless a later balance phase explicitly changes them.
+
+## 53.2 Source-of-truth contract
+
+Static generator explanation belongs to Content. Each entry in `GENERATORS` will gain one required, non-empty `description` string. The description is thematic/explanatory only and must not duplicate mutable numeric rules.
+
+Dynamic values remain derived:
+- unit automatic production: `Economy.generatorUnitCps(id, multipliers)`;
+- unit click contribution: `Economy.generatorUnitClick(id, multipliers)`;
+- owned-stack automatic production: unit CPS × owned count;
+- owned-stack click contribution: unit click × owned count;
+- next cost and batch costs: existing Economy generator cost functions;
+- Max quantity: existing max-affordable logic;
+- wait before purchase: existing `Economy.purchaseWait`;
+- next specialization/unlock: derived from research definitions whose `requiresGenerator` targets that generator.
+
+The UI must never recreate these formulas. If a percentage share of total CPS is shown, the bounded ratio must be computed in Economy (or a pure helper owned by Economy) from HugeNumber values before conversion to a display percentage. The UI must not convert authoritative huge values to ordinary Number first.
+
+No description, percentage, unlock hint or visual state is persisted. Save schema remains v7.
+
+## 53.3 Generator descriptions
+
+Initial content direction, subject to copy-editing during implementation:
+
+- Curseur — « Automatise les premiers gestes de l’atelier et maintient une petite production régulière. »
+- Grand-mère — « Transforme les recettes familiales en une production continue de cookies. »
+- Four artisanal — « Enchaîne les fournées en continu et forme le cœur productif du premier atelier. »
+- Mine de cacao — « Extrait le cacao à grande échelle pour alimenter une production plus industrielle. »
+- Laboratoire chocolatier — « Expérimente de nouveaux procédés pour produire des cookies à un rythme scientifique. »
+- Boulangerie orbitale — « Déplace les lignes de cuisson en orbite pour augmenter l’échelle de production. »
+- Moisson lunaire — « Récolte des ressources sucrées lunaires pour soutenir des fournées massives. »
+- Forge stellaire — « Exploite l’énergie des étoiles pour alimenter une production à très haut rendement. »
+- Raffinerie de nébuleuse — « Condense la matière des nébuleuses en ingrédients utilisables à l’échelle cosmique. »
+- Caravane de comètes — « Capture et achemine des ressources de comètes vers les chaînes de production. »
+- Four quantique — « Superpose les cycles de cuisson pour pousser la production au-delà des procédés classiques. »
+- Confiserie temporelle — « Exploite le temps pour multiplier les cycles de fabrication. »
+- Batteur antimatière — « Utilise l’antimatière pour alimenter des mélanges à une échelle extrême. »
+- Fonderie galactique — « Industrialise les fournées à l’échelle d’une galaxie entière. »
+- Cuisine du multivers — « Coordonne des cuisines parallèles à travers plusieurs univers. »
+- Creuset des origines — « Manipule des forces primordiales pour produire à une échelle presque absolue. »
+
+These sentences are flavor/context. The numeric lines displayed beside them are the mechanical truth.
+
+## 53.4 Generator-card information hierarchy
+
+The default card must stay scannable on mobile. Its always-visible layer should contain:
+- icon + name;
+- short description;
+- owned count;
+- effective automatic production per unit;
+- next ×1 cost;
+- current purchase availability/wait information.
+
+A progressive disclosure control such as native `<details>` should expose advanced information without turning the list into a wall of text:
+- owned-stack automatic production;
+- owned-stack click contribution;
+- share of current automatic production, when total CPS > 0;
+- effective gain from the next unit;
+- next generator-bound research gate, when one exists.
+
+The existing ×1 / ×10 / Max actions remain primary controls. Advanced details must not push them off-screen or reduce touch targets below 44 CSS px.
+
+## 53.5 Research, prestige and objective guidance
+
+Research:
+- keep the current data-driven `description`;
+- locked cards must state the missing prerequisite in plain language;
+- generator-gated research continues to link back to the relevant generator;
+- “owned”, “available”, “insufficient” and “locked” remain derived states, not content flags.
+
+Prestige:
+- before confirmation, explicitly separate **lost**, **kept** and **gained** resources;
+- Rayonnement total and spendable Éclats must remain distinct;
+- no new persisted onboarding flag is required for this phase.
+
+Objectives/Parcours:
+- retain current progress values;
+- emphasize the next actionable destination rather than exposing more simultaneous text.
+
+## 53.6 Visual design direction
+
+The visual language remains original to Cookie Empire. Cell to Singularity and other clickers may inspire principles such as depth, hierarchy and progression feedback, but no proprietary layout, art, iconography or assets are copied.
+
+Direction:
+- preserve galaxy mode as the primary identity;
+- strengthen hierarchy between resource HUD, active scene, actionable cards and secondary detail;
+- give the four generator eras (Atelier, Orbite, Cosmos, Infini) distinct but coherent visual treatment using existing design tokens plus semantic era tokens;
+- avoid color-only meaning;
+- use subtle depth, borders and motion rather than heavy DOM effects;
+- preserve reduced-motion behavior;
+- keep the fixed mobile navigation, safe-area clearance and Foundation 2.8.3 menu stacking guarantees.
+
+## 53.7 Performance and implementation constraints
+
+- Preserve the existing model where generator DOM is built once by `buildGeneratorUI()` and cached in `generatorElements`.
+- Do not reconstruct all generator cards on every render.
+- Add cached element references for new dynamic fields and update text only when values/signatures change.
+- Derive multipliers once per render path and reuse them for generator metrics.
+- Do not move economic calculations into event handlers or template strings.
+- No save migration is expected because only Content metadata and derived UI are added.
+
+## 53.8 Delivery phases
+
+Phase A — generator clarity:
+- add/validate the 16 generator descriptions;
+- add advanced generator metrics and unlock hint derivation;
+- improve card hierarchy without changing economy.
+
+Phase B — cross-system guidance:
+- improve locked research explanations;
+- make prestige loss/keep/gain contract explicit;
+- tighten next-objective guidance.
+
+Phase C — presentation polish:
+- era-specific visual treatments;
+- motion and feedback refinements;
+- final responsive spacing and hierarchy audit.
+
+Each phase must preserve the previous phase's test baseline rather than landing as one large unreviewable redesign.
+
+## 53.9 Verification contract
+
+Before accepting Phase A:
+- Content validation rejects missing/empty generator descriptions;
+- all 16 generator descriptions render;
+- displayed per-unit and owned-stack metrics match Economy outputs;
+- zero-CPS and extremely large HugeNumber cases do not produce NaN/Infinity UI text;
+- next specialization hints are derived from research prerequisites rather than duplicated constants;
+- ×1 / ×10 / Max remain functional;
+- no horizontal overflow on desktop Chromium and Pixel 5;
+- Foundation 2.8.2 bottom-navigation and 2.8.3 settings-menu regressions remain green;
+- axe serious/critical checks remain green for affected views;
+- full Foundation/property/interface/Constellation suites pass.
+
+Browser emulation and physical-device validation must continue to be reported separately.
