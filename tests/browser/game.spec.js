@@ -39,7 +39,7 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
 });
 
 
-test('Foundation 2.3 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
+test('Foundation 2.5 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigeButton')).toBeDisabled();
@@ -60,5 +60,30 @@ test('Foundation 2.3 : prestige conserve Rayonnement et portefeuille après relo
   await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigePoints')).toHaveText('1');
   await expect(page.locator('#prestigeCurrency')).toHaveText('1');
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')).version)).toBe(6);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')).version)).toBe(7);
+});
+
+
+test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au reload', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const state=window.cookieEmpire.state;
+    state.prestigePoints.m=3;state.prestigePoints.e=0;
+    state.prestigeCurrency.m=3;state.prestigeCurrency.e=0;
+    window.cookieEmpire.ui.render();
+  });
+  await page.locator('[data-nav="journey"]').click();
+  const first=page.locator('button[data-prestige-upgrade-id="radiant_click"]');
+  await expect(first).toBeEnabled();
+  await first.click();
+  await expect(page.locator('#prestigePoints')).toHaveText('3');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('2');
+  await expect(page.locator('#perClick')).toHaveText('1.1');
+  await expect(first).toHaveText('Acquis');
+  await page.reload();await page.locator('[data-nav="journey"]').click();
+  await expect(page.locator('#prestigePoints')).toHaveText('3');
+  await expect(page.locator('#prestigeCurrency')).toHaveText('2');
+  await expect(page.locator('button[data-prestige-upgrade-id="radiant_click"]')).toHaveText('Acquis');
+  const saved=await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')));
+  expect(saved.version).toBe(7);expect(saved.state.ownedPrestigeUpgrades).toEqual(['radiant_click']);
 });

@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.4 SYNERGIES / SOURCE OF TRUTH
+Status: FOUNDATION 2.5 ÉCLAT SHOP IN DEVELOPMENT / SOURCE OF TRUTH
 Last audit: 2026-09-30
 
 ## 0. Purpose
@@ -2127,3 +2127,54 @@ Red evidence exists at `49cfc13a01fae848cebcdb7c7d39aa70e929e9e0`. Final automat
 The required balance rerun passes. Under the same diagnostic policy, fresh 2 clicks/s reaches prestige in **25,141 s** versus the 2.3 baseline 31,388 s; fresh 5 clicks/s in **10,969 s** versus 13,587 s; one Rayonnement + 2 clicks/s in **22,821 s** versus 28,538 s. The ten-cycle 2-click/s series remains monotonic and reaches cycle ten in **13,148 s** versus 16,427 s. This is a material ~20% acceleration, accepted for this first synergy milestone but explicitly subject to human long-play observation before adding further broad multipliers. The temporary balance step was removed from routine CI after measurement.
 
 Final feature HEAD `b08488d03039eab353085a9a76cb7e37f8e362e3` passed GitHub Actions: 203/203 Foundation cases, targeted interface checks, 56/56 Constellation/Horizons DOM assertions, and 6/6 Playwright browser tests. Chromium desktop and Pixel 5 emulation are browser evidence, not physical-phone evidence. PR #9 was squash-merged to `main` as `d8a0d18c0366525ebb2ada57d9e1b678c286a2cb`. No prestige spending is part of Foundation 2.4.
+
+
+# 44. Foundation 2.5 — first spendable Éclat shop
+
+Specification BEFORE implementation, 2026-09-30 UTC. Baseline: Foundation 2.4 Synergies on `main` at `c48b0b7d531eec14bab1dd6d0485d3390498ad6c`. Foundation 2.3 deliberately separated lifetime Rayonnement (`prestigePoints`) from the spendable Éclat wallet (`prestigeCurrency`). Foundation 2.5 is the smallest safe use of that wallet.
+
+## 44.1 Scope and authoritative state
+
+Add immutable `PRESTIGE_UPGRADES` content and one authoritative GameState field: `ownedPrestigeUpgrades`, an ordered array of unique known IDs. Purchases are permanent across prestige resets and spend only `prestigeCurrency`. They never subtract `prestigePoints`, never alter `prestigeCount`, and never refund automatically. Full New Game clears them through GameState.create().
+
+The first catalogue is deliberately small and sequential:
+- `radiant_click` — **Impulsion radiante**, cost 1 Éclat, final click ×1.10;
+- `radiant_production` — **Fours rayonnants**, cost 2 Éclats, global CPS ×1.10, requires Impulsion radiante;
+- `harmonic_resonance` — **Résonance harmonique**, cost 4 Éclats, all existing research-synergy CPS and click factors receive an additional ×1.05 final multiplier, requires Fours rayonnants.
+
+These factors are intentionally smaller than the 2.4 research synergies. They are initial balance values, not immutable release commitments.
+
+## 44.2 Economy and transaction contract
+
+Economy validates the prestige catalogue, derives a prestige-shop quote, and folds owned effects into the existing multiplier derivation. `GameEngine.buyPrestigeUpgrade(id)` is atomic: unknown/owned/locked/insufficient purchases return false with no mutation; a valid purchase prepares the new ownership list and all derived values before mutating the live state, then subtracts the exact Éclat cost. HugeNumber subtraction must never be used as an affordability substitute: affordability is checked first.
+
+`radiant_click` multiplies final click reward only. `radiant_production` multiplies global CPS only. `harmonic_resonance` has no effect unless at least one research synergy is active; when active, it applies one ×1.05 factor to final CPS and final click regardless of whether one or four research synergies are active. This avoids quadratic amplification from multiplying once per synergy.
+
+Prestige candidates copy `ownedPrestigeUpgrades` into the new run and preserve the remaining wallet before adding the newly earned reward. Lifetime Rayonnement continues to be the only input to the existing `1 + 0.10 × prestigePoints` permanent multiplier.
+
+## 44.3 Persistence contract
+
+Advance save schema from v6 to **v7**. V7 persists `ownedPrestigeUpgrades` in addition to the v6 authoritative fields. V6 migration initializes it to an empty array. V1–v5 continue through their existing semantics and also initialize the new array empty. Validation rejects unknown IDs, duplicates, non-array ownership and impossible dependency order/ownership. Derived prestige-shop multipliers are never persisted.
+
+The existing v6 invariant `prestigeCurrency <= prestigePoints` remains valid after spending. Import/recovery revalidation must use v7. A failed normal save after a purchase must not crash play; the existing persistence recovery semantics remain the authority. No new transactional storage API is introduced in this milestone.
+
+## 44.4 UI contract
+
+Parcours receives a compact **Boutique d’Éclats** below the prestige card. It shows available Éclats, each permanent purchase, prerequisite/owned/affordability state, and exact effect. Buttons call the engine; UI never edits wallet or ownership directly. A successful purchase requests an immediate normal save through the application callback so the permanent purchase is not intentionally left waiting for the five-second autosave window. If that save fails, gameplay remains live and the existing recovery/status UI reports the persistence problem.
+
+## 44.5 Verification contract
+
+Follow red→green. Before implementation add tests proving Foundation 2.4 lacks: fresh empty prestige ownership; exact wallet debit without lifetime Rayonnement loss; insufficient/locked/duplicate/unknown no-mutation; exact click and CPS effects; harmonic resonance inactive without a research synergy and active exactly once with one or multiple synergies; prestige reset preservation; v6→v7 migration; v7 roundtrip; malformed ownership rejection; full New Game clearing. Add a regression for derivation failure leaving wallet/ownership untouched.
+
+After implementation rerun all Foundation/interface/Constellation checks, the deterministic balance observatory, and Playwright desktop + Pixel 5. Because the deterministic analyzer currently models prestige points but not deliberate shop spending, its unchanged no-shop path is a regression check, not a balance estimate for optimal spending. Add browser coverage for a controlled v7 save with enough wallet to buy the first item, reload it, and verify lifetime Rayonnement is unchanged while wallet and permanent ownership persist. Do not add a second prestige tier or more than these three shop items in this milestone.
+
+
+## 44.6 Implementation and measured verification
+
+Implemented on `feature/foundation-2.5-prestige-shop`. The first six red cases produced **203/209**, with every pre-existing Foundation 2.4 case green. The v7 core then exposed only historical exact-schema expectations; after migrating those assertions and adding adversarial coverage, the Foundation suite reaches **214/214**, targeted interface checks pass and **56/56** Constellation/Horizons DOM assertions pass.
+
+The balance analyzer was updated to clone `ownedPrestigeUpgrades`. Its no-shop-spending regression path remains exactly at the Foundation 2.4 measurements: fresh 2 clicks/s **25,141 s**, fresh 5 clicks/s **10,969 s**, and one Rayonnement + 2 clicks/s **22,821 s**; observatory PASS. This proves that merely introducing v7/shop state does not alter pacing when no permanent purchase is made. The observatory was removed from routine CI again after measurement.
+
+The first new Playwright run exposed only an ambiguous test locator (shop card and button shared the same data attribute); all six historical scenarios passed. The locator was narrowed to the button without runtime changes. Corrected browser automation then passed **8/8**: four desktop Chromium scenarios and four Pixel 5 emulation scenarios, including exact Éclat spending, unchanged lifetime Rayonnement, permanent click effect, v7 save ownership and reload persistence. Physical-phone validation remains separate.
+
+Before merge, final branch HEAD must rerun routine Foundation and Browser workflows green. Foundation 2.5 remains limited to three permanent purchases; do not expand factors or add another prestige tier without human long-play observation and a shop-aware balance model.

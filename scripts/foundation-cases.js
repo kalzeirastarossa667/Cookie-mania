@@ -489,12 +489,12 @@ validateResearchGraph(UPGRADES);
     const {state,engine}=funded();state.clickPower=HugeNumber.from('1e1000');engine.buyUpgrade('reinforced_click');
     assert(engine.click().compare('2e1000')===0,'pas overflow');
   });
-  test('v6 ne sauvegarde aucune valeur dérivée',()=>{
+  test('v7 ne sauvegarde aucune valeur dérivée',()=>{
     const {state,engine}=funded();engine.buyUpgrade('reinforced_click');engine.buyUpgrade('warm_ovens');
     const save=new SaveSystem('cookie-empire-test-v4-schema');
     try{assert(save.save(state),'save');const raw=JSON.parse(localStorage.getItem(save.key));
-      assert(raw.version===6,'version');
-      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','champs exacts');
+      assert(raw.version===7,'version');
+      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedPrestigeUpgrades,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','champs exacts');
       assert(raw.state.clickPower.m===1 && raw.state.ownedUpgrades.length===2,'base + IDs');
     }finally{save.clear();}
   });
@@ -829,12 +829,12 @@ validateResearchGraph(UPGRADES);
     for(const archive of [JSON.stringify({version:2,entries:[]}),importArchive([raw,raw,raw]),JSON.stringify({version:1,entries:[{raw,sourceKey:'x',capturedAt:-1}]})]){const r=save.inspectImport(importBundle(raw,null,archive));assert(r.candidates.length===1 && r.invalidCount===1,'archive ignorée');}
     assert(storage.getItem(save.quarantineKey)===before,'archive locale intacte');
   });
-  test('import : v1 à v3 migrent vers un état v6 sans valeurs dérivées persistées',()=>{
+  test('import : v1 à v3 migrent vers un état v7 sans valeurs dérivées persistées',()=>{
     const {save,raw}=recoveryFixture();for(const version of [1,2,3]){
       const data=JSON.parse(raw);data.version=version;delete data.state.ownedUpgrades;data.state.cps={m:9,e:99};
       if(version===1){data.state.cookies=500;data.state.totalProduced=600;data.state.clickPower=3;}
       const state=save.decodeImport(JSON.stringify(data));assert(state && state.ownedUpgrades.length===0,'migration');
-      const persisted=JSON.parse(save.encode(state));assert(persisted.version===6 && !('cps' in persisted.state) && !('clickReward' in persisted.state) && 'prestigePoints' in persisted.state && 'prestigeCurrency' in persisted.state && 'prestigeCount' in persisted.state,'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
+      const persisted=JSON.parse(save.encode(state));assert(persisted.version===7 && !('cps' in persisted.state) && !('clickReward' in persisted.state) && 'prestigePoints' in persisted.state && 'prestigeCurrency' in persisted.state && 'prestigeCount' in persisted.state,'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
     }
   });
   test('import : compteurs et horodatages hérités doivent être réinscriptibles',()=>{
@@ -927,7 +927,7 @@ validateResearchGraph(UPGRADES);
     for(const definitions of bad){let rejected=false;try{validateMilestoneContent(definitions);}catch{rejected=true;}assert(rejected,'contenu invalide '+JSON.stringify(definitions));}
   });
   test('progression : sauvegarde inchangée et étapes reconstruites',()=>{
-    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
+    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedPrestigeUpgrades,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
   });
   test('progression : migration ancienne respecte ses possessions historiques',()=>{
     const {save,raw}=recoveryFixture();const data=JSON.parse(raw);data.version=3;delete data.state.ownedUpgrades;const s=save.decode(JSON.stringify(data));assert(step(s,'first_cursor').done && !step(s,'first_upgrade').done,'v3');data.version=2;const v2=save.decode(JSON.stringify(data));assert(step(v2,'first_batch').done && !step(v2,'first_cursor').done,'v2 sans ownership');
@@ -1185,6 +1185,68 @@ validateResearchGraph(UPGRADES);
   });
 
 
+  test('2.5 RED : boutique prestige vide au départ',()=>{
+    const s=GameState.create();assert(Array.isArray(s.ownedPrestigeUpgrades) && s.ownedPrestigeUpgrades.length===0,'possession vide');
+    assert(Object.keys(PRESTIGE_UPGRADES).length===3,'trois achats');
+  });
+  test('2.5 RED : achat Éclat débite le portefeuille sans réduire le Rayonnement',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(3);s.prestigeCurrency=HugeNumber.from(3);const e=new GameEngine(s);
+    assert(e.buyPrestigeUpgrade('radiant_click'),'achat');
+    assert(s.prestigeCurrency.compare(2)===0 && s.prestigePoints.compare(3)===0,'séparation');
+    assert(s.clickReward.compare('1.1')===0,'bonus clic');
+  });
+  test('2.5 RED : achats invalides ne mutent rien',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(1);s.prestigeCurrency=HugeNumber.from(1);const e=new GameEngine(s);
+    for(const id of ['radiant_production','missing']){const before=JSON.stringify(s);assert(!e.buyPrestigeUpgrade(id) && JSON.stringify(s)===before,id);}
+    assert(e.buyPrestigeUpgrade('radiant_click'),'premier achat');const before=JSON.stringify(s);
+    assert(!e.buyPrestigeUpgrade('radiant_click') && !e.buyPrestigeUpgrade('radiant_production') && JSON.stringify(s)===before,'doublon et fonds insuffisants');
+  });
+  test('2.5 RED : prestige conserve les achats permanents',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(1);s.ownedPrestigeUpgrades=['radiant_click'];s.totalProduced=HugeNumber.from('1e12');
+    const candidate=new GameEngine(s).prestigeCandidate();assert(candidate && candidate.state.ownedPrestigeUpgrades.join(',')==='radiant_click','conservé');
+    assert(candidate.state.prestigeCurrency.compare(2)===0 && candidate.state.prestigePoints.compare(3)===0,'récompense');
+  });
+  test('2.5 RED : v6 migre vers v7 sans achat prestige',()=>{
+    const save=new SaveSystem('v6-to-v7',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(1);
+    const legacy=JSON.parse(save.encode(s));legacy.version=6;delete legacy.state.ownedPrestigeUpgrades;
+    const loaded=save.decode(JSON.stringify(legacy));assert(loaded && loaded.ownedPrestigeUpgrades.length===0,'migration');
+  });
+  test('2.5 RED : v7 roundtrip et schéma autoritaire',()=>{
+    const save=new SaveSystem('v7-shop',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(3);s.prestigeCurrency=HugeNumber.from(2);s.ownedPrestigeUpgrades=['radiant_click'];new GameEngine(s);
+    const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
+    assert(parsed.version===7 && parsed.state.ownedPrestigeUpgrades.join(',')==='radiant_click','v7');
+    assert(loaded && loaded.ownedPrestigeUpgrades.join(',')==='radiant_click' && loaded.clickReward.compare('1.1')===0,'roundtrip');
+    assert(!Object.hasOwn(parsed.state,'prestigeShopMultiplier'),'pas de cache');
+  });
+
+  test('2.5 : effets exacts et résonance bornée',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(20);s.prestigeCurrency=HugeNumber.from(20);s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];const e=new GameEngine(s);
+    const baseCps=s.cps.clone(),baseClick=s.clickReward.clone();
+    assert(e.buyPrestigeUpgrade('radiant_click') && s.clickReward.compare(baseClick.multiply('1.10'))===0,'clic ×1.10');
+    assert(e.buyPrestigeUpgrade('radiant_production') && s.cps.compare(baseCps.multiply('1.10'))===0,'CPS ×1.10');
+    const beforeCps=s.cps.clone(),beforeClick=s.clickReward.clone();assert(e.buyPrestigeUpgrade('harmonic_resonance'),'résonance');
+    assert(s.cps.compare(beforeCps.multiply('1.05'))===0 && s.clickReward.compare(beforeClick.multiply('1.05'))===0,'une seule résonance');
+    s.generators.oven=10;s.generators.cocoa_mine=10;s.ownedUpgrades.push('expert_oven','expert_cocoa_mine');Economy.refreshDerived(s);
+    const withoutRes={...s,ownedPrestigeUpgrades:['radiant_click','radiant_production']};const baseline=Economy.deriveValues(withoutRes);
+    assert(s.cps.compare(baseline.cps.multiply('1.05'))===0 && s.clickReward.compare(baseline.clickReward.multiply('1.05'))===0,'toujours ×1.05 avec deux synergies');
+  });
+  test('2.5 : résonance sans synergie de recherche reste neutre',()=>{
+    const s=GameState.create();s.ownedPrestigeUpgrades=['radiant_click','radiant_production','harmonic_resonance'];new GameEngine(s);
+    assert(s.cps.isZero() && s.clickReward.compare('1.1')===0,'aucun ×1.05 sans synergie active');
+  });
+  test('2.5 : dérivation défaillante ne débite pas les Éclats',()=>{
+    const s=GameState.create();s.prestigePoints=HugeNumber.from(2);s.prestigeCurrency=HugeNumber.from(2);const e=new GameEngine(s),before=JSON.stringify(s),original=Economy.deriveValues;let threw=false;
+    Economy.deriveValues=()=>{throw new Error('calcul simulé');};try{e.buyPrestigeUpgrade('radiant_click');}catch{threw=true;}finally{Economy.deriveValues=original;}
+    assert(threw && JSON.stringify(s)===before,'transaction intacte');
+  });
+  test('2.5 : v7 refuse possessions prestige invalides',()=>{
+    const save=new SaveSystem('v7-invalid-shop',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(10);s.prestigeCurrency=HugeNumber.from(10);const base=JSON.parse(save.encode(s));
+    for(const value of [['missing'],['radiant_click','radiant_click'],['radiant_production'],['harmonic_resonance'],null,{}]){const bad=JSON.parse(JSON.stringify(base));bad.state.ownedPrestigeUpgrades=value;assert(save.decode(JSON.stringify(bad))===null,'invalide');}
+  });
+  test('2.5 : nouvelle partie efface la boutique prestige',()=>{
+    const s=GameState.create();s.ownedPrestigeUpgrades=['radiant_click'];const fresh=GameState.create();assert(fresh.ownedPrestigeUpgrades.length===0,'reset');
+  });
+
   test('2.4 : quatre synergies sont définies et inactives au départ',()=>{
     assert(Object.keys(SYNERGIES).length===4,'catalogue');
     const s=GameState.create();assert(Economy.deriveActiveSynergies(s).length===0,'aucune synergie gratuite');
@@ -1211,7 +1273,7 @@ validateResearchGraph(UPGRADES);
     const save=new SaveSystem('synergy-24',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();
     s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];new GameEngine(s);
     const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
-    assert(parsed.version===6 && !Object.hasOwn(parsed.state,'activeSynergies'),'schéma v6 inchangé');
+    assert(parsed.version===7 && !Object.hasOwn(parsed.state,'activeSynergies'),'schéma v7 sans cache de synergie');
     assert(Economy.deriveActiveSynergies(loaded).some(item=>item.id==='artisan_duo'),'reconstruction');
     assert(loaded.cps.compare('24.2')===0 && loaded.clickReward.compare('25.3')===0,'effets reconstruits');
   });
@@ -1246,10 +1308,10 @@ validateResearchGraph(UPGRADES);
     const loaded=save.decode(JSON.stringify(legacy));
     assert(loaded && loaded.prestigePoints.compare('3.5')===0 && loaded.prestigeCurrency.compare('3.5')===0,'migration');
   });
-  test('2.3 RED : sauvegarde v6 roundtrip du portefeuille',()=>{
+  test('2.3 : portefeuille historique survit au roundtrip v7',()=>{
     const save=new SaveSystem('v6-wallet',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();s.prestigePoints=HugeNumber.from(5);s.prestigeCurrency=HugeNumber.from('1.25');s.prestigeCount=4;
     const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
-    assert(parsed.version===6,'version 6');
+    assert(parsed.version===7,'version 7');
     assert(loaded && loaded.prestigeCurrency.compare('1.25')===0 && loaded.prestigePoints.compare(5)===0,'roundtrip');
   });
   test('2.3 RED : v6 refuse les portefeuilles non canoniques',()=>{
