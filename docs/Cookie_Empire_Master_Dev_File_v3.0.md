@@ -2378,3 +2378,55 @@ This confirms the Foundation 2.7.2 feedback flow in real use after GitHub Pages 
 This closes the only remaining external acceptance check recorded in section 48.4/48.5. Foundation 2.7.2 Feedback is now the latest user-validated public baseline. Save schema remains v7 and no gameplay/economy change is implied by this acceptance.
 
 Automated evidence remains: 220/220 Foundation, targeted interface PASS, 56/56 Constellation/Horizons DOM, and 12/12 Playwright on the merged runtime. Physical-device coverage beyond the user's successful real-use confirmation is not claimed exhaustively.
+
+
+# 49. Foundation 2.8 — quality hardening from GitHub research
+
+Specification BEFORE implementation, 2026-09-30. Baseline: Foundation 2.7.2 Feedback, user-validated on the public deployment, at `main` commit `a0053b8b105026cd032544e93499a172609cf92c`. Save schema v7. This milestone follows the external-source review recorded in `docs/Cookie_Empire_GitHub_Research_2.8.md`.
+
+## 49.1 Purpose and scope
+
+Foundation 2.8 is a quality milestone, not a gameplay expansion. Preserve GameState fields, Economy formulas and constants, generator/research/prestige catalogues, progression thresholds, offline cap, autosave/render cadence, Formspree behavior, localStorage keys and save schema v7 unless a new test first reproduces a concrete defect in an existing foundation rule.
+
+Development-only tooling may expand. No new package may be shipped inside the standalone game merely to support tests.
+
+## 49.2 Property-based numerical verification
+
+Add fast-check as a pinned development dependency. The property suite loads the real classes from `index.html`; it must not duplicate the production implementation. Cover bounded domains where HugeNumber's contract is mathematically defined and stable:
+- canonical round-trip and non-negative normalization;
+- comparison antisymmetry and equality consistency;
+- addition commutativity within the documented ~15-significant-digit model;
+- multiplication commutativity;
+- multiplication/division round-trip away from zero within explicit relative tolerance;
+- cost monotonicity for valid generator ownership;
+- batch cost never below the first unit and agrees with sequential sums for small bounded quantities;
+- max-affordable never overspends and is maximal for tested bounded cases.
+
+Use deterministic seeds in CI or report the failing seed/path so failures are replayable. Keep run counts bounded so routine CI remains fast.
+
+## 49.3 HugeNumber scientific-string regression gate
+
+Before modifying HugeNumber, add a targeted regression for scientific strings whose coefficient is below one and whose exponent is too large for native Number parsing, including `0.001e1000 = 1e997`. If the untouched 2.7.2 parser fails, record the red evidence, then correct only the parsing logic. The fix must preserve existing accepted syntax, zero handling, normalization, serialization and all old tests. Save JSON decoding is separate and must not be changed merely because string parsing changes.
+
+break_eternity.js remains a reference/oracle candidate and is not adopted as the runtime number system in this milestone. Replacing HugeNumber would require a separate persistence/economy migration design.
+
+## 49.4 Browser accessibility verification
+
+Integrate axe with the existing Playwright tests as development-only tooling. Run automated accessibility scans on the principal mounted views/states already exercised by browser tests, at minimum Empire, Atelier, Recherche, Parcours and Donner mon avis, on desktop Chromium and Pixel 5 emulation. Treat serious/critical violations as failures; keep documented exclusions narrowly scoped and justified. Automated axe coverage does not replace keyboard, screen-reader, contrast or physical-device review.
+
+The current Chromium matrix stays authoritative for 2.8. Firefox/WebKit expansion is deferred until this added gate proves stable and CI cost is measured.
+
+## 49.5 Dependency and runtime boundaries
+
+Pinned development dependencies are allowed in `package.json`/`package-lock.json`; `index.html` must not import them. Kittens Game code/assets remain prohibited from reuse under its repository license; only its general design observations are retained. Other external game repositories remain references unless a later milestone explicitly evaluates code reuse and license obligations.
+
+## 49.6 Verification gate
+
+Follow red → green for any reproduced defect. Final branch must pass:
+- existing Foundation **220/220** plus the new property/numeric cases;
+- targeted interface checks;
+- existing **56/56** Constellation/Horizons DOM assertions;
+- Playwright desktop Chromium and Pixel 5 scenarios;
+- automated axe scan for the selected views/states.
+
+Audit after implementation must verify no unintended GameState/save/economy/content change. If only development tests plus a narrowly proven HugeNumber parser fix change, no balance observatory rerun is required because formulas/constants remain unchanged. Browser evidence remains automated emulation/Chromium evidence, not exhaustive physical-device accessibility validation.
