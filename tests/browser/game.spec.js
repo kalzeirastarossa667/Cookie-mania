@@ -92,7 +92,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.8.2 · Mobile');
+  await expect(page.locator('footer')).toContainText('Foundation 2.8.3 · Menu');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -301,4 +301,34 @@ test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile',
 
   await page.locator('[data-nav="journey"]').click();
   await expectAboveNav('#milestoneDetails');
+});
+
+
+test('Foundation 2.8.3 : le menu options reste au-dessus du HUD de ressources', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Régression spécifique au viewport mobile');
+  await page.goto('/');
+
+  const settings = page.locator('details.settings');
+  await settings.locator('summary').click();
+  await expect(settings).toHaveAttribute('open', '');
+
+  for (const selector of ['#exportSaveButton', '#importButton', '#resetButton']) {
+    const action = page.locator(selector);
+    await expect(action).toBeVisible();
+    const hitTest = await action.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      const topmost = document.elementFromPoint(x, y);
+      return {
+        selector: element.id,
+        topmostId: topmost?.id || '',
+        topmostClass: topmost?.className || '',
+        isTopmost: topmost === element || element.contains(topmost),
+        x,
+        y,
+      };
+    });
+    expect(hitTest.isTopmost, JSON.stringify(hitTest)).toBe(true);
+  }
 });

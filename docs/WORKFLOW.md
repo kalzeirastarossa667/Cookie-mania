@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.2 Mobile, dérivée de Foundation 2.8.1 Timing. Save schema v7 inchangé. Le correctif 2.8.2 est exclusivement CSS/layout : il ajoute un dégagement cohérent pour la navigation basse fixe et ne touche ni GameState, économie, moteur de temps, contenu, persistence ni Formspree.
+Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.3 Menu, dérivée de Foundation 2.8.2 Mobile. Save schema v7 inchangé. Le correctif 2.8.3 est exclusivement CSS/layering : il garde le menu d’options au-dessus du HUD sticky et ne touche ni GameState, économie, moteur de temps, contenu, persistence ni Formspree.
 
 ## Rangement
 
@@ -38,3 +38,6 @@ Foundation 2.8.1 : **18/18 Playwright PASS en 44,7 s** sur la branche de correct
 
 
 Foundation 2.8.2 : 20 cas Playwright déclarés, **19 PASS + 1 skip attendu** sur la branche de correction. Le cas mobile-only vérifie que les éléments de fin d’Empire, Atelier, Recherche et Parcours restent au-dessus de la navigation fixe sous émulation Pixel 5. Foundation reste **220/220**, propriétés PASS, interface PASS et Constellation **56/56**.
+
+
+Foundation 2.8.3 : la régression Pixel 5 ouvre le menu `…` et vérifie par hit-testing que `Exporter les données`, `Importer une partie` et `Nouvelle partie` restent les éléments interactifs au premier plan. La preuve rouge a identifié `.wallet` devant `#exportSaveButton`; le correctif porte `.settings-menu` de `z-index: 5` à `z-index: 40`. Pré-packaging : Foundation **220/220**, propriétés PASS, interface PASS, Constellation **56/56**, Playwright **20 PASS + 2 skips desktop attendus**.

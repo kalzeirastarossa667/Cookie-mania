@@ -2572,3 +2572,54 @@ Green evidence on commit `2a2a2a933b756694161dd72ffb072ac50c4ea892`:
 - Playwright: **19 PASS + 1 expected desktop skip in 46.1 s**. The 2.8.2 regression is deliberately mobile-only and passes on Pixel 5 emulation after checking Empire, Atelier, Recherche and Parcours.
 
 No GameState field, Economy formula, GameEngine timing rule, HugeNumber behavior, persistence field/schema, generator/research/prestige data, Formspree endpoint or autosave cadence changed. Physical Android validation remains required after deployment because the defect was originally observed in a user-provided phone recording.
+
+
+# 52. Foundation 2.8.3 — mobile settings menu layering
+
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: Foundation 2.8.2 Mobile.
+
+## 52.1 Observed defect
+
+A user-supplied Android screenshot clarified the actual interface defect: opening the top-right `…` options control does not keep the save-management actions above the sticky resource HUD. The menu contains `Exporter les données`, `Importer une partie` and `Nouvelle partie`, but the dropdown is currently layered at `z-index: 5` while `.resource-hud` is sticky at `z-index: 10`. Where their rectangles overlap, the HUD paints above the menu and can hide or intercept the menu actions.
+
+Foundation 2.8.2 fixed a different mobile defect involving bottom-navigation clearance. That correction remains valid but did not address this top-right menu layering defect.
+
+## 52.2 UI contract
+
+When `details.settings` is open:
+- the settings menu must paint above the resource HUD and normal game content;
+- Exporter, Importer and Nouvelle partie must remain visible and pointer-hit-testable;
+- the fix must work on the Pixel 5 mobile viewport without changing desktop layout;
+- status notifications and the fixed bottom navigation keep their existing behavior;
+- no GameState, Economy, GameEngine, HugeNumber, Persistence, content or save-schema rule changes.
+
+## 52.3 Required verification
+
+Before the CSS repair, add a Pixel 5 Playwright regression that opens the `…` menu and uses browser hit-testing at the center of each action to prove that every action is the topmost interactive element at its location. The regression must fail on the current 2.8.2 layout.
+
+After the repair:
+- the new mobile regression must pass;
+- existing Foundation/property/interface/Constellation checks must remain green;
+- the complete Playwright suite must remain green apart from deliberate project-specific skips;
+- the public deployment must be rechecked on the physical Android browser that exposed the defect.
+
+The correction should be limited to the stacking/layering contract unless testing proves a broader layout change is necessary.
+
+
+## 52.4 Red/green evidence and implementation — 2026-09-30
+
+Red proof was committed before the CSS repair on `f0a8acb7a06b9f3655adecf908d361da85081511`. Browser checks kept the historical scenarios green and failed the new Pixel 5 regression. Hit-testing the center of `#exportSaveButton` returned `.wallet` as the topmost element, with `isTopmost: false`, directly confirming that the sticky resource HUD intercepted the opened options menu.
+
+The runtime repair is deliberately limited to stacking order: `.settings-menu` moves from `z-index: 5` to `z-index: 40`. This places the open menu above the sticky resource HUD (`10`), quick-click control (`15`), bottom navigation (`20`) and normal content. No DOM ownership, menu action, save/import/export logic or gameplay rule changes.
+
+Green pre-packaging evidence on `b36387604ef68d148e75fd9fc0ef30e1329369bb`:
+- **220/220 Foundation PASS**;
+- cadence remains **20 renders / 1 autosave over 5 s**;
+- Foundation 2.8 deterministic properties PASS;
+- targeted interface checks PASS;
+- **56/56 Constellation DOM checks PASS**;
+- Playwright declares 22 cases across desktop Chromium + Pixel 5 emulation: **20 PASS + 2 expected desktop skips** because the 2.8.2 and 2.8.3 regressions are mobile-only.
+
+Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. Physical Android validation remains required after public deployment because the defect was originally exposed by the user’s phone screenshot.
+
+Release packaging updates only visible version metadata/documentation and archives a byte-identical copy of the playable file. Foundation and Browser workflows must pass again on the packaged runtime before merge.
