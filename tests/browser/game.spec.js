@@ -268,3 +268,35 @@ test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendan
   expect(result.automatic.e).toBe(0);
   expect(result.automatic.m).toBeGreaterThan(1.1);
 });
+
+
+test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'Régression spécifique au viewport mobile');
+  await page.goto('/');
+  await expect(page.locator('#view-empire')).toBeVisible();
+
+  const clearance = await page.evaluate(() => {
+    const target = document.getElementById('objectiveShortcut');
+    target.scrollIntoView({ block: 'end', behavior: 'instant' });
+    const nav = document.querySelector('.game-nav').getBoundingClientRect();
+    const rect = target.getBoundingClientRect();
+    return {
+      targetBottom: rect.bottom,
+      navTop: nav.top,
+      viewportHeight: innerHeight,
+      scrollY,
+    };
+  });
+
+  expect(clearance.targetBottom, JSON.stringify(clearance)).toBeLessThanOrEqual(clearance.navTop - 8);
+
+  await page.locator('[data-nav="workshop"]').click();
+  const lastGenerator = page.locator('#generatorList .generator').last();
+  await lastGenerator.scrollIntoViewIfNeeded();
+  const workshopOverlap = await page.evaluate(() => {
+    const nav = document.querySelector('.game-nav').getBoundingClientRect();
+    const target = document.querySelector('#generatorList .generator:last-child').getBoundingClientRect();
+    return target.bottom - nav.top;
+  });
+  expect(workshopOverlap).toBeLessThanOrEqual(-8);
+});
