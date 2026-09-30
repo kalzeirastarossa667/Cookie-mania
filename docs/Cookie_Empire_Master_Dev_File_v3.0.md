@@ -2313,3 +2313,40 @@ The detailed evidence is recorded in `docs/Cookie_Empire_Foundation_2.7.1_Stabil
 PR #17 was squash-merged to `main` as `5d20d9b5eb4ddfcb156b2a763a4179f77cb66477`. Post-merge **Foundation checks** and **Browser checks** both completed successfully on that exact runtime commit. The archived playable file `archive/releases/cookie-empire-foundation-2.7.1-stable.html` has the same Git blob SHA (`195aafec98021b40a2bdb0ca4dfaf8151d605311`) as `index.html`, proving the delivered snapshot is byte-identical to the tested runtime.
 
 Foundation 2.7.1 is therefore the current stable/testable baseline. Automated browser evidence covers desktop Chromium and Pixel 5 emulation; a physical phone has still not been tested. The next development step may proceed only from this baseline.
+
+
+# 48. Foundation 2.7.2 — player feedback channel
+
+Specification recorded BEFORE implementation, 2026-09-30. Baseline: Foundation 2.7.1 Stable on `main`, with save schema v7. The player supplied the Formspree endpoint `https://formspree.io/f/mdekjdqz` and requested an in-game comment section whose submissions reach the project owner's e-mail through Formspree.
+
+## 48.1 Scope and architecture
+
+This is an UI/integration-only milestone. It must not change GameState, Economy, GameEngine, SaveSystem, Content, progression, balance, autosave timing, localStorage keys or save schema v7.
+
+The game remains a static HTML/CSS/JavaScript GitHub Pages application. Use the Vanilla JavaScript/AJAX integration model, but do not add the optional `@formspree/ajax` CDN dependency: native `fetch` and `FormData` are sufficient and preserve the self-contained runtime. The HTML form still carries the exact Formspree `action` and `method="POST"`.
+
+Fields:
+- optional pseudonym;
+- optional 1–5 rating;
+- required comment, bounded to 3–2000 characters;
+- fixed game-version and source metadata.
+
+No save value, cookie balance, generator ownership, research ownership, prestige state, localStorage content or e-mail credential is attached to the submission. The Formspree endpoint is intentionally public client-side configuration, not a secret.
+
+## 48.2 Interaction contract
+
+Submission is intercepted by the UI and sent with `fetch` as POST with `Accept: application/json`. The player stays on the game page. While a request is in flight, duplicate submission is blocked and the submit button is disabled. Success clears the form and shows a polite confirmation. Failure keeps the game playable and displays a retryable error. Lack of `fetch` support or network access affects feedback only, never gameplay or saving.
+
+The feedback feature is presentation/integration state only. It is never authoritative gameplay state and is never persisted in the game save.
+
+## 48.3 Red/green evidence and verification gate
+
+A targeted interface regression was committed before the runtime implementation. On the untouched 2.7.1 runtime, Foundation rules remained **220/220**, then CI failed exactly at `section de feedback présente`. This isolates the red condition to the missing feature.
+
+After implementation, routine Foundation CI passes again: **220/220 Foundation**, targeted interface feedback submission with a mocked Formspree request, and **56/56 Constellation/Horizons DOM checks**. The mocked request verifies the exact endpoint, POST method, JSON response negotiation, success message, form reset and absence of gameplay-state mutation.
+
+Playwright adds a network-intercepted Formspree scenario so automated browser testing never sends a real e-mail. It verifies the visible form, exact endpoint, POST body, same-page behavior, success clearing, and unchanged gameplay state on both configured browser projects. Final browser result is recorded after CI completes.
+
+## 48.4 Remaining limits
+
+Formspree is an external service only for feedback delivery. Service outage, quota exhaustion, spam filtering, CORS/policy changes or a disabled Formspree form can prevent comments from arriving while the game itself continues to function. Automated tests mock/intercept Formspree; they do not prove delivery into the owner's actual mailbox. One manual real submission should be used to verify end-to-end e-mail delivery after deployment. Physical-phone layout remains distinct from Pixel 5 browser emulation.
