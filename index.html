@@ -1006,11 +1006,12 @@ const Economy = {
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     return Economy.multiply(Economy.multiply(GENERATORS[id].baseCps,multipliers.generators[id]),multipliers.globalCps);
   },
-  generatorStackCps(state,id,multipliers=Economy.deriveMultipliers(state)){
+  generatorStackCps(state,id,multipliers=Economy.deriveMultipliers(state),unitCps=null){
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     const owned=state.generators?.[id];
     if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
-    return Economy.multiply(Economy.generatorUnitCps(id,multipliers),owned);
+    const unit=unitCps===null?Economy.generatorUnitCps(id,multipliers):HugeNumber.from(unitCps);
+    return Economy.multiply(unit,owned);
   },
   deriveCps(state,multipliers=Economy.deriveMultipliers(state)){
     let total=HugeNumber.zero();
@@ -1053,11 +1054,12 @@ const Economy = {
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     return Economy.multiply(Economy.multiply(GENERATORS[id].baseCps,multipliers.generatorClicks[id]),multipliers.click);
   },
-  generatorStackClick(state,id,multipliers=Economy.deriveMultipliers(state)){
+  generatorStackClick(state,id,multipliers=Economy.deriveMultipliers(state),unitClick=null){
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     const owned=state.generators?.[id];
     if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
-    return Economy.multiply(Economy.generatorUnitClick(id,multipliers),owned);
+    const unit=unitClick===null?Economy.generatorUnitClick(id,multipliers):HugeNumber.from(unitClick);
+    return Economy.multiply(unit,owned);
   },
   contributionPercent(part,total){
     const numerator=HugeNumber.from(part),denominator=HugeNumber.from(total);
@@ -2402,8 +2404,8 @@ class GameUI {
       const detailSignature=signature+'::'+owned+'::'+s.cps.m+':'+s.cps.e+'::'+s.ownedUpgrades.join('|');
       if(elements.detailSignature!==detailSignature){
         elements.detailSignature=detailSignature;
-        const stackCps=Economy.generatorStackCps(s,id,multipliers);
-        const stackClick=Economy.generatorStackClick(s,id,multipliers);
+        const stackCps=Economy.generatorStackCps(s,id,multipliers,elements.unitCps);
+        const stackClick=Economy.generatorStackClick(s,id,multipliers,elements.unitClick);
         const share=Economy.contributionPercent(stackCps,s.cps);
         const specialization=Economy.generatorSpecialization(s,id);
         this.setText(elements.stackProduction,Economy.format(stackCps)+' cookie/s');
