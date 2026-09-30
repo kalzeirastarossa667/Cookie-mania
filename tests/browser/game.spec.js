@@ -292,7 +292,7 @@ test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile',
 
   await page.locator('[data-nav="workshop"]').click();
   const lastGenerator = page.locator('#generatorList .generator').last();
-  await lastGenerator.scrollIntoViewIfNeeded();
+  await lastGenerator.evaluate(element => element.scrollIntoView({ block: 'end', behavior: 'instant' }));
   const workshopOverlap = await page.evaluate(() => {
     const nav = document.querySelector('.game-nav').getBoundingClientRect();
     const target = document.querySelector('#generatorList .generator:last-child').getBoundingClientRect();
