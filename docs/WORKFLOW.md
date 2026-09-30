@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Audit du 28 septembre 2026 UTC. Version jouable : Foundation 2.5 Éclat Shop.
+Audit du 28 septembre 2026 UTC. Version jouable : Foundation 2.5 Éclat Shop. Baseline de développement : Foundation 2.6 Shop Balance Model (diagnostic, sans changement runtime).
 
 ## Rangement
 
