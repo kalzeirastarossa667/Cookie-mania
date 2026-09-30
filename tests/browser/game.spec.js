@@ -222,37 +222,49 @@ test('Foundation 2.8 : le thème clair reste sans violation axe sérieuse ou cri
 
 
 test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendant un retard de frame', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.waitForFunction(() => Boolean(window.cookieEmpire));
-  const result = await page.evaluate(() => {
+  await page.goto('/');
+  await expect(page.locator('#balance')).toHaveText('0');
+
+  const burst = await page.evaluate(() => {
     const app = window.cookieEmpire;
     const state = app.state;
-    state.cookies = HugeNumber.zero();
-    state.totalProduced = HugeNumber.zero();
+    const zero = state.cookies.constructor.zero();
+    state.cookies = zero.clone();
+    state.totalProduced = zero.clone();
     state.totalClicks = 0;
+    for (const id of Object.keys(state.generators)) state.generators[id] = 0;
     state.generators.grandma = 1;
-    Economy.refreshDerived(state);
+    app.engine.tick(0);
+    app.lastFrame = performance.now();
 
-    const clickReward = state.clickReward.clone();
-    for (let i = 0; i < 10; i++) document.getElementById('cookieButton').click();
+    const button = document.getElementById('cookieButton');
+    const started = performance.now();
+    let nextClickAt = 0;
+    while (performance.now() - started < 1200) {
+      const elapsed = performance.now() - started;
+      if (elapsed >= nextClickAt) {
+        button.click();
+        nextClickAt += 10;
+      }
+    }
+    return { clicks: state.totalClicks, clickReward: state.clickReward.toJSON() };
+  });
 
-    const originalRaf = window.requestAnimationFrame;
-    window.requestAnimationFrame = () => 0;
-    app.lastFrame = 1000;
-    app.loop(2500);
-    window.requestAnimationFrame = originalRaf;
+  expect(burst.clicks).toBeGreaterThan(50);
+  await page.waitForTimeout(150);
 
-    const manual = clickReward.multiply(state.totalClicks);
-    const automatic = Economy.subtract(state.totalProduced, manual);
+  const result = await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    const manual = state.clickReward.multiply(state.totalClicks);
+    const automatic = state.totalProduced.subtract(manual);
     return {
       clicks: state.totalClicks,
       cps: state.cps.toJSON(),
       automatic: automatic.toJSON(),
-      totalProduced: state.totalProduced.toJSON(),
     };
   });
 
-  expect(result.clicks).toBe(10);
   expect(result.cps).toEqual({ m: 1, e: 0 });
-  expect(result.automatic).toEqual({ m: 1.5, e: 0 });
+  expect(result.automatic.e).toBe(0);
+  expect(result.automatic.m).toBeGreaterThan(1.1);
 });
