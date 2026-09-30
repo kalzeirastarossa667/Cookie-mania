@@ -121,13 +121,31 @@ function simulateBalanceScenario(spec){
     pendingReward:Economy.format(Economy.prestigeReward(state))
   };
 }
-function simulatePrestigeSeries(clickRate,cycles){
+function spendPrestigeShop(state,policy){
+  const before=state.prestigeCurrency.clone(),pointsBefore=state.prestigePoints.clone(),purchased=[];
+  if(policy==='sequential'){
+    const engine=new GameEngine(state);
+    let progressed=true;
+    while(progressed){
+      progressed=false;
+      for(const id of Object.keys(PRESTIGE_UPGRADES)){
+        if(Economy.prestigeUpgradeQuote(state,id).status==='available'){
+          const cost=HugeNumber.from(PRESTIGE_UPGRADES[id].cost),walletBefore=state.prestigeCurrency.clone();
+          if(!engine.buyPrestigeUpgrade(id)) throw new Error('Achat prestige annoncé disponible mais refusé');
+          if(Economy.compare(Economy.subtract(walletBefore,state.prestigeCurrency),cost)!==0) throw new Error('Débit Éclat incorrect');
+          if(Economy.compare(state.prestigePoints,pointsBefore)!==0) throw new Error('Un achat a réduit le Rayonnement');
+          purchased.push(id);progressed=true;break;
+        }
+      }
+    }
+  }else if(policy!=='hold') throw new Error('Politique prestige inconnue');
+  if(Economy.compare(state.prestigeCurrency,0)<0 || Economy.compare(state.prestigeCurrency,state.prestigePoints)>0) throw new Error('Portefeuille prestige invalide');
+  return {walletBefore:Economy.format(before),walletAfter:Economy.format(state.prestigeCurrency),purchased};
+}
+function simulatePrestigeSeries(clickRate,cycles,policy='hold'){
   let state=GameState.create(),previousSeconds=null;
   const rows=[];
   for(let cycle=1;cycle<=cycles;cycle++){
-    // Reuse the same run logic with the prestige total carried by the authoritative candidate.
-    const spec={name:'cycle-'+cycle,clickRate,prestigePoints:state.prestigePoints.toString?.() ?? '0'};
-    // simulateBalanceScenario creates a fresh state, so run the equivalent loop from this authoritative cycle state.
     Economy.refreshDerived(state);
     const engine=new GameEngine(state),horizon=365*24*60*60;
     let seconds=0,purchases=0,steps=0;
@@ -139,8 +157,7 @@ function simulatePrestigeSeries(clickRate,cycles){
         const chosen=actions[0];
         const ok=chosen.kind==='generator'?engine.buyGenerator(chosen.id):engine.buyUpgrade(chosen.id);
         if(!ok) throw new Error('Action candidate prestige invalide');
-        purchases++;
-        continue;
+        purchases++;continue;
       }
       const income=modeledIncome(state,clickRate);
       if(income.isZero()) break;
@@ -149,25 +166,24 @@ function simulatePrestigeSeries(clickRate,cycles){
       if(nextCost && Economy.compare(state.cookies,nextCost)<0) wait=boundedSeconds(Economy.divide(Economy.subtract(nextCost,state.cookies),income),horizon-seconds);
       wait=Math.min(wait,horizon-seconds);
       const amount=Economy.multiply(income,wait);
-      state.cookies=Economy.add(state.cookies,amount);
-      state.totalProduced=Economy.add(state.totalProduced,amount);
-      seconds+=wait;
+      state.cookies=Economy.add(state.cookies,amount);state.totalProduced=Economy.add(state.totalProduced,amount);seconds+=wait;
     }
     if(Economy.compare(state.totalProduced,'1e12')<0) throw new Error('Cycle prestige non atteint');
     const candidate=engine.prestigeCandidate();
     if(!candidate || candidate.reward.isZero()) throw new Error('Récompense prestige absente');
+    const pointsAfterPrestige=candidate.state.prestigePoints.clone();
+    const spending=spendPrestigeShop(candidate.state,policy);
+    if(Economy.compare(candidate.state.prestigePoints,pointsAfterPrestige)!==0) throw new Error('Dépense modifie le Rayonnement');
     const multiplier=Economy.prestigeMultiplier(candidate.state);
-    const row={cycle,seconds,purchases,steps,reward:Economy.format(candidate.reward),prestigePoints:Economy.format(candidate.state.prestigePoints),multiplier:Economy.format(multiplier),prestigeCount:candidate.state.prestigeCount};
+    const row={policy,cycle,seconds,purchases,steps,reward:Economy.format(candidate.reward),prestigePoints:Economy.format(candidate.state.prestigePoints),walletBefore:spending.walletBefore,walletAfter:spending.walletAfter,purchasedPrestigeUpgrades:spending.purchased,ownedPrestigeUpgrades:[...candidate.state.ownedPrestigeUpgrades],multiplier:Economy.format(multiplier),prestigeCount:candidate.state.prestigeCount};
     if(previousSeconds!==null && seconds>previousSeconds) throw new Error('Un cycle prestige devient plus lent sous politique identique');
-    previousSeconds=seconds;
-    rows.push(row);
-    state=candidate.state;
+    previousSeconds=seconds;rows.push(row);state=candidate.state;
   }
   return rows;
 }
 globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
-globalThis.__prestigeSeries=simulatePrestigeSeries(2,10);
-if(!globalThis.__prestigeSeries.some(row=>Array.isArray(row.purchasedPrestigeUpgrades))) throw new Error('2.6 RED: observatoire sans politique de dépense Éclats');
+globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
+globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
 `,{filename:'balance-observatory'}).runInContext(context);
 
 const results=context.__balanceResults;
@@ -181,5 +197,20 @@ if(!byName['fresh-2-clicks'].reached || !byName['fresh-5-clicks'].reached) throw
 if(byName['fresh-5-clicks'].seconds>byName['fresh-2-clicks'].seconds) throw new Error('Plus de clics gratuits ralentissent le scénario déterministe');
 
 console.table(results);
-console.table(context.__prestigeSeries);
+const hold=context.__prestigeSeries,shop=context.__prestigeShopSeries;
+if(hold[0].seconds!==25141 || hold[9].seconds!==13148) throw new Error('Référence hold Foundation 2.5 modifiée');
+if(shop[0].seconds!==hold[0].seconds) throw new Error('Le cycle 1 doit être identique avant toute dépense');
+const catalogue=Object.keys(context.PRESTIGE_UPGRADES ?? {});
+for(let i=0;i<shop.length;i++){
+  const row=shop[i];
+  if(!Array.isArray(row.purchasedPrestigeUpgrades)||!Array.isArray(row.ownedPrestigeUpgrades)) throw new Error('Traçage boutique absent');
+  if(i && row.ownedPrestigeUpgrades.length<shop[i-1].ownedPrestigeUpgrades.length) throw new Error('Possession prestige non monotone');
+}
+const expected=['radiant_click','radiant_production','harmonic_resonance'];
+const finalOwned=shop.at(-1).ownedPrestigeUpgrades;
+if(finalOwned.some(id=>!expected.includes(id))) throw new Error('Achat prestige inconnu dans la série');
+for(let i=0;i<finalOwned.length;i++) if(finalOwned[i]!==expected[i]) throw new Error('Ordre/prérequis prestige invalide');
+console.table(results);
+console.table(hold);
+console.table(shop);
 console.log('Balance observatory: PASS');
