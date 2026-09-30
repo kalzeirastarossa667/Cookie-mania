@@ -2571,7 +2571,7 @@ Green evidence on commit `2a2a2a933b756694161dd72ffb072ac50c4ea892`:
 - **56/56 Constellation/Horizons DOM PASS**;
 - Playwright: **19 PASS + 1 expected desktop skip in 46.1 s**. The 2.8.2 regression is deliberately mobile-only and passes on Pixel 5 emulation after checking Empire, Atelier, Recherche and Parcours.
 
-No GameState field, Economy formula, GameEngine timing rule, HugeNumber behavior, persistence field/schema, generator/research/prestige data, Formspree endpoint or autosave cadence changed. Physical Android validation remains required after deployment because the defect was originally observed in a user-provided phone recording.
+No GameState field, Economy formula, GameEngine timing rule, HugeNumber behavior, persistence field/schema, generator/research/prestige data, Formspree endpoint or autosave cadence changed. At this Foundation 2.8.2 checkpoint, physical Android validation still remained required after deployment because the defect had originally been observed in a user-provided phone recording.
 
 
 # 52. Foundation 2.8.3 — mobile settings menu layering
@@ -2620,7 +2620,7 @@ Green pre-packaging evidence on `b36387604ef68d148e75fd9fc0ef30e1329369bb`:
 - **56/56 Constellation DOM checks PASS**;
 - Playwright declares 22 cases across desktop Chromium + Pixel 5 emulation: **20 PASS + 2 expected desktop skips** because the 2.8.2 and 2.8.3 regressions are mobile-only.
 
-Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. Physical Android validation remains required after public deployment because the defect was originally exposed by the user’s phone screenshot.
+Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. At this Foundation 2.8.3 pre-deployment checkpoint, physical Android validation still remained required after public deployment because the defect had originally been exposed by the user’s phone screenshot.
 
 Release packaging updates only visible version metadata/documentation and archives a byte-identical copy of the playable file. Foundation and Browser workflows must pass again on the packaged runtime before merge.
 
@@ -2641,7 +2641,7 @@ Post-merge evidence on that exact merged commit:
 - the Foundation 2.8.3 Pixel 5 menu hit-testing regression passes;
 - GitHub Pages build/deployment `36763314258`: **SUCCESS**.
 
-The deployed 2.8.3 runtime therefore satisfies automated desktop Chromium + Pixel 5 emulation acceptance and is the current merged/deployed baseline. Physical Android validation remains pending and must be reported separately; automated emulation is not treated as proof of the user's real browser/device behavior.
+At this historical Foundation 2.8.3 checkpoint, the deployed runtime satisfied automated desktop Chromium + Pixel 5 emulation acceptance and was the merged/deployed baseline at that time. Physical Android validation was still pending at that checkpoint and had to be reported separately; automated emulation was not treated as proof of the user's real browser/device behavior.
 
 
 # 53. Foundation 2.9 — visual clarity and player guidance
@@ -2808,7 +2808,7 @@ Foundation 2.9 was implemented in the staged chain required above rather than as
 
 The older PR #25 remains a prototype reference and is not the integration candidate.
 
-Before final packaging, current `main` was revalidated at `bfc46e721940086fd67e5ffc3d93cc3f2343128c`. Its new changes were documentation-only (`AGENTS.md` plus `PROJECT_MEMORY.md`). The C branch was merged non-destructively with that head as `26e7c8a176b1b00f344d88d8271a3f0df33b422a`, leaving it zero commits behind `main`.
+Before final packaging, the then-current `main` was revalidated at `bfc46e721940086fd67e5ffc3d93cc3f2343128c`. Its new changes were documentation-only (`AGENTS.md` plus `PROJECT_MEMORY.md`). The C branch was merged non-destructively with that head as `26e7c8a176b1b00f344d88d8271a3f0df33b422a`, leaving it zero commits behind `main`.
 
 Green evidence on that resynchronized integration state:
 
@@ -2824,7 +2824,7 @@ Green evidence on that resynchronized integration state:
 - Foundation 2.8.1 timing, 2.8.2 bottom-navigation and 2.8.3 menu hit-testing protections remain covered;
 - axe serious/critical scans remain part of the Browser suite in dark and light themes.
 
-Static scope audit against current `main` found byte-identical `HugeNumber`, `GameState`, `SaveSystem`, `GameEngine`, application orchestration and active-session loop. Existing Economy methods for costs, prestige, multipliers, CPS and derived values are byte-identical. Save schema remains **v7** and storage key remains `cookie-empire-foundation-v2`. Foundation 2.9 adds Content metadata, Economy-owned presentation helpers, UI guidance/presentation and tests; it does not rebalance the game.
+Static scope audit against the then-current `main` found byte-identical `HugeNumber`, `GameState`, `SaveSystem`, `GameEngine`, application orchestration and active-session loop. Existing Economy methods for costs, prestige, multipliers, CPS and derived values are byte-identical. Save schema remains **v7** and storage key remains `cookie-empire-foundation-v2`. Foundation 2.9 adds Content metadata, Economy-owned presentation helpers, UI guidance/presentation and tests; it does not rebalance the game.
 
 RC packaging added explicit browser coverage that advanced generator metric text remains finite at **zero CPS** and under an extreme `HugeNumber` value (`1e1000`). At this RC checkpoint, the packaged state was required to pass Foundation + Browser again before merge.
 
