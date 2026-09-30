@@ -2454,3 +2454,65 @@ PR #19 was squash-merged to `main` as `1045cb26e64e0d9c4f4482347234f56fece2b459`
 The archived playable file `archive/releases/cookie-empire-foundation-2.8-quality.html` and `index.html` were created from the same Git blob `ef9cbfe849eaeee605c4f2d0978a142bfd5ad66b`, proving the archived delivery is byte-identical to the packaged runtime.
 
 Foundation 2.8 Quality is therefore the current merged/deployed quality baseline. Evidence is automated Chromium desktop + Pixel 5 emulation plus the existing user's prior real-use validation of the 2.7.2 deployment; Foundation 2.8 itself is not claimed as independently validated with a physical-device screen reader. Save schema remains v7 and gameplay/economy constants remain unchanged.
+
+
+# 50. Foundation 2.8.1 — visible-time production consistency
+
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: merged/deployed Foundation 2.8 Quality. A real tester reports that automatic generator production appears to stop while manually clicking.
+
+## 50.1 Reproduction hypothesis and violated invariant
+
+The active application loop currently computes:
+
+`delta = min(0.5, visible elapsed monotonic seconds)`
+
+and immediately advances `lastFrame` to the current RAF timestamp. Any visible main-thread stall longer than 0.5 s therefore permanently discards the excess elapsed time. Rapid manual input can increase synchronous UI/event work and delay RAF callbacks enough to expose this as generators apparently stopping while the player clicks.
+
+A red deterministic regression is added before the fix: when 1.5 s elapse between two visible loop callbacks, the economy must receive 1.5 s of simulation, not 0.5 s.
+
+## 50.2 Correct time contract
+
+For a visible document, Cookie Empire must credit the full non-negative monotonic elapsed duration between simulation callbacks exactly once. Current production is linear in elapsed time (`CPS × seconds`), so subdividing that duration is mathematically equivalent and there is no integration-stability reason to discard visible elapsed seconds.
+
+For a hidden document, the existing lifecycle behavior remains authoritative:
+- RAF does not advance gameplay while hidden;
+- `pauseForBackground` checkpoints and records wall-clock background start;
+- `resumeFromBackground` applies the existing capped offline production once;
+- `lastFrame` is reset on resume so the same hidden duration is not credited twice.
+
+This supersedes the historical 0.5-second *discarding* frame-delta cap. The safety intent is retained by refusing negative/non-finite elapsed values and by the existing 30-day offline cap. No save field, wall-clock source, generator formula, click reward, price, prestige rule or autosave schema changes.
+
+## 50.3 Scope
+
+Minimal runtime change only in the application active loop plus regression tests. GameState, HugeNumber, Economy formulas, GameEngine transaction semantics, Persistence schema v7, Content and Formspree integration remain unchanged.
+
+Required evidence:
+- red test on the current 2.8 runtime showing visible elapsed time is discarded;
+- green deterministic test after the fix;
+- all existing Foundation/property/interface/Constellation checks;
+- a Chromium/Pixel 5 browser regression proving manual clicks can occur during a delayed visible frame without suppressing the automatic-production portion;
+- existing hidden/background lifecycle tests remain green;
+- post-fix audit confirms no double-credit on visibility resume.
+
+Do not rebalance CPS or click power to mask the timing defect.
+
+
+## 50.4 Implementation and verification — 2026-09-30
+
+Red proof on the exact Foundation 2.8 baseline: the historical **220/220 Foundation** cases passed, the existing 5-second cadence probe passed, then the new timing regression failed with `{"seconds":0.5,"ticks":1}` for 1.5 visible elapsed seconds. This confirms one full second of visible production was discarded by the old frame clamp.
+
+Runtime repair is deliberately minimal: replace the discarding `Math.min(0.5,...)` application-loop delta with the full finite non-negative monotonic RAF delta. GameEngine continues to apply the unchanged linear `CPS × elapsed` rule. Hidden-document handling, resume logic, the 30-day offline cap and save schema v7 are untouched.
+
+Green Foundation evidence on the repaired runtime:
+- **220/220 Foundation PASS**;
+- deterministic cadence remains **20 renders / 1 autosave over 5 s**;
+- visible-stall regression now reports **1.5 s simulated for 1.5 s elapsed**;
+- Foundation 2.8 property suite PASS;
+- targeted interface PASS;
+- **56/56 Constellation/Horizons DOM PASS**.
+
+Browser verification required two test-harness corrections before the intended scenario could execute. Both interim runs kept all **16 historical browser scenarios green**; failures were confined to the new test because `/?test=1` does not initialize the Playwright-hosted app. The final regression uses the normal public route, creates 1 CPS, blocks the browser thread for about 1.2 s while issuing manual cookie clicks, then separates manual from automatic production.
+
+Final browser result on commit `c1bd8886437f110acdd83499b4765e879322073b`: **18/18 Playwright PASS in 44.7 s**, split 9 desktop Chromium + 9 Pixel 5 emulation. The new timing scenario passes on both projects. Foundation 2.8 axe coverage remains green.
+
+Audit: no GameState field, HugeNumber rule, generator/research/prestige constant, save key/schema, Formspree endpoint or background/offline lifecycle rule changed. The correction addresses lost visible time rather than increasing CPS. Physical-device retesting by the reporting friend remains the final real-use confirmation after deployment.

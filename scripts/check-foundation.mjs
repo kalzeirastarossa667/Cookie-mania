@@ -47,6 +47,19 @@ new Script(`
 `).runInContext(context);
 console.log(`Cadence simulation : ${context.loopCounts.render} rendus, ${context.loopCounts.save} sauvegarde sur 5 s`);
 new Script(`
+  const stallCounts={seconds:0,ticks:0};
+  const stalled={lastFrame:0,saveAccumulator:0,renderAccumulator:0,state:{},
+    engine:{tick(seconds){stallCounts.seconds+=seconds;stallCounts.ticks++;}},
+    ui:{render(){},renderRecovery(){}},
+    saveSystem:{save(){return true;}}};
+  CookieEmpireApp.prototype.loop.call(stalled,1500);
+  if(Math.abs(stallCounts.seconds-1.5)>1e-12)
+    throw new Error('Temps visible perdu après blocage du thread : '+JSON.stringify(stallCounts));
+  globalThis.stallCounts=stallCounts;
+`).runInContext(context);
+console.log(`Rattrapage frame visible : ${context.stallCounts.seconds} s simulées`);
+
+new Script(`
   document.hidden=true;
   const before={...counts};
   CookieEmpireApp.prototype.loop.call(app,6000);

@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Checkpoint du 30 septembre 2026 UTC. Version candidate et baseline de développement : Foundation 2.7.2 Feedback, dérivée de Foundation 2.7.1 Stable. Save schema v7 inchangé. La fonctionnalité n’altère ni économie, ni progression, ni persistance ; seul l’envoi d’avis dépend de Formspree. Le snapshot de release 2.7.2 doit rester byte-identique à `index.html`.
+Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.1 Timing, dérivée de Foundation 2.8 Quality. Save schema v7 inchangé. Le correctif ne touche qu’au temps actif visible : aucun temps monotone visible n’est jeté lorsqu’une frame est retardée. GameState, économie, contenu, persistence et Formspree restent inchangés.
 
 ## Rangement
 
@@ -28,7 +28,10 @@ Les réglages de protection de branche, CodeQL et les outils payants ne sont pas
 
 ## Vérification navigateur
 
-Le workflow Browser checks exécute Playwright dans Chromium sur GitHub Actions, avec un écran ordinateur et une émulation Pixel 5. Commande : npm run test:browser après npx playwright install --with-deps chromium. Six scénarios par format couvrent clics, achat de curseur, sauvegarde/rechargement, navigation, filtres, thème, prestige, branches permanentes, absence de débordement horizontal et feedback Formspree. La soumission Formspree est interceptée en test navigateur : aucun faux e-mail n’est envoyé. Les captures et traces sont conservées sept jours dans l’artefact browser-report. L’émulation ne constitue pas un test sur un téléphone physique. Aucun navigateur n’est lancé dans l’environnement local restreint.
+Le workflow Browser checks exécute Playwright dans Chromium sur GitHub Actions, avec un écran ordinateur et une émulation Pixel 5. Commande : npm run test:browser après npx playwright install --with-deps chromium. Neuf scénarios par format couvrent clics, achats, sauvegarde/rechargement, navigation, filtres, thème, prestige, branches permanentes, feedback Formspree, accessibilité axe et la coexistence clic intensif + production automatique. Les captures et traces sont conservées sept jours dans l’artefact browser-report. L’émulation Pixel 5 ne constitue pas un test sur téléphone physique.
 
 
 Foundation 2.7.2 a validé **12/12 scénarios Playwright** en 16,4 s sur la branche de fonctionnalité : 6 desktop Chromium et 6 sous émulation Pixel 5. L’émulation mobile n’est pas un test sur téléphone physique.
+
+
+Foundation 2.8.1 : **18/18 Playwright PASS en 44,7 s** sur la branche de correction, soit 9 desktop Chromium + 9 Pixel 5 émulé. Le test timing occupe volontairement le thread ~1,2 s tout en cliquant et vérifie que le CPS continue d’être crédité.
