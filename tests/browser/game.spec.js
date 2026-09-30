@@ -87,6 +87,44 @@ test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruir
 
 
 
+test('Foundation 2.9 A3 : métriques avancées restent finies à CPS nul et HugeNumber extrême', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-nav="workshop"]').click();
+
+  const cursor = page.locator('#generatorList .generator[data-generator-id="cursor"]');
+  await cursor.locator('details.generator-details summary').click();
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    for (const id of Object.keys(state.generators)) state.generators[id] = 0;
+    state.ownedUpgrades = [];
+    state.ownedPrestigeUpgrades = [];
+    state.prestigePoints = state.prestigePoints.constructor.zero();
+    state.prestigeCurrency = state.prestigeCurrency.constructor.zero();
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('0 %');
+  const zeroTexts = await cursor.locator('.generator-metric').allTextContents();
+  expect(zeroTexts.join(' ')).not.toMatch(/NaN|Infinity/);
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    state.generators.cursor = 1;
+    state.prestigePoints = window.eval("HugeNumber.from('1e1000')");
+    state.prestigeCurrency = window.eval("HugeNumber.from('1e1000')");
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('100 %');
+  const extremeTexts = await cursor.locator('.generator-metric').allTextContents();
+  expect(extremeTexts.join(' ')).not.toMatch(/NaN|Infinity/);
+});
+
+
+
 test('Foundation 2.9 B : le jeu explique les blocages, le prestige et la prochaine action', async ({ page }) => {
   await page.goto('/');
 

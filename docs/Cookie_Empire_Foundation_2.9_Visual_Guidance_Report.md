@@ -2,7 +2,9 @@
 
 Date: 2026-09-30  
 Baseline: Foundation 2.8.3 Menu (`29dfe1d8a409961101e17510533212b9c67d24fb`)  
-Release-candidate branch: `release/foundation-2.9-rc`
+Release-candidate branch: `release/foundation-2.9-rc`  
+Current `main` revalidated before final packaging: `bfc46e721940086fd67e5ffc3d93cc3f2343128c`  
+Foundation 2.9 C resynchronized head: `26e7c8a176b1b00f344d88d8271a3f0df33b422a`
 
 ## 1. Scope
 
@@ -84,16 +86,17 @@ Green head: `65be7c5406e93ee5129bf97abef8b4d272adab4b`
 
 ### C — PR #31
 
-Green head: `64f3b654b37a3bda35e624ac191015095efaa8f3`
+Original green C head: `64f3b654b37a3bda35e624ac191015095efaa8f3`  
+Resynchronized green C head: `26e7c8a176b1b00f344d88d8271a3f0df33b422a`
 
-- Foundation workflow `36768524068`: SUCCESS.
+- Foundation workflow after `main` resynchronization `36773131291`: SUCCESS.
 - Foundation rules: **224/224 PASS**.
 - Cadence: **20 renders / 1 autosave over 5 s**.
 - Visible-frame catch-up: **1.5 s simulated**.
 - HugeNumber/generator-cost properties: PASS.
 - Interface simulation: PASS.
 - Constellation: **169 checks PASS**.
-- Browser workflow `36768523936`: SUCCESS.
+- Browser workflow after `main` resynchronization `36773131276`: SUCCESS.
 - Playwright: **26 PASS** from 28 declared cases, with 2 expected viewport skips.
 
 The C safety test explicitly checks:
@@ -154,3 +157,16 @@ Physical-device validation should therefore be recorded separately after deploym
 The final integration PR must be reviewed against `main` and must run Foundation + Browser workflows again after release metadata/documentation packaging.
 
 PR #25 remains a prototype reference and should not be merged.
+
+
+## 7. Final RC packaging checkpoint
+
+Before opening the final integration PR, the C branch was merged non-destructively with the current documentation-only `main` updates. The resulting head `26e7c8a176b1b00f344d88d8271a3f0df33b422a` was **0 commits behind main** and passed both workflows again:
+
+- Foundation: **224/224 PASS**, cadence **20 renders / 1 autosave over 5 s**, visible-frame catch-up **1.5 s**, deterministic properties PASS, interface PASS, Constellation **169 PASS**;
+- Browser: **26 PASS + 2 expected viewport skips** across desktop Chromium and Pixel 5 emulation;
+- Foundation 2.8.3 mobile settings-menu hit-testing remains green.
+
+A final browser regression is added during RC packaging for the Master 53.9 boundary: advanced generator metric text must stay finite with **zero CPS** and with an **extreme HugeNumber prestige value (`1e1000`)**. The final integration PR must run Foundation + Browser once more on the packaged state.
+
+The packaged playable archive is required to be byte-identical to the root `index.html`. Physical Android validation remains separate and is not implied by these automated results.
