@@ -493,8 +493,8 @@ validateResearchGraph(UPGRADES);
     const {state,engine}=funded();engine.buyUpgrade('reinforced_click');engine.buyUpgrade('warm_ovens');
     const save=new SaveSystem('cookie-empire-test-v4-schema');
     try{assert(save.save(state),'save');const raw=JSON.parse(localStorage.getItem(save.key));
-      assert(raw.version===6,'version');
-      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','champs exacts');
+      assert(raw.version===7,'version');
+      assert(Object.keys(raw.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedPrestigeUpgrades,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','champs exacts');
       assert(raw.state.clickPower.m===1 && raw.state.ownedUpgrades.length===2,'base + IDs');
     }finally{save.clear();}
   });
@@ -834,7 +834,7 @@ validateResearchGraph(UPGRADES);
       const data=JSON.parse(raw);data.version=version;delete data.state.ownedUpgrades;data.state.cps={m:9,e:99};
       if(version===1){data.state.cookies=500;data.state.totalProduced=600;data.state.clickPower=3;}
       const state=save.decodeImport(JSON.stringify(data));assert(state && state.ownedUpgrades.length===0,'migration');
-      const persisted=JSON.parse(save.encode(state));assert(persisted.version===6 && !('cps' in persisted.state) && !('clickReward' in persisted.state) && 'prestigePoints' in persisted.state && 'prestigeCurrency' in persisted.state && 'prestigeCount' in persisted.state,'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
+      const persisted=JSON.parse(save.encode(state));assert(persisted.version===7 && !('cps' in persisted.state) && !('clickReward' in persisted.state) && 'prestigePoints' in persisted.state && 'prestigeCurrency' in persisted.state && 'prestigeCount' in persisted.state,'sources seules');assert(state.generators.cursor===(version===3?10:0),'générateurs');
     }
   });
   test('import : compteurs et horodatages hérités doivent être réinscriptibles',()=>{
@@ -927,7 +927,7 @@ validateResearchGraph(UPGRADES);
     for(const definitions of bad){let rejected=false;try{validateMilestoneContent(definitions);}catch{rejected=true;}assert(rejected,'contenu invalide '+JSON.stringify(definitions));}
   });
   test('progression : sauvegarde inchangée et étapes reconstruites',()=>{
-    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
+    const {save,state}=recoveryFixture();state.totalProduced=HugeNumber.from(1000);const before=Progression.derive(state),raw=save.encode(state),data=JSON.parse(raw);assert(Object.keys(data.state).sort().join(',')==='clickPower,cookies,generators,lastSavedAt,ownedPrestigeUpgrades,ownedUpgrades,prestigeCount,prestigeCurrency,prestigePoints,totalClicks,totalProduced','sources persistées uniquement');const loaded=save.decode(raw);assert(Progression.derive(loaded).completed===before.completed,'reconstruction');data.state.completedMilestones=MILESTONES.map(x=>x.id);data.state.rank='faux';data.state.progression={completed:99};assert(Progression.derive(save.decode(JSON.stringify(data))).completed===before.completed,'faux caches ignorés');
   });
   test('progression : migration ancienne respecte ses possessions historiques',()=>{
     const {save,raw}=recoveryFixture();const data=JSON.parse(raw);data.version=3;delete data.state.ownedUpgrades;const s=save.decode(JSON.stringify(data));assert(step(s,'first_cursor').done && !step(s,'first_upgrade').done,'v3');data.version=2;const v2=save.decode(JSON.stringify(data));assert(step(v2,'first_batch').done && !step(v2,'first_cursor').done,'v2 sans ownership');
