@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.1 HORIZONS CANDIDATE / SOURCE OF TRUTH
+Status: FOUNDATION 2.4 SYNERGIES IN DEVELOPMENT / SOURCE OF TRUTH
 Last audit: 2026-09-28
 
 ## 0. Purpose
@@ -2091,3 +2091,39 @@ Final instrumented verification passes **197/197 Foundation**, targeted interfac
 Playwright coverage is updated to require both lifetime Rayonnement and available wallet to show 1 after a threshold prestige, survive reload, and persist under save v6. Chromium desktop and Pixel 5 emulation are the browser validation surfaces; physical-phone validation remains separate.
 
 Next progression work may define a small data-driven prestige shop, but only against the separated wallet. Spending must reduce `prestigeCurrency` transactionally while never reducing `prestigePoints` unless a future design explicitly changes that lifetime-power contract.
+
+
+# 43. Foundation 2.4 — derived research synergies
+
+Specification BEFORE implementation, 2026-09-30 UTC. Baseline: Foundation 2.3 at `0b76abeed4d91d8286f779be392047f60ebd8c70`. The user requested deeper bonuses and explicit synergies. This milestone extends the existing research layer without introducing spendable Éclat purchases yet; the prestige wallet contract from section 42 remains unchanged.
+
+## 43.1 Design and source of truth
+
+Add immutable `SYNERGIES` content definitions. A synergy is automatically active when all research IDs listed by its definition are owned. Activation is therefore fully derived from authoritative `ownedUpgrades`; GameState receives no `activeSynergies` field and save schema remains v6. Synergies cannot be bought, refunded or activated manually.
+
+Initial catalogue contains four paired-specialization synergies, progressing through the first eight generators. Each requires the two neighboring `generatorPower` specializations of its pair and applies modest multiplicative bonuses to both automatic production and final click reward. Exact factors are content data and must be validated at startup. No synergy may reference an unknown research ID, duplicate a requirement, contain fewer than two requirements, or define a factor below 1.
+
+## 43.2 Economy contract
+
+Economy alone derives active synergies. Upgrade multipliers are reconstructed first; then active synergy CPS factors multiply `globalCps` and active synergy click factors multiply the existing click multiplier. Effects stack multiplicatively in immutable content order and are idempotent across repeated refreshes. Generator prices, ownership, prestige reward formula, Rayonnement permanent multiplier and research purchase prices are unchanged.
+
+The first four combinations are deliberately bounded: Atelier complice (Cursor + Grand-mère) ×1.10 CPS / ×1.10 click; Four & cacao (Four + Mine) ×1.15 / ×1.05; Science orbitale (Laboratoire + Boulangerie orbitale) ×1.20 / ×1.10; Cycle astral (Moisson lunaire + Forge stellaire) ×1.25 / ×1.15. These are initial balance values, not immutable release commitments.
+
+## 43.3 UI contract
+
+Recherche displays a dedicated Synergies section generated from `SYNERGIES`. Each card states its required researches, its two factors and whether it is active. Locked cards are informational only and never become a second source of truth. Existing research filters remain scoped to purchasable research; synergy cards remain visible in their dedicated block.
+
+## 43.4 Verification contract
+
+Red→green coverage must prove: no free synergy on a fresh state; correct activation from the required pair; exact CPS/click multiplication; partial requirements remain inactive; multiple synergies stack multiplicatively; repeated `refreshDerived` is idempotent; save v6 contains no derived synergy cache and reconstructs activation after load; invalid synergy content is rejected. Rerun the complete Foundation/interface/Constellation suites and Playwright desktop/Pixel 5. Because these bonuses change pacing, rerun `npm run analyze:balance` and record the measured impact before merge. Do not add prestige spending in the same milestone.
+
+
+## 43.5 Implementation and measured verification
+
+Implemented on `feature/foundation-2.4-synergies`. `SYNERGIES` is immutable content and `Economy.deriveActiveSynergies` reconstructs activation from `ownedUpgrades`. Active factors are folded into the existing derived multiplier object; no GameState field and no v6 save field were added. Research now renders a separate informational Synergies block.
+
+Red evidence exists at `49cfc13a01fae848cebcdb7c7d39aa70e929e9e0`. Final automated Foundation result is **203/203**, targeted interface checks pass and **56/56** Constellation/Horizons DOM assertions pass. The deterministic render/save cadence remains unchanged.
+
+The required balance rerun passes. Under the same diagnostic policy, fresh 2 clicks/s reaches prestige in **25,141 s** versus the 2.3 baseline 31,388 s; fresh 5 clicks/s in **10,969 s** versus 13,587 s; one Rayonnement + 2 clicks/s in **22,821 s** versus 28,538 s. The ten-cycle 2-click/s series remains monotonic and reaches cycle ten in **13,148 s** versus 16,427 s. This is a material ~20% acceleration, accepted for this first synergy milestone but explicitly subject to human long-play observation before adding further broad multipliers. The temporary balance step was removed from routine CI after measurement.
+
+Browser automation remains required green on the final feature head before merge; Chromium desktop and Pixel 5 emulation are browser evidence, not physical-phone evidence. No prestige spending is part of Foundation 2.4.
