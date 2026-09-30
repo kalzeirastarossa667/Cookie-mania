@@ -259,22 +259,22 @@ const FRENCH_SCALES=[
 ];
 
 const GENERATORS=Object.freeze({
-  cursor:Object.freeze({id:'cursor',name:'Curseur',icon:'👆',baseCost:'15',growthRate:'1.15',baseCps:'0.1'}),
-  grandma:Object.freeze({id:'grandma',name:'Grand-mère',icon:'👵',baseCost:'100',growthRate:'1.15',baseCps:'1'}),
-  oven:Object.freeze({id:'oven',name:'Four artisanal',icon:'🔥',baseCost:'1100',growthRate:'1.15',baseCps:'8'}),
-  cocoa_mine:Object.freeze({id:'cocoa_mine',name:'Mine de cacao',icon:'⛏️',baseCost:'12000',growthRate:'1.15',baseCps:'47'}),
-  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',baseCost:'250000',growthRate:'1.15',baseCps:'230'}),
-  orbital_bakery:Object.freeze({id:'orbital_bakery',name:'Boulangerie orbitale',icon:'🛰️',baseCost:'5000000',growthRate:'1.15',baseCps:'1400'}),
-  lunar_harvest:Object.freeze({id:'lunar_harvest',name:'Moisson lunaire',icon:'🌙',baseCost:'100000000',growthRate:'1.15',baseCps:'7800'}),
-  stellar_forge:Object.freeze({id:'stellar_forge',name:'Forge stellaire',icon:'🌟',baseCost:'2000000000',growthRate:'1.15',baseCps:'44000'}),
-  nebula_refinery:Object.freeze({"id": "nebula_refinery", "name": "Raffinerie de nébuleuse", "icon": "☁️", "baseCost": "40000000000", "growthRate": "1.15", "baseCps": "600000"}),
-  comet_caravan:Object.freeze({"id": "comet_caravan", "name": "Caravane de comètes", "icon": "☄️", "baseCost": "800000000000", "growthRate": "1.15", "baseCps": "9000000"}),
-  quantum_oven:Object.freeze({"id": "quantum_oven", "name": "Four quantique", "icon": "⚛️", "baseCost": "16000000000000", "growthRate": "1.15", "baseCps": "140000000"}),
-  time_confectionery:Object.freeze({"id": "time_confectionery", "name": "Confiserie temporelle", "icon": "⏳", "baseCost": "320000000000000", "growthRate": "1.15", "baseCps": "2200000000"}),
-  antimatter_mixer:Object.freeze({"id": "antimatter_mixer", "name": "Batteur antimatière", "icon": "🌀", "baseCost": "6400000000000000", "growthRate": "1.15", "baseCps": "35000000000"}),
-  galactic_foundry:Object.freeze({"id": "galactic_foundry", "name": "Fonderie galactique", "icon": "🌌", "baseCost": "128000000000000000", "growthRate": "1.15", "baseCps": "560000000000"}),
-  multiverse_kitchen:Object.freeze({"id": "multiverse_kitchen", "name": "Cuisine du multivers", "icon": "🪐", "baseCost": "2560000000000000000", "growthRate": "1.15", "baseCps": "9000000000000"}),
-  origin_crucible:Object.freeze({"id": "origin_crucible", "name": "Creuset des origines", "icon": "💠", "baseCost": "51200000000000000000", "growthRate": "1.15", "baseCps": "145000000000000"})
+  cursor:Object.freeze({id:'cursor',name:'Curseur',icon:'👆',description:"Automatise les premiers gestes de l’atelier et maintient une petite production régulière.",baseCost:'15',growthRate:'1.15',baseCps:'0.1'}),
+  grandma:Object.freeze({id:'grandma',name:'Grand-mère',icon:'👵',description:"Transforme les recettes familiales en une production continue de cookies.",baseCost:'100',growthRate:'1.15',baseCps:'1'}),
+  oven:Object.freeze({id:'oven',name:'Four artisanal',icon:'🔥',description:"Enchaîne les fournées en continu et forme le cœur productif du premier atelier.",baseCost:'1100',growthRate:'1.15',baseCps:'8'}),
+  cocoa_mine:Object.freeze({id:'cocoa_mine',name:'Mine de cacao',icon:'⛏️',description:"Extrait le cacao à grande échelle pour alimenter une production plus industrielle.",baseCost:'12000',growthRate:'1.15',baseCps:'47'}),
+  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',description:"Expérimente de nouveaux procédés pour produire des cookies à un rythme scientifique.",baseCost:'250000',growthRate:'1.15',baseCps:'230'}),
+  orbital_bakery:Object.freeze({id:'orbital_bakery',name:'Boulangerie orbitale',icon:'🛰️',description:"Déplace les lignes de cuisson en orbite pour augmenter l’échelle de production.",baseCost:'5000000',growthRate:'1.15',baseCps:'1400'}),
+  lunar_harvest:Object.freeze({id:'lunar_harvest',name:'Moisson lunaire',icon:'🌙',description:"Récolte des ressources sucrées lunaires pour soutenir des fournées massives.",baseCost:'100000000',growthRate:'1.15',baseCps:'7800'}),
+  stellar_forge:Object.freeze({id:'stellar_forge',name:'Forge stellaire',icon:'🌟',description:"Exploite l’énergie des étoiles pour alimenter une production à très haut rendement.",baseCost:'2000000000',growthRate:'1.15',baseCps:'44000'}),
+  nebula_refinery:Object.freeze({"id": "nebula_refinery", "name": "Raffinerie de nébuleuse", "icon": "☁️", "description": "Condense la matière des nébuleuses en ingrédients utilisables à l’échelle cosmique.", "baseCost": "40000000000", "growthRate": "1.15", "baseCps": "600000"}),
+  comet_caravan:Object.freeze({"id": "comet_caravan", "name": "Caravane de comètes", "icon": "☄️", "description": "Capture et achemine des ressources de comètes vers les chaînes de production.", "baseCost": "800000000000", "growthRate": "1.15", "baseCps": "9000000"}),
+  quantum_oven:Object.freeze({"id": "quantum_oven", "name": "Four quantique", "icon": "⚛️", "description": "Superpose les cycles de cuisson pour pousser la production au-delà des procédés classiques.", "baseCost": "16000000000000", "growthRate": "1.15", "baseCps": "140000000"}),
+  time_confectionery:Object.freeze({"id": "time_confectionery", "name": "Confiserie temporelle", "icon": "⏳", "description": "Exploite le temps pour multiplier les cycles de fabrication.", "baseCost": "320000000000000", "growthRate": "1.15", "baseCps": "2200000000"}),
+  antimatter_mixer:Object.freeze({"id": "antimatter_mixer", "name": "Batteur antimatière", "icon": "🌀", "description": "Utilise l’antimatière pour alimenter des mélanges à une échelle extrême.", "baseCost": "6400000000000000", "growthRate": "1.15", "baseCps": "35000000000"}),
+  galactic_foundry:Object.freeze({"id": "galactic_foundry", "name": "Fonderie galactique", "icon": "🌌", "description": "Industrialise les fournées à l’échelle d’une galaxie entière.", "baseCost": "128000000000000000", "growthRate": "1.15", "baseCps": "560000000000"}),
+  multiverse_kitchen:Object.freeze({"id": "multiverse_kitchen", "name": "Cuisine du multivers", "icon": "🪐", "description": "Coordonne des cuisines parallèles à travers plusieurs univers.", "baseCost": "2560000000000000000", "growthRate": "1.15", "baseCps": "9000000000000"}),
+  origin_crucible:Object.freeze({"id": "origin_crucible", "name": "Creuset des origines", "icon": "💠", "description": "Manipule des forces primordiales pour produire à une échelle presque absolue.", "baseCost": "51200000000000000000", "growthRate": "1.15", "baseCps": "145000000000000"})
 });
 
 const GENERATOR_ERAS=Object.freeze([
