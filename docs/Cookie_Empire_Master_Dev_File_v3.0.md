@@ -2794,3 +2794,38 @@ Before accepting Phase A:
 - full Foundation/property/interface/Constellation suites pass.
 
 Browser emulation and physical-device validation must continue to be reported separately.
+
+
+## 53.10 Implementation and release-candidate evidence — 2026-09-30
+
+Foundation 2.9 was implemented in the staged chain required above rather than as the older monolithic visual prototype:
+
+- A1 / PR #26: required canonical descriptions for all 16 generators;
+- A2 / PR #27: HugeNumber-safe derived stack metrics and bounded CPS share;
+- A3 / PR #28: structured build-once generator cards, cached references and progressive details;
+- B / PR #29: explicit research prerequisites, contextual next action and prestige **PERDU / CONSERVÉ / GAGNÉ** contract;
+- C / PR #31: safe cosmic visual polish, semantic era accents and reduced-motion-aware ambient motion.
+
+The older PR #25 remains a prototype reference and is not the integration candidate.
+
+Before final packaging, current `main` was revalidated at `bfc46e721940086fd67e5ffc3d93cc3f2343128c`. Its new changes were documentation-only (`AGENTS.md` plus `PROJECT_MEMORY.md`). The C branch was merged non-destructively with that head as `26e7c8a176b1b00f344d88d8271a3f0df33b422a`, leaving it zero commits behind `main`.
+
+Green evidence on that resynchronized integration state:
+
+- Foundation workflow `36773131291`: **SUCCESS**;
+- **224/224 Foundation PASS**;
+- cadence: **20 renders / 1 autosave over 5 s**;
+- visible-frame catch-up: **1.5 s simulated**;
+- deterministic HugeNumber/generator-cost properties: PASS;
+- targeted interface checks: PASS;
+- Constellation: **169 DOM checks PASS**;
+- Browser workflow `36773131276`: **SUCCESS**;
+- Playwright: **26 PASS + 2 expected viewport skips**;
+- Foundation 2.8.1 timing, 2.8.2 bottom-navigation and 2.8.3 menu hit-testing protections remain covered;
+- axe serious/critical scans remain part of the Browser suite in dark and light themes.
+
+Static scope audit against current `main` found byte-identical `HugeNumber`, `GameState`, `SaveSystem`, `GameEngine`, application orchestration and active-session loop. Existing Economy methods for costs, prestige, multipliers, CPS and derived values are byte-identical. Save schema remains **v7** and storage key remains `cookie-empire-foundation-v2`. Foundation 2.9 adds Content metadata, Economy-owned presentation helpers, UI guidance/presentation and tests; it does not rebalance the game.
+
+RC packaging adds explicit browser coverage that advanced generator metric text remains finite at **zero CPS** and under an extreme `HugeNumber` value (`1e1000`). The packaged RC must pass Foundation + Browser again before merge.
+
+Automated desktop Chromium and Pixel 5 emulation are evidence of browser behavior, not physical-device validation. Physical Android verification remains a separate acceptance result and must not be inferred from CI.

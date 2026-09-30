@@ -40,6 +40,149 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
 });
 
 
+
+test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruire la boutique', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-nav="workshop"]').click();
+
+  const cards = page.locator('#generatorList .generator');
+  await expect(cards).toHaveCount(16);
+  const cursor = page.locator('#generatorList .generator[data-generator-id="cursor"]');
+  await expect(cursor.locator('.generator-description')).toContainText('Automatise les premiers gestes');
+  const details = cursor.locator('details.generator-details');
+  await expect(details).not.toHaveAttribute('open', '');
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open', '');
+
+  const originalCard = await cursor.evaluate(element => {
+    window.__a3CursorCard = element;
+    return element.dataset.generatorId;
+  });
+  expect(originalCard).toBe('cursor');
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    for (const id of Object.keys(state.generators)) state.generators[id] = 0;
+    state.generators.cursor = 10;
+    state.generators.grandma = 1;
+    state.ownedUpgrades = [];
+    state.ownedPrestigeUpgrades = [];
+    state.prestigePoints = state.prestigePoints.constructor.zero();
+    state.prestigeCurrency = state.prestigeCurrency.constructor.zero();
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="stack-cps"]')).toHaveText('1 cookie/s');
+  await expect(cursor.locator('[data-role="stack-click"]')).toHaveText('1 cookie/clic');
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('50 %');
+  await expect(cursor.locator('[data-role="next-unit"]')).toContainText('+0.1 cookie/s');
+  await expect(cursor.locator('[data-role="specialization"]')).toContainText('Gestes experts · 10 / 10 unités');
+  await expect(cursor.locator('[data-buy-mode="1"]')).toBeVisible();
+  await expect(cursor.locator('[data-buy-mode="10"]')).toBeVisible();
+  await expect(cursor.locator('[data-buy-mode="max"]')).toBeVisible();
+  expect(await page.evaluate(() => window.__a3CursorCard === document.querySelector('#generatorList .generator[data-generator-id="cursor"]'))).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});
+
+
+
+test('Foundation 2.9 A3 : métriques avancées restent finies à CPS nul et HugeNumber extrême', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-nav="workshop"]').click();
+
+  const cursor = page.locator('#generatorList .generator[data-generator-id="cursor"]');
+  await cursor.locator('details.generator-details summary').click();
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    for (const id of Object.keys(state.generators)) state.generators[id] = 0;
+    state.ownedUpgrades = [];
+    state.ownedPrestigeUpgrades = [];
+    state.prestigePoints = state.prestigePoints.constructor.zero();
+    state.prestigeCurrency = state.prestigeCurrency.constructor.zero();
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('0 %');
+  const zeroTexts = await cursor.locator('.generator-metric').allTextContents();
+  expect(zeroTexts.join(' ')).not.toMatch(/NaN|Infinity/);
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    state.generators.cursor = 1;
+    state.prestigePoints = window.eval("HugeNumber.from('1e1000')");
+    state.prestigeCurrency = window.eval("HugeNumber.from('1e1000')");
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('100 %');
+  const extremeTexts = await cursor.locator('.generator-metric').allTextContents();
+  expect(extremeTexts.join(' ')).not.toMatch(/NaN|Infinity/);
+});
+
+
+
+test('Foundation 2.9 B : le jeu explique les blocages, le prestige et la prochaine action', async ({ page }) => {
+  await page.goto('/');
+
+  await page.locator('[data-nav="research"]').click();
+  await expect(page.locator('#research-precision_click [data-role="research-state"]')).toContainText('Clic cosmique');
+
+  await page.locator('[data-nav="journey"]').click();
+  await expect(page.locator('[data-prestige-impact="lost"]')).toContainText('PERDU');
+  await expect(page.locator('[data-prestige-impact="lost"]')).toContainText('générateurs');
+  await expect(page.locator('[data-prestige-impact="kept"]')).toContainText('CONSERVÉ');
+  await expect(page.locator('[data-prestige-impact="kept"]')).toContainText('Rayonnement');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('GAGNÉ');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('Aucun Éclat');
+
+  await expect(page.locator('#nextActionHint')).toContainText('cookie');
+  await expect(page.locator('#nextActionHint')).toContainText('atelier');
+
+  await page.evaluate(() => {
+    const state=window.cookieEmpire.state;
+    state.totalProduced.m=1;state.totalProduced.e=12;
+    window.cookieEmpire.ui.render();
+  });
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('+1 Éclat');
+  await expect(page.locator('[data-prestige-impact="gained"]')).toContainText('×1.1');
+});
+
+
+
+test('Foundation 2.9 C : la couche visuelle reste sûre et distingue les quatre ères', async ({ page }) => {
+  await page.goto('/');
+
+  const safety = await page.evaluate(() => ({
+    cookieAnimation: getComputedStyle(document.getElementById('cookieButton')).animationName,
+    topbarBackdrop: getComputedStyle(document.querySelector('.topbar')).backdropFilter,
+    webkitTopbarBackdrop: getComputedStyle(document.querySelector('.topbar')).webkitBackdropFilter,
+    heroAmbient: getComputedStyle(document.querySelector('.hero'), '::after').animationName,
+  }));
+  expect(safety.cookieAnimation).toBe('none');
+  expect([safety.topbarBackdrop, safety.webkitTopbarBackdrop].filter(Boolean).every(value => value === 'none')).toBe(true);
+  expect(safety.heroAmbient).not.toBe('none');
+
+  await page.locator('[data-nav="workshop"]').click();
+  const eraVisuals = await page.locator('#generatorList .generator').evaluateAll(cards => {
+    const entries = [];
+    for (const era of [...new Set(cards.map(card => card.dataset.era))]) {
+      const card = cards.find(item => item.dataset.era === era);
+      entries.push([era, getComputedStyle(card).getPropertyValue('--era-accent').trim()]);
+    }
+    return Object.fromEntries(entries);
+  });
+  expect(Object.keys(eraVisuals)).toHaveLength(4);
+  expect(new Set(Object.values(eraVisuals).filter(Boolean)).size).toBe(4);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.hero'), '::after').animationName)).toBe('none');
+});
+
+
 test('Foundation 2.5 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
@@ -92,7 +235,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.8.3 · Menu');
+  await expect(page.locator('footer')).toContainText('Foundation 2.9 · Visual');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -165,7 +308,7 @@ test('Foundation 2.7.2 : le feedback est envoyé sans quitter ni modifier la par
   expect(page.url()).toBe(urlBefore);
   expect(intercepted?.method).toBe('POST');
   expect(intercepted?.body).toContain('Le formulaire fonctionne sans toucher');
-  expect(intercepted?.body).toContain('Foundation 2.8');
+  expect(intercepted?.body).toContain('Foundation 2.9');
   expect(await page.evaluate(() => ({
     cookies: window.cookieEmpire.state.cookies.toJSON(),
     produced: window.cookieEmpire.state.totalProduced.toJSON(),

@@ -16,6 +16,9 @@ assert.ok(app, 'application démarrée');
 
 const cards = [...document.querySelectorAll('#generatorList .generator')];
 assert.equal(cards.length, 16, 'seize générateurs affichés');
+assert.equal(cards.filter(card => card.querySelector('.generator-description')?.textContent.trim().length >= 20).length, 16, 'descriptions pédagogiques visibles');
+assert.equal(cards.filter(card => card.querySelector('details.generator-details')).length, 16, 'détails progressifs présents');
+assert.equal(cards.filter(card => !card.querySelector('details.generator-details').open).length, 16, 'détails fermés par défaut');
 assert.match(cards[2].querySelector('.click-bonus').textContent, /8 cookie\/clic/, 'contribution du four lisible');
 assert.match(cards[3].querySelector('.click-bonus').textContent, /47 cookie\/clic/, 'contribution de la mine lisible');
 const themeButton = document.getElementById('themeButton');
@@ -222,7 +225,7 @@ const feedbackForm = document.getElementById('feedbackForm');
 assert.ok(feedbackForm, 'section de feedback présente');
 assert.equal(feedbackForm.method.toLowerCase(), 'post', 'feedback utilise POST');
 assert.equal(feedbackForm.action, 'https://formspree.io/f/mdekjdqz', 'endpoint Formspree exact');
-assert.equal(feedbackForm.querySelector('input[name="game_version"]')?.value, 'Foundation 2.8.3', 'métadonnée version feedback actualisée');
+assert.equal(feedbackForm.querySelector('input[name="game_version"]')?.value, 'Foundation 2.9', 'métadonnée version feedback actualisée');
 const feedbackMessage = document.getElementById('feedbackMessage');
 const feedbackSubmit = document.getElementById('feedbackSubmit');
 const feedbackStatus = document.getElementById('feedbackStatus');

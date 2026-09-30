@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Checkpoint du 30 septembre 2026 UTC. Baseline candidate : Foundation 2.8.3 Menu, dérivée de Foundation 2.8.2 Mobile. Save schema v7 inchangé. Le correctif 2.8.3 est exclusivement CSS/layering : il garde le menu d’options au-dessus du HUD sticky et ne touche ni GameState, économie, moteur de temps, contenu, persistence ni Formspree.
+Checkpoint du 30 septembre 2026 UTC. Release candidate : Foundation 2.9 Visual & Guidance, resynchronisée avec `main` (`bfc46e721940086fd67e5ffc3d93cc3f2343128c`). Save schema v7 et clé de stockage inchangés. La 2.9 ajoute clarté des générateurs, guidage joueur et polish visuel sans modifier les règles économiques ou temporelles validées.
 
 ## Rangement
 
@@ -41,3 +41,6 @@ Foundation 2.8.2 : 20 cas Playwright déclarés, **19 PASS + 1 skip attendu** su
 
 
 Foundation 2.8.3 : la régression Pixel 5 ouvre le menu `…` et vérifie par hit-testing que `Exporter les données`, `Importer une partie` et `Nouvelle partie` restent les éléments interactifs au premier plan. La preuve rouge a identifié `.wallet` devant `#exportSaveButton`; le correctif porte `.settings-menu` de `z-index: 5` à `z-index: 40`. Pré-packaging : Foundation **220/220**, propriétés PASS, interface PASS, Constellation **56/56**, Playwright **20 PASS + 2 skips desktop attendus**.
+
+
+Foundation 2.9 RC : implémentation séquencée A1 → A2 → A3 → B → C. Après resynchronisation avec le `main` courant, le head `26e7c8a176b1b00f344d88d8271a3f0df33b422a` a validé Foundation **224/224**, propriétés PASS, interface PASS, Constellation **169/169**, et Browser **26 PASS + 2 skips de viewport attendus**. Les protections timing 2.8.1, navigation 2.8.2 et menu 2.8.3 restent couvertes. Le packaging RC ajoute un test navigateur explicite pour CPS nul et HugeNumber extrême. L’émulation Pixel 5 ne constitue toujours pas une validation Android physique.

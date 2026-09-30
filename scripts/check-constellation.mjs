@@ -10,6 +10,16 @@ function check(value,message){assert.ok(value,message);checks++;}
 const visible=()=>[...d.querySelectorAll('[data-view]')].filter(x=>!x.hidden).map(x=>x.dataset.view).join(',');
 check(visible()==='empire','Empire seul visible au départ');
 const originalCard=d.querySelector('[data-generator-id="chocolate_lab"]');
+const generatorCards=[...d.querySelectorAll('#generatorList .generator')];
+check(generatorCards.length===16,'A3 : seize cartes générateur construites');
+for(const card of generatorCards){
+  const description=card.querySelector('.generator-description');
+  const details=card.querySelector('details.generator-details');
+  check(Boolean(description && description.textContent.trim().length>=20),'A3 : description pédagogique visible');
+  check(Boolean(details && !details.open),'A3 : détails progressifs fermés par défaut');
+  for(const role of ['stack-cps','stack-click','cps-share','next-unit','specialization'])
+    check(Boolean(card.querySelector(`[data-role="${role}"]`)),'A3 : métrique '+role+' mise en cache dans le DOM');
+}
 for(const view of ['workshop','research','journey','empire']){
  d.querySelector(`[data-nav="${view}"]`).click();
  check(visible()===view,`vue ${view} exclusive`);

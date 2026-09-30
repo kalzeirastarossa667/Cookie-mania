@@ -254,6 +254,58 @@ function runFoundationTests(){
     for(const id of Object.keys(GENERATORS)) assert(state.generators[id]===0,`initialisation ${id}`);
   });
 
+  test('2.9 A1 RED : chaque générateur possède une description pédagogique',()=>{
+    const definitions=Object.values(GENERATORS);
+    assert(definitions.length===16,'16 générateurs attendus');
+    const descriptions=new Set();
+    for(const definition of definitions){
+      assert(typeof definition.description==='string' && definition.description.trim().length>=20,'description manquante ou trop courte : '+definition.id);
+      descriptions.add(definition.description.trim());
+    }
+    assert(descriptions.size===definitions.length,'descriptions distinctes');
+  });
+
+  test('2.9 A2 RED : ratio borné HugeNumber reste sûr aux extrêmes',()=>{
+    const exact=[
+      [0,0,0],
+      [0,'1e1000',0],
+      ['5e999','1e1000',0.5],
+      ['1e999','1e1000',0.1],
+      ['9.999e999','1e1000',0.9999],
+      ['2e1000','1e1000',1]
+    ];
+    for(const [part,total,expected] of exact){
+      const ratio=Economy.boundedRatio(part,total);
+      assert(Number.isFinite(ratio),'ratio fini');
+      assert(ratio>=0 && ratio<=1,'ratio borné');
+      assert(Math.abs(ratio-expected)<1e-12,'ratio exact '+part+'/'+total);
+    }
+    const tiny=Economy.boundedRatio('1e-3000','1e1000');
+    assert(Number.isFinite(tiny) && tiny>=0 && tiny<1e-12,'ratio proche de zéro');
+  });
+
+  test('2.9 A2 RED : métriques de pile générateur restent dérivées',()=>{
+    const s=GameState.create();
+    s.generators.cursor=10;s.generators.grandma=1;
+    new GameEngine(s);
+    const multipliers=Economy.deriveMultipliers(s);
+    const unitCps=Economy.generatorUnitCps('cursor',multipliers);
+    const unitClick=Economy.generatorUnitClick('cursor',multipliers);
+    assert(Economy.generatorStackCps(s,'cursor',multipliers,unitCps).compare(1)===0,'pile CPS curseur');
+    assert(Economy.generatorStackClick(s,'cursor',multipliers,unitClick).compare(1)===0,'pile clic curseur');
+    assert(Math.abs(Economy.generatorCpsShare(s,'cursor',multipliers,unitCps)-0.5)<1e-12,'part CPS curseur');
+    assert(Economy.generatorCpsShare(s,'oven',multipliers)===0,'générateur absent');
+  });
+
+  test('2.9 A2 RED : métriques refusent un compteur de générateur invalide',()=>{
+    const s=GameState.create();s.generators.cursor=-1;
+    const multipliers=Economy.deriveMultipliers({...s,generators:{...s.generators,cursor:0}});
+    let cps=false,click=false;
+    try{Economy.generatorStackCps(s,'cursor',multipliers);}catch{cps=true;}
+    try{Economy.generatorStackClick(s,'cursor',multipliers);}catch{click=true;}
+    assert(cps&&click,'compteur invalide rejeté');
+  });
+
   test('ancienne sauvegarde v3 sans nouveau générateur reste compatible',()=>{
     const key='cookie-empire-test-v3-forward-'+Date.now();
     const save=new SaveSystem(key);
