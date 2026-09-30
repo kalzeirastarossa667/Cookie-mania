@@ -121,6 +121,11 @@ assert.equal(app.engine.buyPrestigeUpgrade('radiant_click'),true,'premier achat 
 assert.equal(app.engine.buyPrestigeUpgrade('radiant_production'),true,'second achat prestige pour test cache');
 app.ui.render();
 assert.notEqual(document.querySelector('[data-generator-id="cursor"] [data-role="production"]').textContent,cursorUnitBeforePrestige,'achat prestige invalide le cache des taux générateurs');
+const cursorUnitBeforeRayonnement=document.querySelector('[data-generator-id="cursor"] [data-role="production"]').textContent;
+state.prestigePoints=window.eval('HugeNumber.from(13)');
+window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+app.ui.render();
+assert.notEqual(document.querySelector('[data-generator-id="cursor"] [data-role="production"]').textContent,cursorUnitBeforeRayonnement,'Rayonnement total invalide le cache des taux générateurs');
 
 assert.equal(document.querySelectorAll('#milestoneList .milestone-row').length, 44, 'progression prolongée');
 assert.match(document.getElementById('milestoneCount').textContent, /44 étapes/, 'nouveau total visible');
