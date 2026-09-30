@@ -17,6 +17,17 @@
 .purchase-actions [data-buy-mode="10"]{flex:0 1 116px;min-width:76px;line-height:1.2;flex-wrap:wrap;gap:2px;overflow-wrap:anywhere}
 @media(max-width:360px){.purchase-actions [data-buy-mode="10"]{flex-basis:91px;min-width:72px;font-size:10px}}
 .generator-info .click-bonus{color:#805027;font-weight:650}
+.generator-description{font-size:12px!important;line-height:1.45;margin-top:7px!important;color:var(--muted)}
+.generator-details{margin-top:10px;padding-top:2px;border-top:1px solid var(--line)}
+.generator-details summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;cursor:pointer;font-size:11px;font-weight:750;color:var(--muted)}
+.generator-details summary::after{content:'+';font-size:16px;line-height:1}
+.generator-details[open] summary::after{content:'−'}
+.generator-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:4px 0 2px}
+.generator-metric{min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#7b6b4a0d}
+.generator-metric span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.55px;color:var(--muted)}
+.generator-metric b{display:block;margin-top:2px;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.generator-metric.is-wide{grid-column:1/-1}
+@media(max-width:420px){.generator-metrics{grid-template-columns:1fr}.generator-metric.is-wide{grid-column:auto}}
 [data-theme="dark"]{color-scheme:dark;--paper:#0b1028;--card:#19203c;--ink:#f4efff;--muted:#c1bfda;--line:#42486d;--amber:#f6c875;--green:#26345b;--ok:#b7e6d0;--prestige-click:#d8b9ff;--prestige-production:#f3cc91}
 [data-theme="dark"] body{background:radial-gradient(ellipse at 18% 8%,#303467 0,transparent 44%),radial-gradient(ellipse at 90% 42%,#33204f 0,transparent 43%),linear-gradient(145deg,#0b1028,#13152f 70%,#1c1539);background-attachment:fixed}
 [data-theme="dark"] .brand-mark,[data-theme="dark"] .generator-icon{background:#35335a;border-color:#656083}
@@ -1585,33 +1596,83 @@ class GameUI {
     this.progressionState=state;this.announcedMilestones=completed;
   }
 
+  formatGeneratorShare(ratio){
+    if(!Number.isFinite(ratio) || ratio<=0) return '0 %';
+    if(ratio>=1) return '100 %';
+    const percent=ratio*100;
+    if(percent<0.01) return '< 0,01 %';
+    return `${percent.toLocaleString('fr-FR',{maximumFractionDigits:2})} %`;
+  }
+
+  createGeneratorCard(definition){
+    const make=(tag,className,text)=>{
+      const node=document.createElement(tag);
+      if(className) node.className=className;
+      if(text!==undefined) node.textContent=text;
+      return node;
+    };
+    const panel=make('div','generator');
+    panel.dataset.generatorId=definition.id;
+    panel.dataset.era=GENERATOR_ERAS.find(era=>era.ids.includes(definition.id)).id;
+
+    const row=make('div','generator-row');
+    const icon=make('span','generator-icon');icon.setAttribute('aria-hidden','true');icon.innerHTML=this.generatorIcon(definition);
+    const info=make('div','generator-info');
+    const title=make('h3','',definition.name);
+    const description=make('p','generator-description',definition.description);
+    const productionLine=make('p');
+    productionLine.append('+');
+    const production=make('span','',Economy.format(definition.baseCps));production.dataset.role='production';
+    productionLine.append(production,' cookie/s par unité');
+    const clickBonus=make('p','click-bonus',`+${Economy.format(definition.baseCps)} cookie/clic par unité`);
+    info.append(title,description,productionLine,clickBonus);
+    const ownedBadge=make('span','owned-badge');
+    const owned=make('b','', '0');owned.dataset.role='owned';
+    ownedBadge.append(owned,document.createTextNode('possédés'));
+    row.append(icon,info,ownedBadge);
+
+    const details=make('details','generator-details');
+    const summary=make('summary','', 'Comprendre ce générateur');
+    const metrics=make('div','generator-metrics');
+    const metric=(label,role,initial,wide=false)=>{
+      const box=make('div','generator-metric'+(wide?' is-wide':''));
+      const caption=make('span','',label);
+      const value=make('b','',initial);value.dataset.role=role;
+      box.append(caption,value);metrics.appendChild(box);return value;
+    };
+    const stackCps=metric('Production possédée','stack-cps','0 cookie/s');
+    const stackClick=metric('Bonus clic possédé','stack-click','0 cookie/clic');
+    const cpsShare=metric('Part de la production','cps-share','0 %');
+    const nextUnit=metric('Gain de la prochaine unité','next-unit',`+${Economy.format(definition.baseCps)} cookie/s · +${Economy.format(definition.baseCps)} cookie/clic`);
+    const specialization=metric('Spécialisation','specialization','À découvrir',true);
+    details.append(summary,metrics);
+
+    const purchase=make('div','purchase-actions');
+    const buy1=make('button','btn buy primary-buy');buy1.type='button';buy1.dataset.generatorId=definition.id;buy1.dataset.buyMode='1';
+    buy1.append(document.createTextNode('Acheter · '));
+    const cost=make('span','',Economy.format(definition.baseCost));cost.dataset.role='cost';buy1.appendChild(cost);
+    const buy10=make('button','btn buy');buy10.type='button';buy10.dataset.generatorId=definition.id;buy10.dataset.buyMode='10';
+    const batchPrefix=make('span','', '×10 · '),batchCost=make('span','',Economy.format(Economy.generatorBatchCost(definition,0,10)));batchCost.dataset.role='batch-cost';
+    buy10.append(batchPrefix,batchCost);
+    const buyMax=make('button','btn buy','Max');buyMax.type='button';buyMax.dataset.generatorId=definition.id;buyMax.dataset.buyMode='max';buyMax.setAttribute('aria-label',`Acheter le maximum de ${definition.name}`);
+    purchase.append(buy1,buy10,buyMax);
+
+    const wait=make('p','purchase-wait');wait.dataset.role='wait';
+    panel.append(row,details,purchase,wait);
+    const specializationDefinition=Object.values(UPGRADES).find(item=>item.effect.target==='generatorPower' && item.effect.generatorId===definition.id) ?? null;
+    return {panel,elements:{
+      panel,priceOwned:null,rateSignature:null,wait,price:null,formattedCost:null,batchPrice:null,formattedBatchCost:null,
+      owned,production,clickBonus,cost,batchCost,buy1,buy10,buyMax,stackCps,stackClick,cpsShare,nextUnit,specialization,
+      specializationDefinition,unitCps:null,unitClick:null
+    }};
+  }
+
   buildGeneratorUI(){
     const fragment=document.createDocumentFragment();
     for(const definition of Object.values(GENERATORS)){
-      const panel=document.createElement('div');
-      panel.className='generator';
-      panel.dataset.generatorId=definition.id;
-      panel.dataset.era=GENERATOR_ERAS.find(era=>era.ids.includes(definition.id)).id;
-      panel.innerHTML=`<div class="generator-row"><span class="generator-icon" aria-hidden="true">${this.generatorIcon(definition)}</span><div class="generator-info"><h3>${definition.name}</h3><p>+<span data-role="production">${Economy.format(definition.baseCps)}</span> cookie/s par unité</p><p class="click-bonus">+${Economy.format(definition.baseCps)} cookie/clic par unité</p></div><span class="owned-badge"><b data-role="owned">0</b>possédés</span></div><div class="purchase-actions"><button class="btn buy primary-buy" data-generator-id="${definition.id}" data-buy-mode="1" type="button">Acheter · <span data-role="cost">${Economy.format(definition.baseCost)}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="10" type="button"><span>×10 · </span><span data-role="batch-cost">${Economy.format(Economy.generatorBatchCost(definition,0,10))}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="max" type="button" aria-label="Acheter le maximum de ${definition.name}">Max</button></div><p class="purchase-wait" data-role="wait"></p>`;
-      this.generatorElements[definition.id]={
-        panel,
-        priceOwned:null,
-        rateSignature:null,
-        wait:panel.querySelector('[data-role="wait"]'),
-        price:null,
-        formattedCost:null,
-        batchPrice:null,
-        formattedBatchCost:null,
-        owned:panel.querySelector('[data-role="owned"]'),
-        production:panel.querySelector('[data-role="production"]'),
-        clickBonus:panel.querySelector('.click-bonus'),
-        cost:panel.querySelector('[data-role="cost"]'),
-        batchCost:panel.querySelector('[data-role="batch-cost"]'),
-        buy1:panel.querySelector('[data-buy-mode="1"]'),
-        buy10:panel.querySelector('[data-buy-mode="10"]'),
-        buyMax:panel.querySelector('[data-buy-mode="max"]')
-      };
-      fragment.appendChild(panel);
+      const built=this.createGeneratorCard(definition);
+      this.generatorElements[definition.id]=built.elements;
+      fragment.appendChild(built.panel);
     }
     this.$.generatorList.replaceChildren(fragment);
   }
@@ -1876,9 +1937,23 @@ class GameUI {
       this.setText(elements.owned,owned.toLocaleString('fr-FR'));
       if(elements.rateSignature!==signature){
         elements.rateSignature=signature;
-        this.setText(elements.production,Economy.format(Economy.generatorUnitCps(id,multipliers)));
-        this.setText(elements.clickBonus,`+${Economy.format(Economy.generatorUnitClick(id,multipliers))} cookie/clic par unité`);
+        elements.unitCps=Economy.generatorUnitCps(id,multipliers);
+        elements.unitClick=Economy.generatorUnitClick(id,multipliers);
+        this.setText(elements.production,Economy.format(elements.unitCps));
+        this.setText(elements.clickBonus,`+${Economy.format(elements.unitClick)} cookie/clic par unité`);
+        this.setText(elements.nextUnit,`+${Economy.format(elements.unitCps)} cookie/s · +${Economy.format(elements.unitClick)} cookie/clic`);
       }
+      const stackCps=Economy.generatorStackCps(s,id,multipliers,elements.unitCps);
+      const stackClick=Economy.generatorStackClick(s,id,multipliers,elements.unitClick);
+      this.setText(elements.stackCps,`${Economy.format(stackCps)} cookie/s`);
+      this.setText(elements.stackClick,`${Economy.format(stackClick)} cookie/clic`);
+      this.setText(elements.cpsShare,this.formatGeneratorShare(Economy.generatorCpsShare(s,id,multipliers,elements.unitCps,s.cps)));
+      const specialization=elements.specializationDefinition;
+      this.setText(elements.specialization,!specialization
+        ? 'Aucune spécialisation dédiée'
+        : s.ownedUpgrades.includes(specialization.id)
+          ? `${specialization.name} active · ×${Economy.format(specialization.effect.factor)} production + clic`
+          : `${specialization.name} · ${owned} / ${specialization.requiresGenerator?.count ?? 0} unités`);
       elements.buy1.disabled=owned>=Number.MAX_SAFE_INTEGER || Economy.compare(s.cookies,elements.price)<0;
       const wait=Economy.purchaseWait(elements.price,s.cookies,s.cps);
       this.setText(elements.wait,owned>=Number.MAX_SAFE_INTEGER?'Limite de possession atteinte':wait.missing.isZero()?'Une unité disponible maintenant':`Manque ${Economy.format(wait.missing)} · ${Economy.formatWait(wait.seconds)}`);
