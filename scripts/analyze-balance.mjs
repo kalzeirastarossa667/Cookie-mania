@@ -53,7 +53,8 @@ const progressionSpecs=[
     clickRate:5,
     mode:'continuous',
     horizonSeconds:10*365*24*60*60,
-    targetProduced:'1e22',
+    targetProduced:null,
+    stopGeneratorId:'origin_crucible',
     controlOrder:[]
   },
   {
@@ -211,11 +212,13 @@ function runEconomicWindow(state,{
   maxSteps=200000,
   chooseAction=(current)=>bestByScore(candidateActions(current,clickRate)),
   chooseNextCost=(current)=>nextReachableCost(current),
-  onAction=null
+  onAction=null,
+  stopWhen=null
 }={}){
   const engine=new GameEngine(state);
+  const completed=()=>Boolean(stopWhen?.(state)) || (targetProduced!==null && Economy.compare(state.totalProduced,targetProduced)>=0);
   let seconds=0,purchases=0,steps=0;
-  while(seconds<horizonSeconds && Economy.compare(state.totalProduced,targetProduced)<0 && steps<maxSteps){
+  while(seconds<horizonSeconds && !completed() && steps<maxSteps){
     steps++;
     const action=chooseAction(state);
     if(action){
@@ -246,7 +249,7 @@ function runEconomicWindow(state,{
   }
   return {
     engine,
-    reached:Economy.compare(state.totalProduced,targetProduced)>=0,
+    reached:completed(),
     seconds,
     purchases,
     steps
@@ -488,6 +491,7 @@ function simulateProgressionTimeline(spec){
       clickRate:spec.clickRate,
       targetProduced:spec.targetProduced,
       horizonSeconds:spec.horizonSeconds,
+      stopWhen:spec.stopGeneratorId?current=>current.generators[spec.stopGeneratorId]>0:null,
       chooseAction:current=>chooseProgressionAction(current,spec.clickRate,policyState),
       chooseNextCost:current=>progressionNextCost(current,policyState),
       onAction:info=>observeTimelineAction(tracker,info,info.seconds,1,policyState)
@@ -508,7 +512,7 @@ function simulateProgressionTimeline(spec){
     mode:spec.mode,
     controlOrder:[...(spec.controlOrder ?? [])],
     horizonSeconds:spec.horizonSeconds ?? 365*24*60*60,
-    targetProduced:spec.mode==='continuous'?spec.targetProduced:'1e12 per prestige cycle',
+    targetProduced:spec.mode==='continuous'?(spec.stopGeneratorId?'first ownership '+spec.stopGeneratorId:spec.targetProduced):'1e12 per prestige cycle',
     elapsedSeconds,
     events:tracker.events,
     milestones:timelineSummary(tracker),
