@@ -1,6 +1,6 @@
 # Organisation et outils GitHub
 
-Checkpoint du 30 septembre 2026 UTC. Version jouable et baseline de développement : Foundation 2.7 Branching Prestige Progression. Save schema v7. Le merge `175cb19789a42adf29b38ad0ff48469c2de0b60c` a été revalidé sur `main` par Foundation checks et Browser checks.
+Checkpoint du 30 septembre 2026 UTC. Version jouable et baseline de développement : Foundation 2.7.1 Stable. Save schema v7. Le merge runtime `5d20d9b5eb4ddfcb156b2a763a4179f77cb66477` a été revalidé sur `main` par Foundation checks et Browser checks. Le snapshot archivé 2.7.1 est byte-identique à `index.html`.
 
 ## Rangement
 
