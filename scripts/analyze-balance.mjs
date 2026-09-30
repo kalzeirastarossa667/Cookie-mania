@@ -147,6 +147,8 @@ function bestByScore(actions){
 function candidateActions(state,clickRate){
   const actions=[];
   for(const id of Object.keys(GENERATORS)){
+    const cost=Economy.generatorCost(GENERATORS[id],state.generators[id]);
+    if(Economy.compare(state.cookies,cost)<0) continue;
     const candidate=evaluateAction(state,clickRate,{kind:'generator',mode:'single',id});
     if(candidate) actions.push(candidate);
   }
@@ -187,8 +189,13 @@ function controlTargetCost(state,control){
 function forcedControlCandidate(state,clickRate,control){
   const actions=[];
   for(const id of Object.keys(GENERATORS)){
+    const owned=state.generators[id];
+    const minimumQuantity=control==='max'?2:10;
+    if(minimumQuantity>Number.MAX_SAFE_INTEGER-owned) continue;
+    const minimumCost=Economy.generatorBatchCost(GENERATORS[id],owned,minimumQuantity);
+    if(Economy.compare(state.cookies,minimumCost)<0) continue;
     const action={kind:'generator',mode:control,id};
-    const candidate=evaluateAction(state,clickRate,action,{minimumQuantity:control==='max'?2:10});
+    const candidate=evaluateAction(state,clickRate,action,{minimumQuantity});
     if(candidate) actions.push(candidate);
   }
   return bestByScore(actions);
@@ -201,6 +208,8 @@ function pendingControl(policyState){
 function unlockOrderCandidate(state,clickRate){
   for(const id of Object.keys(GENERATORS)){
     if(state.generators[id]>0) continue;
+    const cost=Economy.generatorCost(GENERATORS[id],0);
+    if(Economy.compare(state.cookies,cost)<0) return null;
     return evaluateAction(state,clickRate,{kind:'generator',mode:'single',id});
   }
   return null;
