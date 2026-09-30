@@ -23,7 +23,7 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
-La suite exécute 220 cas de règles/persistance, les vérifications d'interface ciblées et 56 assertions Constellation/Horizons. Playwright vérifie aussi Chromium sur ordinateur et émulation Pixel 5. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
+La suite exécute **220/220** cas de règles/persistance, les vérifications d'interface ciblées et **56/56** assertions Constellation/Horizons. Le checkpoint 2.7.1 a également validé **10/10 scénarios Playwright** : 5 sur Chromium desktop et 5 sous émulation Pixel 5, dont le parcours des deux branches de Rayonnement jusqu’à leur convergence. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
 
 Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
 
