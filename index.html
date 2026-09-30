@@ -538,6 +538,21 @@ body::before{
   .purchase-actions .buy{padding:8px 5px}
 }
 
+
+/* Foundation 2.9 guidance layer */
+.generator-details{margin-top:10px;border-top:1px solid color-mix(in srgb,var(--ce-border) 78%,transparent)}
+.generator-details summary{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:9px 2px 5px;color:var(--ce-subtle);font-size:10px;font-weight:750;cursor:pointer;list-style:none}
+.generator-details summary::-webkit-details-marker{display:none}.generator-details summary::after{content:'＋';font-size:14px;color:var(--ce-accent)}.generator-details[open] summary::after{content:'−'}
+.generator-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px 0 9px}
+.generator-detail-grid>span{padding:8px 9px;border:1px solid color-mix(in srgb,var(--ce-border) 72%,transparent);border-radius:11px;background:color-mix(in srgb,var(--ce-surface-soft) 68%,transparent)}
+.generator-detail-grid small{display:block;color:var(--ce-subtle);font-size:8px;font-weight:750;letter-spacing:.35px;text-transform:uppercase}.generator-detail-grid b{display:block;margin-top:2px;color:var(--ce-text);font-size:10px;line-height:1.35;overflow-wrap:anywhere}
+.generator-specialization{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:0 0 3px!important;padding:9px 10px;border-radius:11px;background:color-mix(in srgb,var(--era-accent) 8%,var(--ce-surface-soft));font-size:10px!important}.generator-specialization span{color:var(--ce-subtle)}.generator-specialization b{max-width:62%;color:var(--ce-text);text-align:right;line-height:1.35}
+.prestige-contract{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:12px 0}
+.prestige-contract>div{padding:9px;border:1px solid var(--ce-border);border-radius:11px;background:var(--ce-surface-strong)}.prestige-contract span{display:block;font-size:8px;font-weight:850;letter-spacing:.55px;text-transform:uppercase}.prestige-contract b{display:block;margin-top:4px;font-size:10px;line-height:1.35;color:var(--ce-text)}.prestige-contract small{display:block;margin-top:4px;font-size:9px;color:var(--ce-subtle);line-height:1.35}
+.prestige-contract [data-prestige-impact="reset"] span{color:#c86d62}.prestige-contract [data-prestige-impact="keep"] span{color:var(--ok)}.prestige-contract [data-prestige-impact="gain"] span{color:var(--ce-accent)}
+@media(max-width:760px){.generator-detail-grid{grid-template-columns:1fr 1fr}.prestige-contract{grid-template-columns:1fr}.generator-specialization{flex-direction:column;gap:3px}.generator-specialization b{max-width:100%;text-align:left}}
+@media(max-width:370px){.generator-detail-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -564,7 +579,7 @@ body::before{
 <div class="next-milestone" id="nextMilestone"><span class="journey-star" aria-hidden="true">✦</span><div class="next-copy"><span class="next-label" id="nextMilestoneLabel">Votre prochaine étape</span><h3 id="nextMilestoneTitle">Première fournée</h3><p id="nextMilestoneDescription">Produire 25 cookies au total.</p></div></div>
 <div class="journey-progress"><progress id="milestoneProgress" max="100" value="0" aria-labelledby="nextMilestoneTitle" aria-valuetext="0 / 25"></progress><span id="milestoneProgressText">0 / 25</span></div>
 <button class="btn journey-shortcut" data-open-view="workshop" type="button">Ouvrir l’atelier →</button>
-<div class="prestige-card" id="prestigeCard"><span class="eyebrow">Rayonnement permanent</span><h3>Éclats d’empire</h3><p>Rayonnement total : <b id="prestigePoints">0</b> · multiplicateur <b id="prestigeMultiplier">×1</b></p><p>Éclats disponibles : <b id="prestigeCurrency">0</b></p><p id="prestigeHint">Produisez 1 billion de cookies dans cette partie pour débloquer le prestige.</p><button class="btn" id="prestigeButton" type="button" disabled>Faire rayonner l’empire</button><p class="journey-note">Le prestige recommence la partie courante mais conserve vos Éclats et achats permanents.</p></div><section class="prestige-shop" aria-labelledby="prestigeShopTitle"><span class="eyebrow">Progression permanente</span><h3 id="prestigeShopTitle">Boutique d’Éclats</h3><p class="journey-note">Dépensez vos Éclats disponibles sans réduire votre Rayonnement total.</p><div id="prestigeShopList"></div></section>
+<div class="prestige-card" id="prestigeCard"><span class="eyebrow">Rayonnement permanent</span><h3>Éclats d’empire</h3><p>Rayonnement total : <b id="prestigePoints">0</b> · multiplicateur <b id="prestigeMultiplier">×1</b></p><p>Éclats disponibles : <b id="prestigeCurrency">0</b></p><p id="prestigeHint">Produisez 1 billion de cookies dans cette partie pour débloquer le prestige.</p><div class="prestige-contract" aria-label="Conséquences du prestige"><div data-prestige-impact="reset"><span>Réinitialisé</span><b>Cookies, clics de la partie, générateurs et recherches</b></div><div data-prestige-impact="keep"><span>Conservé</span><b>Rayonnement, Éclats disponibles et achats permanents</b></div><div data-prestige-impact="gain"><span>Gagné</span><b id="prestigeGain">+0 Rayonnement · +0 Éclat</b><small id="prestigeAfterMultiplier">Multiplicateur permanent inchangé</small></div></div><button class="btn" id="prestigeButton" type="button" disabled>Faire rayonner l’empire</button><p class="journey-note">Le prestige recommence la partie courante mais conserve vos Éclats et achats permanents.</p></div><section class="prestige-shop" aria-labelledby="prestigeShopTitle"><span class="eyebrow">Progression permanente</span><h3 id="prestigeShopTitle">Boutique d’Éclats</h3><p class="journey-note">Dépensez vos Éclats disponibles sans réduire votre Rayonnement total.</p><div id="prestigeShopList"></div></section>
 <details class="milestone-details" id="milestoneDetails"><summary>Voir les 44 étapes</summary><button class="btn milestone-filter" id="milestoneFilter" type="button" aria-pressed="false">Masquer les étapes franchies</button><ol id="milestoneList"></ol><p class="journey-note">Des repères pour votre atelier. Ces étapes n’accordent pas de bonus.</p></details><p id="milestoneAnnouncement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p></section>
 <section class="game-view" id="view-workshop" data-view="workshop" aria-labelledby="productionTitle" hidden><div class="section-heading"><div><span class="eyebrow">Faites tourner la boutique</span><h2 id="productionTitle">Votre atelier</h2></div><span class="section-count">PRODUCTION</span></div><div class="shop-controls"><label for="shopEra">Région<select id="shopEra"><option value="all">Toutes les régions</option><option value="workshop">Atelier</option><option value="orbit">Orbite</option><option value="cosmos">Cosmos</option><option value="infinity">Infini</option></select></label><label for="shopFilter">Afficher<select id="shopFilter"><option value="all">Tous les générateurs</option><option value="affordable">Achetable maintenant</option><option value="owned">Déjà possédés</option><option value="new">À découvrir</option></select></label></div><p class="section-note" id="shopSummary"></p><div id="generatorList"></div><p id="shopEmpty" hidden>Aucun générateur ne correspond à ces filtres.</p></section>
 <section class="upgrades game-view" id="view-research" data-view="research" aria-labelledby="upgradesTitle" hidden><div class="section-divider" aria-hidden="true"></div><div class="section-heading"><div><span class="eyebrow">La recherche ouvre de nouveaux horizons</span><h2 id="upgradesTitle">Arbre des saveurs</h2></div></div><p class="section-note">Trois branches de recherche. Chaque découverte reste acquise et renforce votre empire.</p><div class="research-controls"><div class="branch-filters" aria-label="Branches de recherche"><button class="btn" data-branch="all" aria-pressed="true">Tout</button><button class="btn" data-branch="click" aria-pressed="false">✦ Clic</button><button class="btn" data-branch="generator" aria-pressed="false">❋ Atelier</button><button class="btn" data-branch="globalCps" aria-pressed="false">♨ Empire</button></div><button class="btn" id="researchFilter" aria-pressed="false">Masquer les acquises</button></div><p id="researchSummary" class="section-note"></p><div id="upgradeList"></div><p id="researchEmpty" hidden>Aucune recherche à afficher dans cette branche. Changez le filtre pour revoir vos découvertes.</p></section></main>
@@ -733,22 +748,22 @@ const FRENCH_SCALES=[
 ];
 
 const GENERATORS=Object.freeze({
-  cursor:Object.freeze({id:'cursor',name:'Curseur',icon:'👆',description:"Un geste automatisé qui lance votre production et renforce chaque clic.",baseCost:'15',growthRate:'1.15',baseCps:'0.1'}),
-  grandma:Object.freeze({id:'grandma',name:'Grand-mère',icon:'👵',description:"Une artisane fiable qui prépare des fournées en continu, même sans cliquer.",baseCost:'100',growthRate:'1.15',baseCps:'1'}),
-  oven:Object.freeze({id:'oven',name:'Four artisanal',icon:'🔥',description:"Un four régulier qui transforme votre atelier en véritable chaîne de production.",baseCost:'1100',growthRate:'1.15',baseCps:'8'}),
-  cocoa_mine:Object.freeze({id:'cocoa_mine',name:'Mine de cacao',icon:'⛏️',description:"Extrait le cacao à grande échelle pour accélérer fortement la production.",baseCost:'12000',growthRate:'1.15',baseCps:'47'}),
-  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',description:"Optimise recettes et procédés pour faire grimper le rendement chocolatier.",baseCost:'250000',growthRate:'1.15',baseCps:'230'}),
-  orbital_bakery:Object.freeze({id:'orbital_bakery',name:'Boulangerie orbitale',icon:'🛰️',description:"Une boulangerie en orbite qui produit sans interruption au-dessus de la planète.",baseCost:'5000000',growthRate:'1.15',baseCps:'1400'}),
-  lunar_harvest:Object.freeze({id:'lunar_harvest',name:'Moisson lunaire',icon:'🌙',description:"Récolte des ressources sucrées lunaires pour alimenter votre empire.",baseCost:'100000000',growthRate:'1.15',baseCps:'7800'}),
-  stellar_forge:Object.freeze({id:'stellar_forge',name:'Forge stellaire',icon:'🌟',description:"Forge l’énergie des étoiles en fournées massives de cookies.",baseCost:'2000000000',growthRate:'1.15',baseCps:'44000'}),
-  nebula_refinery:Object.freeze({"id": "nebula_refinery", "name": "Raffinerie de nébuleuse", "icon": "☁️", description:"Raffine les nuages cosmiques en ingrédients concentrés pour l’industrie.","baseCost": "40000000000", "growthRate": "1.15", "baseCps": "600000"}),
-  comet_caravan:Object.freeze({"id": "comet_caravan", "name": "Caravane de comètes", "icon": "☄️", description:"Capte et transporte des cargaisons sucrées à travers le système stellaire.","baseCost": "800000000000", "growthRate": "1.15", "baseCps": "9000000"}),
-  quantum_oven:Object.freeze({"id": "quantum_oven", "name": "Four quantique", "icon": "⚛️", description:"Cuit plusieurs possibilités à la fois pour multiplier le rendement.","baseCost": "16000000000000", "growthRate": "1.15", "baseCps": "140000000"}),
-  time_confectionery:Object.freeze({"id": "time_confectionery", "name": "Confiserie temporelle", "icon": "⏳", description:"Exploite le temps lui-même afin de produire au-delà d’un rythme normal.","baseCost": "320000000000000", "growthRate": "1.15", "baseCps": "2200000000"}),
-  antimatter_mixer:Object.freeze({"id": "antimatter_mixer", "name": "Batteur antimatière", "icon": "🌀", description:"Mélange matière et antimatière pour atteindre une production d’échelle extrême.","baseCost": "6400000000000000", "growthRate": "1.15", "baseCps": "35000000000"}),
-  galactic_foundry:Object.freeze({"id": "galactic_foundry", "name": "Fonderie galactique", "icon": "🌌", description:"Industrialise la production à l’échelle d’une galaxie entière.","baseCost": "128000000000000000", "growthRate": "1.15", "baseCps": "560000000000"}),
-  multiverse_kitchen:Object.freeze({"id": "multiverse_kitchen", "name": "Cuisine du multivers", "icon": "🪐", description:"Synchronise plusieurs réalités pour faire travailler d’innombrables cuisines.","baseCost": "2560000000000000000", "growthRate": "1.15", "baseCps": "9000000000000"}),
-  origin_crucible:Object.freeze({"id": "origin_crucible", "name": "Creuset des origines", "icon": "💠", description:"Puise dans les lois fondamentales de l’univers pour créer des cookies à la source.","baseCost": "51200000000000000000", "growthRate": "1.15", "baseCps": "145000000000000"})
+  cursor:Object.freeze({id:'cursor',name:'Curseur',icon:'👆',description:"Automatise les premiers gestes de l’atelier et maintient une petite production régulière.",baseCost:'15',growthRate:'1.15',baseCps:'0.1'}),
+  grandma:Object.freeze({id:'grandma',name:'Grand-mère',icon:'👵',description:"Transforme les recettes familiales en une production continue de cookies.",baseCost:'100',growthRate:'1.15',baseCps:'1'}),
+  oven:Object.freeze({id:'oven',name:'Four artisanal',icon:'🔥',description:"Enchaîne les fournées en continu et forme le cœur productif du premier atelier.",baseCost:'1100',growthRate:'1.15',baseCps:'8'}),
+  cocoa_mine:Object.freeze({id:'cocoa_mine',name:'Mine de cacao',icon:'⛏️',description:"Extrait le cacao à grande échelle pour alimenter une production plus industrielle.",baseCost:'12000',growthRate:'1.15',baseCps:'47'}),
+  chocolate_lab:Object.freeze({id:'chocolate_lab',name:'Laboratoire chocolatier',icon:'🧪',description:"Expérimente de nouveaux procédés pour produire des cookies à un rythme scientifique.",baseCost:'250000',growthRate:'1.15',baseCps:'230'}),
+  orbital_bakery:Object.freeze({id:'orbital_bakery',name:'Boulangerie orbitale',icon:'🛰️',description:"Déplace les lignes de cuisson en orbite pour augmenter l’échelle de production.",baseCost:'5000000',growthRate:'1.15',baseCps:'1400'}),
+  lunar_harvest:Object.freeze({id:'lunar_harvest',name:'Moisson lunaire',icon:'🌙',description:"Récolte des ressources sucrées lunaires pour soutenir des fournées massives.",baseCost:'100000000',growthRate:'1.15',baseCps:'7800'}),
+  stellar_forge:Object.freeze({id:'stellar_forge',name:'Forge stellaire',icon:'🌟',description:"Exploite l’énergie des étoiles pour alimenter une production à très haut rendement.",baseCost:'2000000000',growthRate:'1.15',baseCps:'44000'}),
+  nebula_refinery:Object.freeze({"id": "nebula_refinery", "name": "Raffinerie de nébuleuse", "icon": "☁️", description:"Condense la matière des nébuleuses en ingrédients utilisables à l’échelle cosmique.","baseCost": "40000000000", "growthRate": "1.15", "baseCps": "600000"}),
+  comet_caravan:Object.freeze({"id": "comet_caravan", "name": "Caravane de comètes", "icon": "☄️", description:"Capture et achemine des ressources de comètes vers les chaînes de production.","baseCost": "800000000000", "growthRate": "1.15", "baseCps": "9000000"}),
+  quantum_oven:Object.freeze({"id": "quantum_oven", "name": "Four quantique", "icon": "⚛️", description:"Superpose les cycles de cuisson pour pousser la production au-delà des procédés classiques.","baseCost": "16000000000000", "growthRate": "1.15", "baseCps": "140000000"}),
+  time_confectionery:Object.freeze({"id": "time_confectionery", "name": "Confiserie temporelle", "icon": "⏳", description:"Exploite le temps pour multiplier les cycles de fabrication.","baseCost": "320000000000000", "growthRate": "1.15", "baseCps": "2200000000"}),
+  antimatter_mixer:Object.freeze({"id": "antimatter_mixer", "name": "Batteur antimatière", "icon": "🌀", description:"Utilise l’antimatière pour alimenter des mélanges à une échelle extrême.","baseCost": "6400000000000000", "growthRate": "1.15", "baseCps": "35000000000"}),
+  galactic_foundry:Object.freeze({"id": "galactic_foundry", "name": "Fonderie galactique", "icon": "🌌", description:"Industrialise les fournées à l’échelle d’une galaxie entière.","baseCost": "128000000000000000", "growthRate": "1.15", "baseCps": "560000000000"}),
+  multiverse_kitchen:Object.freeze({"id": "multiverse_kitchen", "name": "Cuisine du multivers", "icon": "🪐", description:"Coordonne des cuisines parallèles à travers plusieurs univers.","baseCost": "2560000000000000000", "growthRate": "1.15", "baseCps": "9000000000000"}),
+  origin_crucible:Object.freeze({"id": "origin_crucible", "name": "Creuset des origines", "icon": "💠", description:"Manipule des forces primordiales pour produire à une échelle presque absolue.","baseCost": "51200000000000000000", "growthRate": "1.15", "baseCps": "145000000000000"})
 });
 
 const GENERATOR_ERAS=Object.freeze([
@@ -801,6 +816,15 @@ const PRESTIGE_UPGRADES=Object.freeze({
   radiant_convergence:Object.freeze({id:'radiant_convergence',branch:'convergence',name:'Convergence radiante',description:'Les voies du geste et de la production se rejoignent.',cost:'5',requires:Object.freeze(['radiant_precision','harmonic_resonance']),effect:Object.freeze({target:'globalCps',factor:'1.04'})})
 });
 const owns=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
+
+function validateGeneratorContent(definitions){
+  if(!definitions || typeof definitions!=='object' || !Object.keys(definitions).length) throw new Error('Catalogue générateurs invalide');
+  for(const [id,definition] of Object.entries(definitions)){
+    if(!definition || definition.id!==id || typeof definition.name!=='string' || !definition.name.trim() || typeof definition.icon!=='string' || !definition.icon.trim() || typeof definition.description!=='string' || !definition.description.trim()) throw new Error('Définition générateur invalide');
+    if(HugeNumber.from(definition.baseCost).isZero() || HugeNumber.from(definition.baseCps).isZero() || HugeNumber.from(definition.growthRate).compare(1)<=0) throw new Error('Valeurs générateur invalides');
+  }
+}
+validateGeneratorContent(GENERATORS);
 
 function validateUpgradeContent(definitions){
   for(const [id,definition] of Object.entries(definitions)){
@@ -982,6 +1006,12 @@ const Economy = {
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     return Economy.multiply(Economy.multiply(GENERATORS[id].baseCps,multipliers.generators[id]),multipliers.globalCps);
   },
+  generatorStackCps(state,id,multipliers=Economy.deriveMultipliers(state)){
+    if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
+    const owned=state.generators?.[id];
+    if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
+    return Economy.multiply(Economy.generatorUnitCps(id,multipliers),owned);
+  },
   deriveCps(state,multipliers=Economy.deriveMultipliers(state)){
     let total=HugeNumber.zero();
     for(const [id,definition] of Object.entries(GENERATORS)){
@@ -1022,6 +1052,37 @@ const Economy = {
   generatorUnitClick(id,multipliers){
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     return Economy.multiply(Economy.multiply(GENERATORS[id].baseCps,multipliers.generatorClicks[id]),multipliers.click);
+  },
+  generatorStackClick(state,id,multipliers=Economy.deriveMultipliers(state)){
+    if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
+    const owned=state.generators?.[id];
+    if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
+    return Economy.multiply(Economy.generatorUnitClick(id,multipliers),owned);
+  },
+  contributionPercent(part,total){
+    const numerator=HugeNumber.from(part),denominator=HugeNumber.from(total);
+    if(denominator.isZero()) return null;
+    if(numerator.isZero()) return 0;
+    const ratio=numerator.divide(denominator);
+    const raw=ratio.m*Math.pow(10,ratio.e)*100;
+    if(!Number.isFinite(raw)) return ratio.e>=0?100:0;
+    return Math.max(0,Math.min(100,raw));
+  },
+  formatPercent(value){
+    if(value===null) return '—';
+    if(value===0) return '0 %';
+    if(value<0.1) return '< 0,1 %';
+    const rounded=value<10?value.toFixed(1):value.toFixed(0);
+    return rounded.replace('.',',')+' %';
+  },
+  generatorSpecialization(state,id){
+    if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
+    const candidates=Object.values(UPGRADES).filter(definition=>definition.requiresGenerator?.id===id);
+    if(!candidates.length) return null;
+    const next=candidates.find(definition=>!state.ownedUpgrades.includes(definition.id));
+    if(!next) return {status:'owned',definition:candidates[candidates.length-1],quote:null};
+    const quote=Economy.upgradeQuote(state,next.id);
+    return {status:quote.status,definition:next,quote};
   },
   purchaseWait(cost,balance,cps){
     const missing=HugeNumber.from(cost).subtract(balance);
@@ -1772,7 +1833,7 @@ class GameUI {
     document.getElementById('prestigeButton').addEventListener('click',()=>{
       const reward=Economy.prestigeReward(this.engine.state);
       if(reward.isZero()) return;
-      if(window.confirm(`Faire rayonner l’empire ? Cookies, générateurs et recherches de cette partie seront réinitialisés. Vous gagnerez ${Economy.format(reward)} Éclat(s) permanent(s).`)) this.onPrestige();
+      if(window.confirm(`Faire rayonner l’empire ? Cookies, clics de la partie, générateurs et recherches seront réinitialisés. Rayonnement, Éclats disponibles et achats permanents sont conservés. Gain : +${Economy.format(reward)} Rayonnement et +${Economy.format(reward)} Éclat(s).`)) this.onPrestige();
     });
   }
 
@@ -1995,6 +2056,9 @@ class GameUI {
     this.setText(document.getElementById('prestigeHint'),prestigeReward.isZero()
       ? `Encore ${Economy.format(HugeNumber.from('1e12').subtract(state.totalProduced))} cookies à produire dans cette partie.`
       : `Prestige disponible : +${Economy.format(prestigeReward)} Éclat(s), soit ×${Economy.format(Economy.add(1,Economy.multiply(Economy.add(state.prestigePoints,prestigeReward),0.1)))} après renaissance.`);
+    this.setText(document.getElementById('prestigeGain'),'+'+Economy.format(prestigeReward)+' Rayonnement · +'+Economy.format(prestigeReward)+' Éclat(s)');
+    const afterPrestigeMultiplier=Economy.add(1,Economy.multiply(Economy.add(state.prestigePoints,prestigeReward),0.1));
+    this.setText(document.getElementById('prestigeAfterMultiplier'),'Multiplicateur après renaissance : ×'+Economy.format(afterPrestigeMultiplier));
     this.setText(document.getElementById('empireRank'),progress.rank);
     this.setText(document.getElementById('sceneTitle'),progress.rank);
     const reached=GENERATOR_ERAS.filter(era=>era.ids.some(id=>state.generators[id]>0)).at(-1) ?? GENERATOR_ERAS[0];
@@ -2038,7 +2102,7 @@ class GameUI {
       panel.className='generator';
       panel.dataset.generatorId=definition.id;
       panel.dataset.era=GENERATOR_ERAS.find(era=>era.ids.includes(definition.id)).id;
-      panel.innerHTML=`<div class="generator-row"><span class="generator-icon" aria-hidden="true">${this.generatorIcon(definition)}</span><div class="generator-info"><h3>${definition.name}</h3><p class="generator-description">${definition.description}</p></div><span class="owned-badge"><b data-role="owned">0</b>possédés</span></div><div class="generator-metrics"><span><small>Production / unité</small><b>+<span data-role="production">${Economy.format(definition.baseCps)}</span> cookie/s</b></span><span><small>Bonus clic / unité</small><b class="click-bonus">+${Economy.format(definition.baseCps)} cookie/clic par unité</b></span></div><div class="purchase-actions"><button class="btn buy primary-buy" data-generator-id="${definition.id}" data-buy-mode="1" type="button">Acheter · <span data-role="cost">${Economy.format(definition.baseCost)}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="10" type="button"><span>×10 · </span><span data-role="batch-cost">${Economy.format(Economy.generatorBatchCost(definition,0,10))}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="max" type="button" aria-label="Acheter le maximum de ${definition.name}">Max</button></div><p class="purchase-wait" data-role="wait"></p>`;
+      panel.innerHTML=`<div class="generator-row"><span class="generator-icon" aria-hidden="true">${this.generatorIcon(definition)}</span><div class="generator-info"><h3>${definition.name}</h3><p class="generator-description">${definition.description}</p></div><span class="owned-badge"><b data-role="owned">0</b>possédés</span></div><div class="generator-metrics"><span><small>Production / unité</small><b>+<span data-role="production">${Economy.format(definition.baseCps)}</span> cookie/s</b></span><span><small>Bonus clic / unité</small><b class="click-bonus">+${Economy.format(definition.baseCps)} cookie/clic par unité</b></span></div><div class="purchase-actions"><button class="btn buy primary-buy" data-generator-id="${definition.id}" data-buy-mode="1" type="button">Acheter · <span data-role="cost">${Economy.format(definition.baseCost)}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="10" type="button"><span>×10 · </span><span data-role="batch-cost">${Economy.format(Economy.generatorBatchCost(definition,0,10))}</span></button><button class="btn buy" data-generator-id="${definition.id}" data-buy-mode="max" type="button" aria-label="Acheter le maximum de ${definition.name}">Max</button></div><p class="purchase-wait" data-role="wait"></p><details class="generator-details"><summary>Comprendre ce générateur</summary><div class="generator-detail-grid"><span><small>Production possédée</small><b data-role="stack-production">0 cookie/s</b></span><span><small>Bonus clic possédé</small><b data-role="stack-click">0 cookie/clic</b></span><span><small>Part de la production</small><b data-role="production-share">—</b></span><span><small>Gain de la prochaine unité</small><b data-role="next-gain">+0/s · +0/clic</b></span></div><p class="generator-specialization"><span>Prochaine spécialisation</span><b data-role="specialization">À déterminer</b></p></details>`;
       this.generatorElements[definition.id]={
         panel,
         priceOwned:null,
@@ -2051,6 +2115,14 @@ class GameUI {
         owned:panel.querySelector('[data-role="owned"]'),
         production:panel.querySelector('[data-role="production"]'),
         clickBonus:panel.querySelector('.click-bonus'),
+        stackProduction:panel.querySelector('[data-role="stack-production"]'),
+        stackClick:panel.querySelector('[data-role="stack-click"]'),
+        productionShare:panel.querySelector('[data-role="production-share"]'),
+        nextGain:panel.querySelector('[data-role="next-gain"]'),
+        specialization:panel.querySelector('[data-role="specialization"]'),
+        detailSignature:null,
+        unitCps:null,
+        unitClick:null,
         cost:panel.querySelector('[data-role="cost"]'),
         batchCost:panel.querySelector('[data-role="batch-cost"]'),
         buy1:panel.querySelector('[data-buy-mode="1"]'),
@@ -2322,8 +2394,31 @@ class GameUI {
       this.setText(elements.owned,owned.toLocaleString('fr-FR'));
       if(elements.rateSignature!==signature){
         elements.rateSignature=signature;
-        this.setText(elements.production,Economy.format(Economy.generatorUnitCps(id,multipliers)));
-        this.setText(elements.clickBonus,`+${Economy.format(Economy.generatorUnitClick(id,multipliers))} cookie/clic par unité`);
+        elements.unitCps=Economy.generatorUnitCps(id,multipliers);
+        elements.unitClick=Economy.generatorUnitClick(id,multipliers);
+        this.setText(elements.production,Economy.format(elements.unitCps));
+        this.setText(elements.clickBonus,`+${Economy.format(elements.unitClick)} cookie/clic par unité`);
+      }
+      const detailSignature=signature+'::'+owned+'::'+s.cps.m+':'+s.cps.e+'::'+s.ownedUpgrades.join('|');
+      if(elements.detailSignature!==detailSignature){
+        elements.detailSignature=detailSignature;
+        const stackCps=Economy.generatorStackCps(s,id,multipliers);
+        const stackClick=Economy.generatorStackClick(s,id,multipliers);
+        const share=Economy.contributionPercent(stackCps,s.cps);
+        const specialization=Economy.generatorSpecialization(s,id);
+        this.setText(elements.stackProduction,Economy.format(stackCps)+' cookie/s');
+        this.setText(elements.stackClick,Economy.format(stackClick)+' cookie/clic');
+        this.setText(elements.productionShare,s.cps.isZero()?'— sans production automatique':Economy.formatPercent(share)+' du CPS');
+        this.setText(elements.nextGain,'+'+Economy.format(elements.unitCps)+'/s · +'+Economy.format(elements.unitClick)+'/clic');
+        let specializationText='Aucune spécialisation dédiée pour le moment';
+        if(specialization){
+          const d=specialization.definition,gate=d.requiresGenerator;
+          if(specialization.status==='owned') specializationText='✓ '+d.name+' acquise';
+          else if(specialization.status==='locked') specializationText=d.name+' · '+s.generators[id]+' / '+gate.count+' unités';
+          else if(specialization.status==='available') specializationText=d.name+' · disponible dans Recherche';
+          else specializationText=d.name+' · '+Economy.format(specialization.quote.cost)+' cookies requis';
+        }
+        this.setText(elements.specialization,specializationText);
       }
       elements.buy1.disabled=owned>=Number.MAX_SAFE_INTEGER || Economy.compare(s.cookies,elements.price)<0;
       const wait=Economy.purchaseWait(elements.price,s.cookies,s.cps);
@@ -2340,7 +2435,8 @@ class GameUI {
       const card=button.closest('.upgrade-card');
       card.classList.toggle('is-owned',quote.status==='owned');
       card.classList.toggle('is-locked',quote.status==='locked');
-      this.setText(card.querySelector('[data-role="research-state"]'),quote.missingGenerator?`${s.generators[quote.missingGenerator.id]} / ${quote.missingGenerator.count} unités requises`:quote.status==='locked'?'Prérequis à découvrir':quote.status==='owned'?'✓ Découverte':quote.status==='available'?'Disponible':'Cookies insuffisants');
+      const researchState=quote.missingGenerator?`Requiert ${quote.missingGenerator.count} ${GENERATORS[quote.missingGenerator.id].name} · ${s.generators[quote.missingGenerator.id]} / ${quote.missingGenerator.count}`:quote.missing?.length?`Requiert : ${quote.missing.map(required=>UPGRADES[required].name).join(', ')}`:quote.status==='owned'?'✓ Découverte':quote.status==='available'?'Disponible':'Cookies insuffisants';
+      this.setText(card.querySelector('[data-role="research-state"]'),researchState);
       card.classList.toggle('is-available',quote.status==='available');
       button.setAttribute('aria-label',`${UPGRADES[id].name} : ${button.textContent}${quote.missingGenerator?' ; nécessite '+quote.missingGenerator.count+' '+GENERATORS[quote.missingGenerator.id].name:quote.missing?.length?' ; nécessite '+quote.missing.map(id=>UPGRADES[id].name).join(', '):''}`);
     }

@@ -11,6 +11,11 @@ test('clics, achat réel et sauvegarde après rechargement', async ({ page }) =>
   await page.locator('[data-nav="workshop"]').click();
   await page.locator('button[data-generator-id="cursor"][data-buy-mode="1"]').click();
   await expect(page.locator('[data-generator-id="cursor"] [data-role="owned"]')).toHaveText('1');\n  await expect(page.locator('[data-generator-id="cursor"] .generator-description')).not.toBeEmpty();
+  const cursorDetails = page.locator('[data-generator-id="cursor"] .generator-details');
+  await expect(cursorDetails.locator('summary')).toHaveText(/Comprendre ce générateur/);
+  await cursorDetails.locator('summary').click();
+  await expect(cursorDetails.locator('[data-role="specialization"]')).toContainText('Gestes experts');
+  await expect(cursorDetails).not.toContainText(/NaN|Infinity/);
   await expect(page.locator('#cps')).not.toHaveText('0');
   await expect(page.locator('#perClick')).not.toHaveText('1');
   await page.locator('#saveButton').click();
