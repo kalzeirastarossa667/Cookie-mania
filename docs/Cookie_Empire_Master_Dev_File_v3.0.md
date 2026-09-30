@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.4 SYNERGIES IN DEVELOPMENT / SOURCE OF TRUTH
-Last audit: 2026-09-28
+Status: FOUNDATION 2.4 SYNERGIES / SOURCE OF TRUTH
+Last audit: 2026-09-30
 
 ## 0. Purpose
 
@@ -2126,4 +2126,4 @@ Red evidence exists at `49cfc13a01fae848cebcdb7c7d39aa70e929e9e0`. Final automat
 
 The required balance rerun passes. Under the same diagnostic policy, fresh 2 clicks/s reaches prestige in **25,141 s** versus the 2.3 baseline 31,388 s; fresh 5 clicks/s in **10,969 s** versus 13,587 s; one Rayonnement + 2 clicks/s in **22,821 s** versus 28,538 s. The ten-cycle 2-click/s series remains monotonic and reaches cycle ten in **13,148 s** versus 16,427 s. This is a material ~20% acceleration, accepted for this first synergy milestone but explicitly subject to human long-play observation before adding further broad multipliers. The temporary balance step was removed from routine CI after measurement.
 
-Browser automation remains required green on the final feature head before merge; Chromium desktop and Pixel 5 emulation are browser evidence, not physical-phone evidence. No prestige spending is part of Foundation 2.4.
+Final feature HEAD `b08488d03039eab353085a9a76cb7e37f8e362e3` passed GitHub Actions: 203/203 Foundation cases, targeted interface checks, 56/56 Constellation/Horizons DOM assertions, and 6/6 Playwright browser tests. Chromium desktop and Pixel 5 emulation are browser evidence, not physical-phone evidence. PR #9 was squash-merged to `main` as `d8a0d18c0366525ebb2ada57d9e1b678c286a2cb`. No prestige spending is part of Foundation 2.4.
