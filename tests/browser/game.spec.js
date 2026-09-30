@@ -73,7 +73,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
     window.cookieEmpire.ui.render();
   });
   await page.locator('[data-nav="journey"]').click();
-  const first=page.locator('[data-prestige-upgrade-id="radiant_click"]');
+  const first=page.locator('button[data-prestige-upgrade-id="radiant_click"]');
   await expect(first).toBeEnabled();
   await first.click();
   await expect(page.locator('#prestigePoints')).toHaveText('3');
@@ -83,7 +83,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
   await page.reload();await page.locator('[data-nav="journey"]').click();
   await expect(page.locator('#prestigePoints')).toHaveText('3');
   await expect(page.locator('#prestigeCurrency')).toHaveText('2');
-  await expect(page.locator('[data-prestige-upgrade-id="radiant_click"]')).toHaveText('Acquis');
+  await expect(page.locator('button[data-prestige-upgrade-id="radiant_click"]')).toHaveText('Acquis');
   const saved=await page.evaluate(() => JSON.parse(localStorage.getItem('cookie-empire-foundation-v2')));
   expect(saved.version).toBe(7);expect(saved.state.ownedPrestigeUpgrades).toEqual(['radiant_click']);
 });
