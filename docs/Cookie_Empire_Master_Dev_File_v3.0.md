@@ -2214,3 +2214,19 @@ The analyzer remains diagnostic and outside routine `npm test`. Add a separate n
 ## 45.4 Decision gate
 
 Do not add more prestige upgrades in Foundation 2.6. The measured sequential series is the evidence gate for the next design. Foundation 2.7 may expand or rebalance the prestige tree only after documenting when each current purchase is acquired, its measured cycle-time impact, and whether the combined curve remains controlled rather than collapsing progression.
+
+
+## 45.5 Measured Foundation 2.6 result
+
+Red proof: with the analyzer temporarily included in CI, all **214/214** Foundation tests passed first, then the run failed only with `2.6 RED: observatoire sans politique de dépense Éclats`. This isolated the missing capability to the diagnostic tool.
+
+Green measurement at 2 clicks/s over 10 prestige cycles:
+- hold remains exactly Foundation 2.5: cycle 1 **25,141 s**, cycle 10 **13,148 s**;
+- sequential buys **Impulsion radiante after cycle 1** (wallet 1.01 → 0.01), **Fours rayonnants after cycle 3** (2.02 → 0.02), and **Résonance harmonique after cycle 7** (4.04 → 0.04);
+- sequential cycle times are 25,141; 21,029; 19,237; 17,523; 16,271; 15,165; 14,208; 12,723; 12,025; **11,403 s**;
+- compared with hold, cycle 10 is about **13.3% faster** (11,403 vs 13,148 s), while lifetime Rayonnement remains identical under the same prestige reward schedule;
+- after all three purchases, cycle 8 improves from hold 14,700 s to 12,723 s, about **13.4% faster**;
+- purchase order and prerequisites remain valid, ownership is monotonic, wallet never becomes negative or exceed lifetime Rayonnement, and each purchase debit is checked against catalogue cost;
+- full observatory PASS; routine CI was restored to `npm test` only afterward.
+
+Interpretation: the current three-item permanent shop produces a meaningful but controlled deterministic acceleration rather than a progression collapse over the measured 10 cycles. This is evidence for cautiously expanding prestige progression later, not proof of human-optimal balance. The next design should preserve comparable incremental gains and introduce choices/branches rather than simply stacking larger global multipliers.
