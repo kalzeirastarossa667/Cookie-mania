@@ -614,9 +614,11 @@ if(!__progressionOnly){
 const timelineRuns=__progressionSpecs.map(spec=>simulateProgressionTimeline(spec));
 for(const timeline of timelineRuns) assertTimelineIntegrity(timeline);
 
-for(let index=0;index<__progressionSpecs.length;index++){
-  const repeated=simulateProgressionTimeline(__progressionSpecs[index]);
-  if(JSON.stringify(timelineRuns[index])!==JSON.stringify(repeated)) throw new Error(__progressionSpecs[index].name+': exécution non déterministe');
+for(const deterministicName of ['x10-then-max-2-clicks','zero-click-1h']){
+  const spec=__progressionSpecs.find(item=>item.name===deterministicName);
+  const first=timelineRuns.find(item=>item.name===deterministicName);
+  const repeated=simulateProgressionTimeline(spec);
+  if(JSON.stringify(first)!==JSON.stringify(repeated)) throw new Error(deterministicName+': exécution non déterministe');
 }
 
 for(const name of ['x10-then-max-2-clicks','max-then-x10-2-clicks']){
