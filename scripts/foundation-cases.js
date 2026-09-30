@@ -1185,6 +1185,19 @@ validateResearchGraph(UPGRADES);
   });
 
 
+
+  test('2.7 RED : validation prestige indépendante de l’ordre sérialisé',()=>{
+    const save=new SaveSystem('v7-branch-order',{getItem(){return null;},setItem(){},removeItem(){}});
+    const canonical=['radiant_click','radiant_production','harmonic_resonance'];
+    const reordered=['harmonic_resonance','radiant_click','radiant_production'];
+    assert(save.validatePrestigeUpgrades(reordered).join(',')===canonical.join(','),'canonicalisation');
+  });
+  test('2.7 RED : prérequis prestige validés comme ensemble',()=>{
+    const save=new SaveSystem('v7-branch-deps',{getItem(){return null;},setItem(){},removeItem(){}});
+    let threw=false;try{save.validatePrestigeUpgrades(['radiant_production']);}catch{threw=true;}
+    assert(threw,'prérequis absent rejeté');
+  });
+
   test('2.5 RED : boutique prestige vide au départ',()=>{
     const s=GameState.create();assert(Array.isArray(s.ownedPrestigeUpgrades) && s.ownedPrestigeUpgrades.length===0,'possession vide');
     assert(Object.keys(PRESTIGE_UPGRADES).length===3,'trois achats');
