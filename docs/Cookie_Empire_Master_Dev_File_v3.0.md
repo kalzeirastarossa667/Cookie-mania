@@ -2178,3 +2178,10 @@ The balance analyzer was updated to clone `ownedPrestigeUpgrades`. Its no-shop-s
 The first new Playwright run exposed only an ambiguous test locator (shop card and button shared the same data attribute); all six historical scenarios passed. The locator was narrowed to the button without runtime changes. Corrected browser automation then passed **8/8**: four desktop Chromium scenarios and four Pixel 5 emulation scenarios, including exact Éclat spending, unchanged lifetime Rayonnement, permanent click effect, v7 save ownership and reload persistence. Physical-phone validation remains separate.
 
 Final feature HEAD `3abac3d2bc9e8bd759141dbbaa744c3e56adedd3` reran routine Foundation and Browser workflows green and PR #10 was squash-merged to `main` as `823ca5a65d2b1e6e8f4cfab8fa32ca8910e0522d`. Foundation 2.5 remains limited to three permanent purchases; do not expand factors or add another prestige tier without human long-play observation and a shop-aware balance model.
+
+
+## 44.7 Post-merge audit correction — prestige display cache
+
+Adversarial audit after Foundation 2.5 found a presentation-only defect. The GameUI multiplier cache signature included `ownedUpgrades` but not `ownedPrestigeUpgrades`. Buying Fours rayonnants or another permanent multiplier correctly updated authoritative `cps` / `clickReward`, but generator per-unit rates could remain visually stale until a later cache rebuild/reload.
+
+The defect was reproduced first in `scripts/check-interface.mjs`: Foundation remained **214/214**, then the targeted interface assertion failed exactly on the unchanged generator rate. Fix: include both normal-research and permanent-prestige ownership in the presentation multiplier signature. No Economy, GameState or persistence rule changes. Full Foundation/interface/Constellation and Playwright regression are required before merge.
