@@ -1185,6 +1185,25 @@ validateResearchGraph(UPGRADES);
   });
 
 
+  test('2.4 RED : quatre synergies sont définies et inactives au départ',()=>{
+    assert(Object.keys(SYNERGIES).length===4,'catalogue');
+    const s=GameState.create(),active=Economy.deriveActiveSynergies(s);
+    assert(active.length===0,'aucune synergie gratuite');
+  });
+  test('2.4 RED : maîtrise artisanale récompense deux spécialisations voisines',()=>{
+    const s=GameState.create();s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];new GameEngine(s);
+    const before=Economy.deriveValues(s),active=Economy.deriveActiveSynergies(s);
+    assert(active.some(item=>item.id==='artisan_duo'),'synergie active');
+    assert(s.cps.compare(before.cps)>0 && s.clickReward.compare(before.clickReward)>0,'bonus CPS et clic');
+  });
+  test('2.4 RED : synergies restent dérivées et survivent au rechargement',()=>{
+    const save=new SaveSystem('synergy-24',{getItem(){return null;},setItem(){},removeItem(){}}),s=GameState.create();
+    s.generators.cursor=10;s.generators.grandma=10;s.ownedUpgrades=['expert_cursor','expert_grandma'];new GameEngine(s);
+    const raw=save.encode(s),parsed=JSON.parse(raw),loaded=save.decode(raw);
+    assert(!Object.hasOwn(parsed.state,'activeSynergies'),'aucun cache persisté');
+    assert(Economy.deriveActiveSynergies(loaded).some(item=>item.id==='artisan_duo'),'reconstruction');
+  });
+
   test('2.3 RED : portefeuille Éclats initialisé à zéro',()=>{
     const s=GameState.create();assert(s.prestigeCurrency && s.prestigeCurrency.isZero(),'prestigeCurrency zéro');
   });
