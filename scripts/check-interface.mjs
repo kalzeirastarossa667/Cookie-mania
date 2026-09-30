@@ -216,5 +216,46 @@ app.engine.click();
 app.saveAccumulator = 0;
 window.dispatchEvent(new window.Event('pagehide'));
 assert.equal(app.saveSystem.load()?.totalClicks, state.totalClicks, 'clic juste avant fermeture conservé');
+
+// Foundation 2.7.2 — canal de feedback Formspree.
+const feedbackForm = document.getElementById('feedbackForm');
+assert.ok(feedbackForm, 'section de feedback présente');
+assert.equal(feedbackForm.method.toLowerCase(), 'post', 'feedback utilise POST');
+assert.equal(feedbackForm.action, 'https://formspree.io/f/mdekjdqz', 'endpoint Formspree exact');
+const feedbackMessage = document.getElementById('feedbackMessage');
+const feedbackSubmit = document.getElementById('feedbackSubmit');
+const feedbackStatus = document.getElementById('feedbackStatus');
+assert.ok(feedbackMessage && feedbackSubmit && feedbackStatus, 'contrôles de feedback présents');
+assert.equal(feedbackMessage.required, true, 'commentaire obligatoire');
+assert.equal(feedbackStatus.getAttribute('aria-live'), 'polite', 'résultat annoncé sans interruption');
+
+const feedbackStateBefore = {
+  cookies: state.cookies.toJSON(),
+  produced: state.totalProduced.toJSON(),
+  clicks: state.totalClicks,
+  upgrades: [...state.ownedUpgrades],
+  prestige: [...state.ownedPrestigeUpgrades],
+};
+let feedbackRequest = null;
+window.fetch = async (url, options) => {
+  feedbackRequest = { url, options };
+  return { ok: true, json: async () => ({ ok: true }) };
+};
+feedbackMessage.value = 'Très bon jeu, le parcours est clair.';
+feedbackForm.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+await new Promise(resolve => window.setTimeout(resolve, 0));
+assert.equal(feedbackRequest?.url, 'https://formspree.io/f/mdekjdqz', 'AJAX envoie vers Formspree');
+assert.equal(feedbackRequest?.options?.method, 'POST', 'AJAX utilise POST');
+assert.equal(feedbackRequest?.options?.headers?.Accept, 'application/json', 'réponse JSON demandée');
+assert.match(feedbackStatus.textContent, /Merci/i, 'succès visible après envoi');
+assert.equal(feedbackMessage.value, '', 'formulaire vidé après succès');
+assert.deepEqual({
+  cookies: state.cookies.toJSON(),
+  produced: state.totalProduced.toJSON(),
+  clicks: state.totalClicks,
+  upgrades: [...state.ownedUpgrades],
+  prestige: [...state.ownedPrestigeUpgrades],
+}, feedbackStateBefore, 'feedback ne modifie aucun état de jeu');
+
 window.close();
 console.log('Interface simulée : vérifications ciblées réussies');
