@@ -254,6 +254,17 @@ function runFoundationTests(){
     for(const id of Object.keys(GENERATORS)) assert(state.generators[id]===0,`initialisation ${id}`);
   });
 
+  test('2.9 A1 RED : chaque générateur possède une description pédagogique',()=>{
+    const definitions=Object.values(GENERATORS);
+    assert(definitions.length===16,'16 générateurs attendus');
+    const descriptions=new Set();
+    for(const definition of definitions){
+      assert(typeof definition.description==='string' && definition.description.trim().length>=20,'description manquante ou trop courte : '+definition.id);
+      descriptions.add(definition.description.trim());
+    }
+    assert(descriptions.size===definitions.length,'descriptions distinctes');
+  });
+
   test('ancienne sauvegarde v3 sans nouveau générateur reste compatible',()=>{
     const key='cookie-empire-test-v3-forward-'+Date.now();
     const save=new SaveSystem(key);
