@@ -508,6 +508,34 @@ const Economy = {
     if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
     return Economy.multiply(Economy.multiply(GENERATORS[id].baseCps,multipliers.generators[id]),multipliers.globalCps);
   },
+  boundedRatio(part,total){
+    const numerator=HugeNumber.from(part),denominator=HugeNumber.from(total);
+    if(denominator.isZero() || numerator.isZero()) return 0;
+    if(numerator.compare(denominator)>=0) return 1;
+    const ratio=numerator.divide(denominator);
+    const value=ratio.m*Math.pow(10,ratio.e);
+    if(!Number.isFinite(value) || value<=0) return 0;
+    return Math.min(1,Math.max(0,value));
+  },
+  generatorStackCps(state,id,multipliers=Economy.deriveMultipliers(state),unitCps=null){
+    if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
+    const owned=state.generators?.[id];
+    if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
+    const rate=unitCps===null ? Economy.generatorUnitCps(id,multipliers) : HugeNumber.from(unitCps);
+    return Economy.multiply(rate,owned);
+  },
+  generatorStackClick(state,id,multipliers=Economy.deriveMultipliers(state),unitClick=null){
+    if(!owns(GENERATORS,id)) throw new Error('Générateur inconnu');
+    const owned=state.generators?.[id];
+    if(!Number.isSafeInteger(owned) || owned<0) throw new Error('Quantité de générateur invalide');
+    const rate=unitClick===null ? Economy.generatorUnitClick(id,multipliers) : HugeNumber.from(unitClick);
+    return Economy.multiply(rate,owned);
+  },
+  generatorCpsShare(state,id,multipliers=Economy.deriveMultipliers(state),unitCps=null,totalCps=null){
+    const stack=Economy.generatorStackCps(state,id,multipliers,unitCps);
+    const total=totalCps===null ? Economy.deriveCps(state,multipliers) : HugeNumber.from(totalCps);
+    return Economy.boundedRatio(stack,total);
+  },
   deriveCps(state,multipliers=Economy.deriveMultipliers(state)){
     let total=HugeNumber.zero();
     for(const [id,definition] of Object.entries(GENERATORS)){
