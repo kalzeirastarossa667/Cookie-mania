@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.6 SHOP BALANCE MODEL IN DEVELOPMENT / SOURCE OF TRUTH
+Status: FOUNDATION 2.6 SHOP BALANCE MODEL / SOURCE OF TRUTH
 Last audit: 2026-09-30
 
 ## 0. Purpose
@@ -2228,5 +2228,7 @@ Green measurement at 2 clicks/s over 10 prestige cycles:
 - after all three purchases, cycle 8 improves from hold 14,700 s to 12,723 s, about **13.4% faster**;
 - purchase order and prerequisites remain valid, ownership is monotonic, wallet never becomes negative or exceed lifetime Rayonnement, and each purchase debit is checked against catalogue cost;
 - full observatory PASS; routine CI was restored to `npm test` only afterward.
+
+PR #12 was squash-merged to `main` as `e3421a0e6a576eca76d168830d57fdbff21ed491` after final routine Foundation CI passed. No runtime file changed in Foundation 2.6, so Foundation 2.5 remains the latest player-facing/browser-verified gameplay build while the source-of-truth development baseline advances to Foundation 2.6 diagnostics.
 
 Interpretation: the current three-item permanent shop produces a meaningful but controlled deterministic acceleration rather than a progression collapse over the measured 10 cycles. This is evidence for cautiously expanding prestige progression later, not proof of human-optimal balance. The next design should preserve comparable incremental gains and introduce choices/branches rather than simply stacking larger global multipliers.
