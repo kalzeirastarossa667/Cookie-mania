@@ -2516,3 +2516,36 @@ Browser verification required two test-harness corrections before the intended s
 Final browser result on commit `c1bd8886437f110acdd83499b4765e879322073b`: **18/18 Playwright PASS in 44.7 s**, split 9 desktop Chromium + 9 Pixel 5 emulation. The new timing scenario passes on both projects. Foundation 2.8 axe coverage remains green.
 
 Audit: no GameState field, HugeNumber rule, generator/research/prestige constant, save key/schema, Formspree endpoint or background/offline lifecycle rule changed. The correction addresses lost visible time rather than increasing CPS. Physical-device retesting by the reporting friend remains the final real-use confirmation after deployment.
+
+# 51. Foundation 2.8.2 — mobile navigation clearance
+
+Specification recorded BEFORE runtime implementation, 2026-09-30. Baseline: Foundation 2.8.1 Timing. A user-supplied Android screen recording shows the fixed bottom navigation visually overlapping the lower portion of the active game view.
+
+## 51.1 Observed defect
+
+The mobile navigation is fixed to the viewport bottom and includes safe-area padding, while the main application container keeps only 18 px of bottom padding. A separate 76 px margin exists only on the feedback card. This creates inconsistent clearance: active game content can be scrolled into the visual area occupied by the bottom navigation, and browser focus/scroll-to-element behavior may position interactive content behind that overlay.
+
+The recording shows the issue on the Empire view around the lower Constellation content. The defect is presentation-only; no gameplay-state or timing defect is inferred from the video.
+
+## 51.2 UI contract
+
+On mobile viewports:
+- the fixed bottom navigation remains fixed;
+- the document reserves one shared bottom-navigation clearance including env(safe-area-inset-bottom);
+- scrolling or browser focus that brings an active-view element to the end of the viewport must keep that element fully above the navigation with a small visual gap;
+- the same rule applies across Empire, Atelier, Recherche and Parcours rather than using a one-off margin on the feedback card;
+- desktop layout must remain unchanged.
+
+Use a single CSS custom property for the mobile navigation clearance so the fixed bar position, quick-click offset and document/scroll clearance do not drift independently.
+
+## 51.3 Scope and verification
+
+This is CSS/layout only. GameState, Economy, GameEngine, HugeNumber, Persistence schema v7, content, Formspree and Foundation 2.8.1 timing semantics are unchanged.
+
+Required evidence:
+- red Pixel 5 Playwright regression against the current 2.8.1 layout;
+- green regression after the CSS fix;
+- all existing browser scenarios remain green on desktop and Pixel 5;
+- Foundation/property/interface/Constellation suites remain green;
+- no horizontal overflow introduced;
+- user should recheck the public page on the physical Android browser that produced the recording.
