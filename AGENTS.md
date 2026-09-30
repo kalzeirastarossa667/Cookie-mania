@@ -1,6 +1,6 @@
 # Cookie Empire — démarrage du travail
 
-Lire README.md puis docs/README.md. Avant toute modification du jeu, lire intégralement le Master Dev File actuel indiqué dans docs/README.md et analyser index.html. Les archives ne sont pas une base de développement.
+Lire README.md puis docs/README.md et PROJECT_MEMORY.md. Avant toute modification du jeu, lire intégralement le Master Dev File actuel indiqué dans docs/README.md et analyser index.html. PROJECT_MEMORY.md complète le Master avec l’intention produit durable et la continuité du projet, mais ne remplace jamais le HEAD courant, le Master, le code ou les tests comme sources techniques de vérité. Les archives ne sont pas une base de développement.
 
 - index.html est le jeu autonome et la seule source jouable courante.
 - Préserver HugeNumber, les sauvegardes, le temps et les règles validées.
