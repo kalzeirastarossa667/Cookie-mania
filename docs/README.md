@@ -1,6 +1,7 @@
 # Documentation actuelle
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
+- [Analyse de balance 2.6](Cookie_Empire_Foundation_2.6_Balance_Report.md) : politiques de dépense d’Éclats sur dix cycles.
 - [Vérifications 2.5](Cookie_Empire_Foundation_2.5_Test_Report.md).
 - [Vérifications 2.4](Cookie_Empire_Foundation_2.4_Test_Report.md) : baseline Synergies.
 - [Vérifications 2.3](Cookie_Empire_Foundation_2.3_Test_Report.md) : baseline Rayonnement.

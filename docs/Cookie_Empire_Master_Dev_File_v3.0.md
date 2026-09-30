@@ -1,6 +1,6 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.5 ÉCLAT SHOP / SOURCE OF TRUTH
+Status: FOUNDATION 2.6 SHOP BALANCE MODEL IN DEVELOPMENT / SOURCE OF TRUTH
 Last audit: 2026-09-30
 
 ## 0. Purpose
@@ -2178,3 +2178,55 @@ The balance analyzer was updated to clone `ownedPrestigeUpgrades`. Its no-shop-s
 The first new Playwright run exposed only an ambiguous test locator (shop card and button shared the same data attribute); all six historical scenarios passed. The locator was narrowed to the button without runtime changes. Corrected browser automation then passed **8/8**: four desktop Chromium scenarios and four Pixel 5 emulation scenarios, including exact Éclat spending, unchanged lifetime Rayonnement, permanent click effect, v7 save ownership and reload persistence. Physical-phone validation remains separate.
 
 Final feature HEAD `3abac3d2bc9e8bd759141dbbaa744c3e56adedd3` reran routine Foundation and Browser workflows green and PR #10 was squash-merged to `main` as `823ca5a65d2b1e6e8f4cfab8fa32ca8910e0522d`. Foundation 2.5 remains limited to three permanent purchases; do not expand factors or add another prestige tier without human long-play observation and a shop-aware balance model.
+
+
+# 45. Foundation 2.6 — shop-aware prestige balance model
+
+Specification BEFORE implementation, 2026-09-30 UTC. Baseline: Foundation 2.5 Éclat Shop on `main` at `3f996daa4ada82b500c0766644e5ea3c97ca1822`; gameplay merge `823ca5a65d2b1e6e8f4cfab8fa32ca8910e0522d`. Post-merge Foundation and Browser workflows are green.
+
+## 45.1 Purpose and scope
+
+Foundation 2.6 is an engineering/quality milestone, not a new player-facing power tier. Before adding more permanent bonuses, the deterministic balance observatory must model deliberate Éclat spending and compare it with the no-shop Foundation 2.5 baseline. No GameState, save schema, runtime economy factor, UI, generator, research, synergy or prestige cost changes are allowed in this milestone unless the analyzer exposes a confirmed runtime bug.
+
+## 45.2 Policy model
+
+Extend `scripts/analyze-balance.mjs` with explicit prestige-shop policies. A policy receives the authoritative state at the start of a new prestige cycle and may buy only currently available `PRESTIGE_UPGRADES` through `GameEngine.buyPrestigeUpgrade`; it must never mutate wallet/ownership directly.
+
+Required policies:
+- **hold**: buy nothing, preserving the existing 10-cycle reference exactly;
+- **sequential**: repeatedly buy the first available permanent upgrade in catalogue order while affordable, respecting prerequisites and wallet naturally.
+
+Shop spending occurs immediately after each successful prestige transition and before simulating the next run. Therefore cycle 1 is identical for both policies; its reward creates the first wallet that can be spent for cycle 2. Record per cycle: seconds, reward, lifetime Rayonnement, wallet before spending, wallet after spending, purchased IDs that cycle, cumulative owned IDs, multiplier and prestige count.
+
+## 45.3 Verification and guardrails
+
+Red→green is required. Add a dedicated analyzer self-check proving the old observatory cannot yet report shop purchases, then implement the policy model. Guardrails:
+- hold series must remain identical to the Foundation 2.5 reference: cycle 1 = 25,141 s and cycle 10 = 13,148 s at 2 clicks/s;
+- sequential cycle 1 must equal hold cycle 1;
+- sequential ownership must be monotonic and may contain only known IDs in prerequisite-valid order;
+- wallet must never become negative and must never exceed lifetime Rayonnement;
+- every recorded shop purchase must reduce wallet by exactly its catalogue cost while leaving lifetime Rayonnement unchanged;
+- once `radiant_click` is owned, a later equivalent run must not be slower than the hold policy solely under this deterministic model; analogous checks apply after CPS and resonance purchases without claiming human optimality;
+- the existing fresh no-shop scenarios and 10-cycle hold series must remain valid.
+
+The analyzer remains diagnostic and outside routine `npm test`. Add a separate npm script only if useful for a fast deterministic shop-policy check; do not burden normal CI with the full balance run. Run the full observatory once for this milestone and document measured results. Because runtime/player-facing code is intentionally unchanged, existing browser evidence remains valid; rerun Playwright only if runtime files change.
+
+## 45.4 Decision gate
+
+Do not add more prestige upgrades in Foundation 2.6. The measured sequential series is the evidence gate for the next design. Foundation 2.7 may expand or rebalance the prestige tree only after documenting when each current purchase is acquired, its measured cycle-time impact, and whether the combined curve remains controlled rather than collapsing progression.
+
+
+## 45.5 Measured Foundation 2.6 result
+
+Red proof: with the analyzer temporarily included in CI, all **214/214** Foundation tests passed first, then the run failed only with `2.6 RED: observatoire sans politique de dépense Éclats`. This isolated the missing capability to the diagnostic tool.
+
+Green measurement at 2 clicks/s over 10 prestige cycles:
+- hold remains exactly Foundation 2.5: cycle 1 **25,141 s**, cycle 10 **13,148 s**;
+- sequential buys **Impulsion radiante after cycle 1** (wallet 1.01 → 0.01), **Fours rayonnants after cycle 3** (2.02 → 0.02), and **Résonance harmonique after cycle 7** (4.04 → 0.04);
+- sequential cycle times are 25,141; 21,029; 19,237; 17,523; 16,271; 15,165; 14,208; 12,723; 12,025; **11,403 s**;
+- compared with hold, cycle 10 is about **13.3% faster** (11,403 vs 13,148 s), while lifetime Rayonnement remains identical under the same prestige reward schedule;
+- after all three purchases, cycle 8 improves from hold 14,700 s to 12,723 s, about **13.4% faster**;
+- purchase order and prerequisites remain valid, ownership is monotonic, wallet never becomes negative or exceed lifetime Rayonnement, and each purchase debit is checked against catalogue cost;
+- full observatory PASS; routine CI was restored to `npm test` only afterward.
+
+Interpretation: the current three-item permanent shop produces a meaningful but controlled deterministic acceleration rather than a progression collapse over the measured 10 cycles. This is evidence for cautiously expanding prestige progression later, not proof of human-optimal balance. The next design should preserve comparable incremental gains and introduce choices/branches rather than simply stacking larger global multipliers.
