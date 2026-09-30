@@ -106,6 +106,8 @@ test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu
   const convergence=page.locator('button[data-prestige-upgrade-id="radiant_convergence"]');
 
   await expect(root).toBeEnabled();
+  await expect(page.locator('[data-prestige-branch="click"] .prestige-branch')).toHaveText('Voie clic');
+  await expect(page.locator('[data-prestige-branch="production"]').first().locator('.prestige-branch')).toHaveText('Voie production');
   await expect(production).toBeDisabled();
   await expect(clickBranch).toBeDisabled();
   await root.click();
