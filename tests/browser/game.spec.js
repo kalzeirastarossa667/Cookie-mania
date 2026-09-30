@@ -40,6 +40,52 @@ test('navigation, filtres et largeur de l’interface', async ({ page }, testInf
 });
 
 
+
+test('Foundation 2.9 A3 : les cartes expliquent leur production sans reconstruire la boutique', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-nav="workshop"]').click();
+
+  const cards = page.locator('#generatorList .generator');
+  await expect(cards).toHaveCount(16);
+  const cursor = page.locator('[data-generator-id="cursor"]');
+  await expect(cursor.locator('.generator-description')).toContainText('Automatise les premiers gestes');
+  const details = cursor.locator('details.generator-details');
+  await expect(details).not.toHaveAttribute('open', '');
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open', '');
+
+  const originalCard = await cursor.evaluate(element => {
+    window.__a3CursorCard = element;
+    return element.dataset.generatorId;
+  });
+  expect(originalCard).toBe('cursor');
+
+  await page.evaluate(() => {
+    const state = window.cookieEmpire.state;
+    for (const id of Object.keys(state.generators)) state.generators[id] = 0;
+    state.generators.cursor = 10;
+    state.generators.grandma = 1;
+    state.ownedUpgrades = [];
+    state.ownedPrestigeUpgrades = [];
+    state.prestigePoints = state.prestigePoints.constructor.zero();
+    state.prestigeCurrency = state.prestigeCurrency.constructor.zero();
+    window.eval('Economy.refreshDerived(window.cookieEmpire.state)');
+    window.cookieEmpire.ui.render();
+  });
+
+  await expect(cursor.locator('[data-role="stack-cps"]')).toHaveText('1 cookie/s');
+  await expect(cursor.locator('[data-role="stack-click"]')).toHaveText('1 cookie/clic');
+  await expect(cursor.locator('[data-role="cps-share"]')).toHaveText('50 %');
+  await expect(cursor.locator('[data-role="next-unit"]')).toContainText('+0.1 cookie/s');
+  await expect(cursor.locator('[data-role="specialization"]')).toContainText('Gestes experts · 10 / 10 unités');
+  await expect(cursor.locator('[data-buy-mode="1"]')).toBeVisible();
+  await expect(cursor.locator('[data-buy-mode="10"]')).toBeVisible();
+  await expect(cursor.locator('[data-buy-mode="max"]')).toBeVisible();
+  expect(await page.evaluate(() => window.__a3CursorCard === document.querySelector('[data-generator-id="cursor"]'))).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});
+
+
 test('Foundation 2.5 : prestige conserve Rayonnement et portefeuille après reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-nav="journey"]').click();
