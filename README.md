@@ -1,6 +1,6 @@
 # Cookie Empire
 
-**Foundation 2.7.2 — Feedback** : clicker autonome avec **16 générateurs**, **22 recherches**, **44 objectifs** et un système de **prestige permanent à branches** avec Rayonnement total et portefeuille d’Éclats séparés.
+**Foundation 2.8 — Quality** : clicker autonome avec **16 générateurs**, **22 recherches**, **44 objectifs** et un système de **prestige permanent à branches** avec Rayonnement total et portefeuille d’Éclats séparés. Cette version consolide les grands nombres et l’accessibilité sans modifier la balance ni le schéma de sauvegarde v7.
 
 ## Jouer
 
@@ -19,15 +19,17 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 ## Développer
 
 - [Master Dev File v3.0](docs/Cookie_Empire_Master_Dev_File_v3.0.md), source de vérité.
+- [Rapport Foundation 2.8 Quality](docs/Cookie_Empire_Foundation_2.8_Quality_Report.md).
 - [Rapport Foundation 2.7.2 Feedback](docs/Cookie_Empire_Foundation_2.7.2_Feedback_Report.md).
 - [Rapport de stabilisation Foundation 2.7.1](docs/Cookie_Empire_Foundation_2.7.1_Stability_Report.md).
 - [Rapport Foundation 2.4](docs/Cookie_Empire_Foundation_2.4_Test_Report.md).
+- [Recherche GitHub Foundation 2.8](docs/Cookie_Empire_GitHub_Research_2.8.md).
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
-La suite exécute **220/220** cas de règles/persistance, les vérifications d'interface ciblées et **56/56** assertions Constellation/Horizons. Le checkpoint 2.7.2 valide **12/12 scénarios Playwright** : 6 sur Chromium desktop et 6 sous émulation Pixel 5. Le scénario de feedback intercepte l’appel Formspree afin de vérifier le POST sans envoyer de faux commentaire ni de faux e-mail. Le fichier `scripts/foundation-cases.js` est réservé au développement. Les anciens tests par générateur ont été regroupés ; les doubles exécutions au démarrage ont été supprimées.
+La suite conserve **220/220** cas de règles/persistance, ajoute des propriétés génératives déterministes pour `HugeNumber` et les coûts, exécute les vérifications d'interface ciblées et **56/56** assertions Constellation/Horizons. Foundation 2.8 valide **16/16 scénarios Playwright** : 8 sur Chromium desktop et 8 sous émulation Pixel 5, avec scans axe `serious`/`critical` des vues principales et du feedback en thèmes sombre et clair. Le scénario Formspree reste intercepté en test : aucun faux commentaire ni faux e-mail n’est envoyé. `fast-check` et `@axe-core/playwright` sont réservés au développement et ne sont pas importés par le jeu autonome.
 
-Ces résultats Node/jsdom ne certifient pas le rendu sur un téléphone réel. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
+Ces résultats Node/jsdom et l’émulation Pixel 5 ne certifient pas un test exhaustif sur téléphone physique ni un audit manuel au lecteur d’écran. La dernière validation utilisateur réelle avant cette livraison reste Foundation 2.7.2. Lire le Master, spécifier chaque mécanique puis vérifier ses effets avant de poursuivre. Les références externes ont inspiré des principes de conception ; aucun de leurs assets ou codes n'est embarqué.
 
 ## Organisation du dépôt
 
