@@ -191,7 +191,14 @@ test('Foundation 2.8 : aucune violation axe sérieuse ou critique dans les vues 
     await page.locator(`[data-nav="${view}"]`).click();
     await expect(page.locator(`#view-${view}`)).toBeVisible();
     const violations = await seriousAccessibilityViolations(page);
-    expect(violations, `${view}: ${JSON.stringify(violations, null, 2)}`).toEqual([]);
+    const branchStyles = view === 'journey' ? await page.locator('.prestige-branch').evaluateAll(nodes =>
+      nodes.map(node => {
+        const style=getComputedStyle(node);
+        const parentStyle=getComputedStyle(node.closest('.prestige-shop-item'));
+        return { text:node.textContent, color:style.color, background:style.backgroundColor, parentBackground:parentStyle.backgroundColor, theme:document.documentElement.dataset.theme };
+      })
+    ) : [];
+    expect(violations, `${view}: ${JSON.stringify({ violations, branchStyles }, null, 2)}`).toEqual([]);
   }
   await expect(page.locator('#feedbackForm')).toBeVisible();
   const feedbackResults = await new AxeBuilder({ page }).include('#feedbackForm').analyze();
