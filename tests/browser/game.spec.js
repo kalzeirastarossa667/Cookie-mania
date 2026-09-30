@@ -92,7 +92,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.8.2 · Mobile');
+  await expect(page.locator('footer')).toContainText('Foundation 2.8.3 · Menu');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -304,7 +304,7 @@ test('Foundation 2.8.2 : la navigation basse ne recouvre pas le contenu mobile',
 });
 
 
-test('Régression mobile : le menu options reste au-dessus du HUD de ressources', async ({ page }, testInfo) => {
+test('Foundation 2.8.3 : le menu options reste au-dessus du HUD de ressources', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'Régression spécifique au viewport mobile');
   await page.goto('/');
 

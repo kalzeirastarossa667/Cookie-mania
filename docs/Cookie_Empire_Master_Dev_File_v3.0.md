@@ -2604,3 +2604,22 @@ After the repair:
 - the public deployment must be rechecked on the physical Android browser that exposed the defect.
 
 The correction should be limited to the stacking/layering contract unless testing proves a broader layout change is necessary.
+
+
+## 52.4 Red/green evidence and implementation — 2026-09-30
+
+Red proof was committed before the CSS repair on `f0a8acb7a06b9f3655adecf908d361da85081511`. Browser checks kept the historical scenarios green and failed the new Pixel 5 regression. Hit-testing the center of `#exportSaveButton` returned `.wallet` as the topmost element, with `isTopmost: false`, directly confirming that the sticky resource HUD intercepted the opened options menu.
+
+The runtime repair is deliberately limited to stacking order: `.settings-menu` moves from `z-index: 5` to `z-index: 40`. This places the open menu above the sticky resource HUD (`10`), quick-click control (`15`), bottom navigation (`20`) and normal content. No DOM ownership, menu action, save/import/export logic or gameplay rule changes.
+
+Green pre-packaging evidence on `b36387604ef68d148e75fd9fc0ef30e1329369bb`:
+- **220/220 Foundation PASS**;
+- cadence remains **20 renders / 1 autosave over 5 s**;
+- Foundation 2.8 deterministic properties PASS;
+- targeted interface checks PASS;
+- **56/56 Constellation DOM checks PASS**;
+- Playwright declares 22 cases across desktop Chromium + Pixel 5 emulation: **20 PASS + 2 expected desktop skips** because the 2.8.2 and 2.8.3 regressions are mobile-only.
+
+Audit: GameState, HugeNumber, Economy formulas/constants, GameEngine timing, persistence schema v7, storage keys, generator/research/synergy/prestige content, Formspree behavior and autosave cadence are unchanged. Physical Android validation remains required after public deployment because the defect was originally exposed by the user’s phone screenshot.
+
+Release packaging updates only visible version metadata/documentation and archives a byte-identical copy of the playable file. Foundation and Browser workflows must pass again on the packaged runtime before merge.
