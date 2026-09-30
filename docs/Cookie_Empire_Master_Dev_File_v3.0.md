@@ -2306,3 +2306,10 @@ For playability, prestige nodes now include data-driven branch metadata and the 
 Verification on commit `b47a39d8efd3fe4de27e3da0f0c457b6862b1d8e`: **220/220 Foundation**, targeted interface PASS, **56/56 Constellation/Horizons DOM**, and **10/10 Playwright** (5 desktop Chromium + 5 Pixel 5 emulation). The added browser scenario exercises the branch path through convergence and verifies exact remaining Éclats and unchanged lifetime Rayonnement. Physical-phone testing remains unperformed.
 
 The detailed evidence is recorded in `docs/Cookie_Empire_Foundation_2.7.1_Stability_Report.md`. Foundation 2.8 must not change economy/progression until this 2.7.1 checkpoint is merged and post-merge CI is green.
+
+
+## 47.1 Final acceptance
+
+PR #17 was squash-merged to `main` as `5d20d9b5eb4ddfcb156b2a763a4179f77cb66477`. Post-merge **Foundation checks** and **Browser checks** both completed successfully on that exact runtime commit. The archived playable file `archive/releases/cookie-empire-foundation-2.7.1-stable.html` has the same Git blob SHA (`195aafec98021b40a2bdb0ca4dfaf8151d605311`) as `index.html`, proving the delivered snapshot is byte-identical to the tested runtime.
+
+Foundation 2.7.1 is therefore the current stable/testable baseline. Automated browser evidence covers desktop Chromium and Pixel 5 emulation; a physical phone has still not been tested. The next development step may proceed only from this baseline.
