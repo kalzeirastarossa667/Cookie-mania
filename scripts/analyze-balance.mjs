@@ -15,6 +15,9 @@ const context=createContext({
 });
 new Script(match[1],{filename:'index.html'}).runInContext(context);
 
+const progressionOnly=process.argv.includes('--progression-only');
+context.__progressionOnly=progressionOnly;
+
 const scenarios=[
   {name:'fresh-0-click',clickRate:0,prestigePoints:'0'},
   {name:'fresh-2-clicks',clickRate:2,prestigePoints:'0'},
@@ -594,11 +597,19 @@ function milestone(timeline,key){
 }
 
 globalThis.__prestigeCatalogue=Object.fromEntries(Object.entries(PRESTIGE_UPGRADES).map(([id,d])=>[id,{requires:[...(d.requires ?? [])]}]));
-globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
-globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
-globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
-globalThis.__prestigeClickSeries=simulatePrestigeSeries(2,15,'click-priority');
-globalThis.__prestigeProductionSeries=simulatePrestigeSeries(2,15,'production-priority');
+if(!__progressionOnly){
+  globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
+  globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
+  globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
+  globalThis.__prestigeClickSeries=simulatePrestigeSeries(2,15,'click-priority');
+  globalThis.__prestigeProductionSeries=simulatePrestigeSeries(2,15,'production-priority');
+}else{
+  globalThis.__balanceResults=[];
+  globalThis.__prestigeSeries=[];
+  globalThis.__prestigeShopSeries=[];
+  globalThis.__prestigeClickSeries=[];
+  globalThis.__prestigeProductionSeries=[];
+}
 
 const timelineRuns=__progressionSpecs.map(spec=>simulateProgressionTimeline(spec));
 for(const timeline of timelineRuns) assertTimelineIntegrity(timeline);
@@ -631,6 +642,7 @@ for(const key of ['first-generator','first-x10','first-max','first-research','fi
 globalThis.__progressionTimelines=timelineRuns;
 `,{filename:'balance-observatory'}).runInContext(context);
 
+if(!progressionOnly){
 const results=context.__balanceResults;
 const byName=Object.fromEntries(results.map(x=>[x.name,x]));
 for(const row of results){
@@ -675,6 +687,7 @@ console.table(hold);
 console.table(shop);
 console.table(click);
 console.table(production);
+}
 
 for(const timeline of context.__progressionTimelines){
   console.log('\nProgression timeline O1: '+timeline.name);
@@ -691,4 +704,4 @@ for(const timeline of context.__progressionTimelines){
 }
 
 console.log('Progression observatory O1: PASS');
-console.log('Balance observatory: PASS');
+if(!progressionOnly) console.log('Balance observatory: PASS');
