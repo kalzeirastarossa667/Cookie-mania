@@ -2116,3 +2116,14 @@ Recherche displays a dedicated Synergies section generated from `SYNERGIES`. Eac
 ## 43.4 Verification contract
 
 Red→green coverage must prove: no free synergy on a fresh state; correct activation from the required pair; exact CPS/click multiplication; partial requirements remain inactive; multiple synergies stack multiplicatively; repeated `refreshDerived` is idempotent; save v6 contains no derived synergy cache and reconstructs activation after load; invalid synergy content is rejected. Rerun the complete Foundation/interface/Constellation suites and Playwright desktop/Pixel 5. Because these bonuses change pacing, rerun `npm run analyze:balance` and record the measured impact before merge. Do not add prestige spending in the same milestone.
+
+
+## 43.5 Implementation and measured verification
+
+Implemented on `feature/foundation-2.4-synergies`. `SYNERGIES` is immutable content and `Economy.deriveActiveSynergies` reconstructs activation from `ownedUpgrades`. Active factors are folded into the existing derived multiplier object; no GameState field and no v6 save field were added. Research now renders a separate informational Synergies block.
+
+Red evidence exists at `49cfc13a01fae848cebcdb7c7d39aa70e929e9e0`. Final automated Foundation result is **203/203**, targeted interface checks pass and **56/56** Constellation/Horizons DOM assertions pass. The deterministic render/save cadence remains unchanged.
+
+The required balance rerun passes. Under the same diagnostic policy, fresh 2 clicks/s reaches prestige in **25,141 s** versus the 2.3 baseline 31,388 s; fresh 5 clicks/s in **10,969 s** versus 13,587 s; one Rayonnement + 2 clicks/s in **22,821 s** versus 28,538 s. The ten-cycle 2-click/s series remains monotonic and reaches cycle ten in **13,148 s** versus 16,427 s. This is a material ~20% acceleration, accepted for this first synergy milestone but explicitly subject to human long-play observation before adding further broad multipliers. The temporary balance step was removed from routine CI after measurement.
+
+Browser automation remains required green on the final feature head before merge; Chromium desktop and Pixel 5 emulation are browser evidence, not physical-phone evidence. No prestige spending is part of Foundation 2.4.
