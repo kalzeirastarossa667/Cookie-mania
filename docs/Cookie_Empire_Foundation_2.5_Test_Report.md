@@ -23,7 +23,7 @@ The real analyzer now carries `ownedPrestigeUpgrades` when cloning state. The no
 
 ## Browser verification
 
-Playwright coverage was extended with a controlled permanent-purchase path on both desktop Chromium and Pixel 5 emulation. The first run found an ambiguous test locator because the same data attribute existed on the shop card and its button; all six historical browser scenarios passed. The test was corrected to target the button explicitly without changing runtime behavior. Final browser result must be recorded after the corrected HEAD completes.
+Playwright coverage was extended with a controlled permanent-purchase path on both desktop Chromium and Pixel 5 emulation. The first run found an ambiguous test locator because the same data attribute existed on the shop card and its button; all six historical browser scenarios passed. The test was corrected to target the button explicitly without changing runtime behavior. Corrected browser result: **8/8 PASS** in Chromium — four scenarios on desktop and the same four under Pixel 5 emulation. The permanent-purchase path verifies exact wallet debit, unchanged lifetime Rayonnement, click effect, v7 ownership persistence and reload.
 
 ## Remaining limits
 
