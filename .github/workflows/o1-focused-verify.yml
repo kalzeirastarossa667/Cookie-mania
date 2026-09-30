@@ -1,0 +1,23 @@
+name: O1 focused verification
+
+on:
+  push:
+    branches:
+      - verify/o1-progression-observability
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run analyze:progression
