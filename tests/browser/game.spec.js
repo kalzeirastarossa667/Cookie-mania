@@ -223,6 +223,7 @@ test('Foundation 2.8 : le thème clair reste sans violation axe sérieuse ou cri
 
 test('Foundation 2.8.1 : clic manuel et production automatique coexistent pendant un retard de frame', async ({ page }) => {
   await page.goto('/?test=1');
+  await page.waitForFunction(() => Boolean(window.cookieEmpire));
   const result = await page.evaluate(() => {
     const app = window.cookieEmpire;
     const state = app.state;
