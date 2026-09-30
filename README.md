@@ -18,7 +18,7 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 ## Développer
 
 - [Master Dev File v3.0](docs/Cookie_Empire_Master_Dev_File_v3.0.md), source de vérité.
-- [Rapport Foundation 2.3](docs/Cookie_Empire_Foundation_2.3_Test_Report.md).
+- [Rapport Foundation 2.4](docs/Cookie_Empire_Foundation_2.4_Test_Report.md).
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
