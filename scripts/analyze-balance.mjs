@@ -16,6 +16,10 @@ const context=createContext({
 new Script(match[1],{filename:'index.html'}).runInContext(context);
 
 const progressionOnly=process.argv.includes('--progression-only');
+const selfTestOnly=process.argv.includes('--self-test-only');
+const jsonOutput=process.argv.includes('--json');
+context.__selfTestOnly=selfTestOnly;
+new Script(readFileSync(new URL('./progression-cases.js',import.meta.url),'utf8'),{filename:'progression-cases.js'}).runInContext(context);
 context.__progressionOnly=progressionOnly;
 
 const scenarios=[
@@ -89,6 +93,19 @@ function cloneBalanceState(source){
   state.prestigeCount=source.prestigeCount;
   Economy.refreshDerived(state);
   return state;
+}
+
+function assertEconomicState(state){
+  for(const key of ['cookies','totalProduced','clickPower','cps','clickReward','prestigePoints','prestigeCurrency']){
+    const value=state[key];
+    if(!(value instanceof HugeNumber) || !Number.isFinite(value.m) || !Number.isInteger(value.e) ||
+      (value.m===0?value.e!==0:value.m<1 || value.m>=10)) throw new Error('HugeNumber non canonique : '+key);
+  }
+  for(const value of [state.totalClicks,state.prestigeCount,...Object.values(state.generators)]){
+    if(!Number.isSafeInteger(value) || value<0) throw new Error('Compteur observatoire invalide');
+  }
+  if(Economy.compare(state.cookies,state.totalProduced)>0 ||
+    Economy.compare(state.prestigeCurrency,state.prestigePoints)>0) throw new Error('État économique incohérent');
 }
 
 function modeledIncome(state,clickRate){
@@ -252,6 +269,7 @@ function runEconomicWindow(state,{
   stopWhen=null
 }={}){
   const engine=new GameEngine(state);
+  assertEconomicState(state);
   const completed=()=>Boolean(stopWhen?.(state)) || (targetProduced!==null && Economy.compare(state.totalProduced,targetProduced)>=0);
   let seconds=0,purchases=0,steps=0;
   while(seconds<horizonSeconds && !completed() && steps<maxSteps){
@@ -265,6 +283,7 @@ function runEconomicWindow(state,{
       const result=executeAction(engine,action);
       if(!result.ok) throw new Error('Action candidate devenue invalide');
       if(action.expectedQuantity!==undefined && result.quantity!==action.expectedQuantity) throw new Error('Quantité candidate différente à l’exécution');
+      assertEconomicState(state);
       purchases++;
       if(onAction) onAction({seconds,action,result,before,state});
       continue;
@@ -282,10 +301,12 @@ function runEconomicWindow(state,{
     state.cookies=Economy.add(state.cookies,amount);
     state.totalProduced=Economy.add(state.totalProduced,amount);
     seconds+=wait;
+    assertEconomicState(state);
   }
   return {
     engine,
     reached:completed(),
+    stopReason:completed()?'target-reached':seconds>=horizonSeconds?'horizon':steps>=maxSteps?'step-limit':'no-income',
     seconds,
     purchases,
     steps
@@ -434,6 +455,8 @@ function observeSpecializationAccess(tracker,state,atSeconds,cycle){
 
 function observeTimelineAction(tracker,info,atSeconds,cycle,policyState){
   const {action,result,before,state}=info;
+  // Candidate affordability and rejected engine actions are never timeline events.
+  if(!result.ok || result.quantity<=0) return;
   if(action.kind==='generator'){
     const era=generatorEra(action.id);
     const detail={
@@ -459,7 +482,7 @@ function observeTimelineAction(tracker,info,atSeconds,cycle,policyState){
       tracker.record('first-x10','purchase-control',atSeconds,cycle,detail);
       policyState.usedControls.add('x10');
     }
-    if(action.mode==='max' && result.quantity>=2){
+    if(action.mode==='max' && result.quantity>=1){
       tracker.record('first-max','purchase-control',atSeconds,cycle,detail);
       policyState.usedControls.add('max');
     }
@@ -504,7 +527,10 @@ function simulateProgressionTimeline(spec){
       });
       elapsedSeconds+=run.seconds;
       if(!run.reached){
-        cycles.push({cycle,reached:false,cycleDurationSeconds:run.seconds,elapsedSeconds,purchases:run.purchases,steps:run.steps,reward:null});
+        cycles.push({cycle,reached:false,cycleDurationSeconds:null,observedSeconds:run.seconds,elapsedSeconds,purchases:run.purchases,steps:run.steps,reward:null,stopReason:run.stopReason});
+        for(let next=cycle+1;next<=spec.prestigeCycles;next++){
+          cycles.push({cycle:next,reached:false,cycleDurationSeconds:null,observedSeconds:0,elapsedSeconds,purchases:0,steps:0,reward:null,stopReason:'not-started'});
+        }
         break;
       }
       const candidate=run.engine.prestigeCandidate();
@@ -517,10 +543,11 @@ function simulateProgressionTimeline(spec){
       tracker.record('prestige:'+cycle,'prestige',elapsedSeconds,cycle,prestigeDetail);
       tracker.record('first-prestige','prestige',elapsedSeconds,cycle,prestigeDetail);
       cycles.push({
-        cycle,reached:true,cycleDurationSeconds:run.seconds,elapsedSeconds,
+        cycle,reached:true,cycleDurationSeconds:run.seconds,observedSeconds:run.seconds,elapsedSeconds,stopReason:run.stopReason,
         purchases:run.purchases,steps:run.steps,reward:Economy.format(candidate.reward)
       });
       state=candidate.state;
+      assertEconomicState(state);
     }
   }else if(spec.mode==='continuous'){
     const run=runEconomicWindow(state,{
@@ -534,7 +561,7 @@ function simulateProgressionTimeline(spec){
     });
     elapsedSeconds=run.seconds;
     cycles.push({
-      cycle:1,reached:run.reached,cycleDurationSeconds:run.seconds,elapsedSeconds,
+      cycle:1,reached:run.reached,cycleDurationSeconds:null,observedSeconds:run.seconds,elapsedSeconds,stopReason:run.stopReason,
       purchases:run.purchases,steps:run.steps,reward:null
     });
   }else{
@@ -542,6 +569,7 @@ function simulateProgressionTimeline(spec){
   }
 
   return {
+    contractVersion:1,
     name:spec.name,
     description:spec.description,
     clickRate:spec.clickRate,
@@ -598,7 +626,9 @@ function assertTimelineIntegrity(timeline){
   }
   let cycleElapsed=-1;
   for(const row of timeline.cycles){
-    if(!Number.isFinite(row.cycleDurationSeconds) || row.cycleDurationSeconds<0) throw new Error(timeline.name+': durée cycle invalide');
+    const completedPrestige=timeline.mode==='prestige-cycles' && row.reached;
+    if(completedPrestige?(!Number.isFinite(row.cycleDurationSeconds) || row.cycleDurationSeconds<0):row.cycleDurationSeconds!==null) throw new Error(timeline.name+': durée cycle invalide');
+    if(!Number.isFinite(row.observedSeconds) || row.observedSeconds<0) throw new Error(timeline.name+': observation invalide');
     if(!Number.isFinite(row.elapsedSeconds) || row.elapsedSeconds<cycleElapsed) throw new Error(timeline.name+': cumul cycles non monotone');
     cycleElapsed=row.elapsedSeconds;
   }
@@ -611,8 +641,10 @@ function milestone(timeline,key){
   return found;
 }
 
+runProgressionChecks();
+
 globalThis.__prestigeCatalogue=Object.fromEntries(Object.entries(PRESTIGE_UPGRADES).map(([id,d])=>[id,{requires:[...(d.requires ?? [])]}]));
-if(!__progressionOnly){
+if(!__progressionOnly && !__selfTestOnly){
   globalThis.__balanceResults=__balanceScenarios.map(simulateBalanceScenario);
   globalThis.__prestigeSeries=simulatePrestigeSeries(2,10,'hold');
   globalThis.__prestigeShopSeries=simulatePrestigeSeries(2,10,'sequential');
@@ -626,10 +658,11 @@ if(!__progressionOnly){
   globalThis.__prestigeProductionSeries=[];
 }
 
-const timelineRuns=__progressionSpecs.map(spec=>simulateProgressionTimeline(spec));
+const timelineRuns=__selfTestOnly?[]:__progressionSpecs.map(spec=>simulateProgressionTimeline(spec));
 for(const timeline of timelineRuns) assertTimelineIntegrity(timeline);
 
-for(const deterministicName of ['x10-then-max-2-clicks','zero-click-1h']){
+if(!__selfTestOnly){
+for(const {name:deterministicName} of __progressionSpecs){
   const spec=__progressionSpecs.find(item=>item.name===deterministicName);
   const first=timelineRuns.find(item=>item.name===deterministicName);
   const repeated=simulateProgressionTimeline(spec);
@@ -656,10 +689,11 @@ for(const key of ['first-generator','first-x10','first-max','first-research','fi
   if(item.reached || item.atSeconds!==null) throw new Error('zero-click: jalon devrait rester non atteint '+key);
 }
 
+}
 globalThis.__progressionTimelines=timelineRuns;
 `,{filename:'balance-observatory'}).runInContext(context);
 
-if(!progressionOnly){
+if(!progressionOnly && !selfTestOnly){
 const results=context.__balanceResults;
 const byName=Object.fromEntries(results.map(x=>[x.name,x]));
 for(const row of results){
@@ -706,6 +740,9 @@ console.table(click);
 console.table(production);
 }
 
+if(jsonOutput){
+  console.log(JSON.stringify({contractVersion:1,timelines:context.__progressionTimelines},null,2));
+}else{
 for(const timeline of context.__progressionTimelines){
   console.log('\nProgression timeline O1: '+timeline.name);
   console.log(timeline.description);
@@ -720,5 +757,7 @@ for(const timeline of context.__progressionTimelines){
   console.log('Unreached milestones: '+(unreached.length?unreached.join(', '):'none'));
 }
 
-console.log('Progression observatory O1: PASS');
-if(!progressionOnly) console.log('Balance observatory: PASS');
+console.log('Progression contracts O1: PASS');
+if(!selfTestOnly) console.log('Progression observatory O1: PASS');
+}
+if(!progressionOnly && !selfTestOnly) console.log('Balance observatory: PASS');

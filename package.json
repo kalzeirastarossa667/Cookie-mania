@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/check-foundation.mjs && node scripts/check-properties.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs",
+    "test": "node scripts/check-foundation.mjs && node scripts/check-properties.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs && npm run test:progression",
     "test:browser": "playwright test",
     "analyze:balance": "node scripts/analyze-balance.mjs",
-    "analyze:progression": "node scripts/analyze-balance.mjs --progression-only"
+    "analyze:progression": "node scripts/analyze-balance.mjs --progression-only",
+    "test:progression": "node scripts/analyze-balance.mjs --self-test-only"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

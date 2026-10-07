@@ -2853,3 +2853,42 @@ Foundation 2.9 Visual & Guidance completed its integration without expanding the
 After the successful GitHub Pages deployment, the project owner manually checked the deployed version on a physical Android phone and reported that the game appeared to function correctly, notably the `⋯` menu and its accessibility. Record this as **user physical-Android validation of Foundation 2.9 on the tested device/browser**. It is not an exhaustive certification of all Android devices, browser engines, viewport sizes, accessibility configurations or assistive technologies.
 
 This closes the Foundation 2.9 stability checkpoint at the level of automated Foundation/browser checks, deployment evidence and one owner-performed physical Android validation. No post-2.9 mechanic is part of this checkpoint. Save schema remains **v7**, storage key remains `cookie-empire-foundation-v2`, and the documentation-only final checkpoint must not modify runtime, economy, saves or gameplay.
+
+
+# 54. O1 — progression observability (development tooling only)
+
+Consolidation checkpoint: 2026-10-07. Revalidated main:
+`af0443a94909a34a1f207665244d6eb4b55aab74` (Foundation 2.9).
+Official O1 head `8b764e664788a602db06f66d79a1987a64a81de9` and verification
+head `0bec4c1552d7c5a1fbb76563ffef9af3da2f0793` already contain identical
+analyzer/package blobs. Only two temporary verification workflows distinguish
+their file trees; neither belongs in the official O1 PR.
+
+O1 extends sections 40–41 with versioned event definitions, documented in
+[the O1 contract](Cookie_Empire_O1_Progression_Observatory.md). Measure successful
+real GameEngine purchases, including atomic ×10 and Max, research ownership,
+first ownership per Content era, specialization access, advanced generators and
+accepted in-memory prestige candidates/cycle durations. Candidate evaluations
+and refused purchases never count. Specialization access means prerequisites
+satisfied, not affordability or ownership. Unreached milestones and unfinished
+or unstarted prestige cycles remain explicit.
+
+Preserve the analytical continuous-click model of section 40.1, stable catalogue
+tie-breaking, integer-second purchase boundaries and bounded horizons.
+None of these policies represents optimal play. Late-run buys ten cursors before
+the other generators in catalogue order; it buys no research and never prestiges.
+The observatory never writes Persistence.
+
+Consolidation concerns only development tooling, tests and documentation. Bounded
+contract checks join npm test; the five-policy progression measurement runs once
+in the existing Foundation workflow, with deterministic repeats inside the analyzer.
+The historical full balance run stays outside routine CI (sections 41/45).
+Do not copy the verify workflows or introduce runtime dependencies.
+
+O1 leaves index.html byte-identical: GameState, HugeNumber, Economy, GameEngine,
+Content, UI, timing, prestige rules, storage keys and save schema v7 are unchanged.
+Require static scope inspection and automated Foundation/property/DOM/O1 checks;
+report browser automation separately from physical-device validation.
+Final candidate CI evidence belongs in its PR, with exact SHA.
+The O1 PR must remain unmerged pending independent audit. O2/O3/E1/E2, new mechanics,
+economic changes and Dependabot #35 remain outside scope.

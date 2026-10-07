@@ -1,5 +1,7 @@
 # Documentation actuelle
 
+- [Observatoire O1 de progression](Cookie_Empire_O1_Progression_Observatory.md) : définitions des événements, politiques, exemple Foundation 2.9 et limites ; outil de développement sans changement du jeu.
+
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
 - [Rapport final Foundation 2.9 Visual & Guidance](Cookie_Empire_Foundation_2.9_Visual_Guidance_Report.md) : historique A1 → A2 → A3 → B → C, packaging RC, PR #32 fusionnée, vérifications post-merge, déploiement GitHub Pages et validation utilisateur Android physique.
 - [Menu 2.8.3](Cookie_Empire_Foundation_2.8.3_Menu_Report.md) : menu d’options au-dessus du HUD de ressources et hit-testing Pixel 5.
