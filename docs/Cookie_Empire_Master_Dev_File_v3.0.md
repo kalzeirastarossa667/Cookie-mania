@@ -2981,3 +2981,33 @@ not balance judgments. Definitions, full measurements and limitations are in
 [the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Candidate GitHub checks
 and their exact SHA are recorded in its PR. Next: O3 reference comparison
 baseline after review; E1/E2 and new mechanics remain separate.
+
+## 55.5 O2 code audit — 2026-10-22
+
+User steering supersedes the next-action wording above: keep PR #37 open,
+do not merge it and do not start O3. Audit the O2 implementation first.
+
+The audit of candidate `0d4a4283b72a9dff7e307e3d8baeb790e4bb3726`
+reproduced missing validation at the O2 boundary: inconsistent purchase mode/
+quantity, fractional/unsafe timestamps outside the integer-second model,
+missing milestone cycle identities, nonconsecutive prestige cycles, and missing
+or inconsistent purchase windows were accepted. This did not demonstrate wrong
+results in the five current policies; their complete JSON is unchanged after
+the repairs. The important integration gap was that an absent observer could
+produce an empty purchase report without failing diagnostics.
+
+Validation now checks successful quantity against mode before observation,
+safe integer times, boolean reached flags, positive cycle identities,
+consecutive cycle numbering and exactly one consistent purchase window per
+started cycle. Counters, durations, stop reasons, interval bounds/order and
+finite numeric observations are checked before reporting. Invalid observations
+fail explicitly instead of producing false measured values or JSON nulls.
+No policy, criterion or output for valid inputs changes; O2 remains contract v1.
+
+Tests preserve the original valid cases, add six named audit groups and compare
+bounded interval collection with a full chronological trace over 200 generated
+sequences (fast-check, existing dependency, seed 22022026). Five new groups
+failed before the repair; all six pass afterward. Full Foundation/property/DOM/
+O1 suites and the five-policy deterministic run are rerun. Audit observations,
+mutation checks and limitations are recorded in the O2 report and PR #37.
+The next action remains review of O2; O3 is explicitly on hold.

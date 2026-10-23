@@ -99,6 +99,39 @@ une preuve suffisante d'un mur de progression pour les joueurs.
   de la base sont les runs post-fusion O1 ; les éventuels runs de la PR O2 sont
   consignés séparément dans cette PR avec leur SHA.
 
+## Audit du code O2 — 22 octobre 2026
+
+Périmètre : `scripts/pacing-diagnostics.mjs`, `scripts/check-pacing.mjs` et leur
+branchement dans l'analyseur. Les constats concernent la robustesse du diagnostic
+face à des données incohérentes ou à une régression d'instrumentation ; aucune
+erreur dans les résultats des cinq politiques actuelles n'a été reproduite.
+
+| Constat reproduit avant correction | Conséquence | Correction |
+| --- | --- | --- |
+| Une liste de fenêtres vide était acceptée pour des cycles observés | O2 pouvait réussir sans mesurer les achats | Une fenêtre obligatoire par cycle commencé, avec recoupement cycle, début, durée, compteurs et motif d'arrêt |
+| Des quantités incompatibles avec le mode d'achat et des temps fractionnaires ou non sûrs étaient acceptés | Les libellés et les observations pouvaient devenir trompeurs | Contrôle avant mutation du collecteur, secondes entières sûres |
+| Deux jalons sans identité de cycle pouvaient produire un délai ; les cycles 1 et 3 étaient traités comme successifs | Comparaisons sans identité fiable | Identités et booléens explicites, numérotation consécutive des cycles |
+| Les fenêtres fournies au diagnostic n'étaient pas contrôlées, notamment NaN/Infinity | Des valeurs invalides pouvaient devenir `null` dans le JSON | Contrôle des nombres, compteurs, intervalles, ordre et couverture temporelle |
+
+Preuves de régression : cinq nouveaux groupes de tests échouent sur l'ancien
+module et passent après correction. Un sixième compare le collecteur borné à
+une trace chronologique complète indépendante sur **200 séquences générées**
+(graine `22022026`, achats unitaires/×10/Max/recherche et achats simultanés).
+
+Une mutation temporaire de l'analyseur, hors dépôt, désactive uniquement le
+collecteur d'achats. Avec l'ancien module, `--pacing --json` termine avec le code
+0 et des fenêtres vides ; avec le module corrigé, il termine avec le code 1 et
+`O2 missing or inconsistent purchase window`. Ce contrôle porte sur le vrai
+chemin d'intégration, en complément des tests unitaires.
+
+Après correction, `npm test` passe : **224/224 Foundation**, propriétés et
+interface ciblée, **169 contrôles DOM**, contrats O1, assertions historiques O2
+et **6 groupes d'audit**. La sortie JSON complète des cinq politiques répétées
+est **byte-identique** à celle d'O2 avant audit sous Node 24.19.0. Le contrat
+reste en version 1. L'analyseur, les politiques, le runtime et le lockfile ne
+sont pas modifiés par cette correction. Les tests ne constituent pas une preuve
+exhaustive pour tout jeu de données arbitraire ni une validation de l'équilibrage.
+
 ## Limites et prochaine étape
 
 Les cinq politiques gardent les limites O1 : revenu de clic continu hypothétique,
@@ -110,6 +143,7 @@ O2 ne déclare automatiquement ni mur, ni emballement, ni générateur obsolète
 Les contrôles numériques O1/propriétés restent en place ; l'évolution détaillée
 des exposants et une recherche de stratégie optimale ne sont pas implémentées.
 
-Après revue de cette étape, **O3** pourra figer une référence comparative avec
-les identités de runtime, contrats et politiques. **E1/E2** viennent ensuite.
-Aucune nouvelle mécanique ni modification de prix n'est incluse ici.
+Instruction de reprise : **laisser la PR #37 ouverte, sans fusion, et ne pas
+lancer O3**. La prochaine décision porte sur la revue de cet audit O2. O3 et
+E1/E2 restent en attente. Aucune nouvelle mécanique ni modification de prix
+n'est incluse ici.

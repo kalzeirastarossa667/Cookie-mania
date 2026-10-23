@@ -1,6 +1,6 @@
 // Development-only observations. No economy rules, runtime mutation or policy decisions.
 function time(value, minimum = 0) {
-  if (!Number.isFinite(value) || value < minimum) throw new Error('O2 invalid observation time');
+  if (!Number.isSafeInteger(value) || value < minimum) throw new Error('O2 invalid observation time');
   return value;
 }
 
@@ -31,6 +31,9 @@ export function createPurchaseObserver() {
       if (!['generator', 'upgrade'].includes(action.kind) || typeof action.id !== 'string' || !action.id ||
           !(action.kind === 'generator' ? ['single', 'x10', 'max'] : ['research']).includes(action.mode))
         throw new Error('O2 invalid purchase action');
+      if ((action.mode === 'x10' && result.quantity !== 10) ||
+          (['single', 'research'].includes(action.mode) && result.quantity !== 1))
+        throw new Error('O2 purchase mode/quantity mismatch');
       if (action.kind === 'generator' && !Number.isSafeInteger(generatorUnits + result.quantity))
         throw new Error('O2 unsafe aggregate quantity');
       const description = { kind: action.kind, id: action.id, mode: action.mode, quantity: result.quantity };
@@ -59,13 +62,78 @@ export function createPurchaseObserver() {
   };
 }
 
+function validatePurchaseWindows(timeline, windows) {
+  if (!Array.isArray(timeline.cycles) || !Array.isArray(windows)) throw new Error('O2 missing cycle/window list');
+  // These are discrete observations, not economic values or computed ratios.
+  function observationNumbers(value) {
+    if (typeof value === 'number' && (!Number.isSafeInteger(value) || value < 0))
+      throw new Error('O2 invalid window number');
+    if (value && typeof value === 'object') Object.values(value).forEach(observationNumbers);
+  }
+  let elapsed = 0, windowIndex = 0;
+  for (const [index, row] of timeline.cycles.entries()) {
+    if (row.cycle !== index + 1 || typeof row.reached !== 'boolean') throw new Error('O2 invalid cycle identity/reached');
+    const completedPrestige = timeline.mode === 'prestige-cycles' && row.reached;
+    if (completedPrestige ? (!Number.isSafeInteger(row.cycleDurationSeconds) || row.cycleDurationSeconds < 0)
+      : row.cycleDurationSeconds !== null) throw new Error('O2 invalid prestige duration');
+    time(row.observedSeconds);
+    time(row.elapsedSeconds);
+    if (row.elapsedSeconds !== elapsed + row.observedSeconds || !Number.isSafeInteger(row.purchases) || row.purchases < 0 ||
+        (completedPrestige && row.cycleDurationSeconds !== row.observedSeconds)) throw new Error('O2 inconsistent cycle duration/count');
+    if (!['target-reached', 'no-income', 'horizon', 'step-limit', 'not-started'].includes(row.stopReason) ||
+        row.reached !== (row.stopReason === 'target-reached')) throw new Error('O2 invalid cycle stop reason');
+    if (row.stopReason === 'not-started') {
+      if (row.observedSeconds !== 0 || row.purchases !== 0) throw new Error('O2 unstarted cycle has observations');
+    } else {
+      const window = windows[windowIndex++];
+      observationNumbers(window);
+      if (!window || window.cycle !== row.cycle || window.startSeconds !== elapsed || window.transactions !== row.purchases ||
+          window.totalObservedSeconds !== row.observedSeconds || window.stopReason !== row.stopReason)
+        throw new Error('O2 missing or inconsistent purchase window');
+      for (const key of ['generatorUnits', 'researchPurchases', 'sameSecondPurchases', 'positiveIntervalCount']) {
+        if (!Number.isSafeInteger(window[key]) || window[key] < 0) throw new Error('O2 invalid window count');
+      }
+      if (window.researchPurchases > window.transactions || window.generatorUnits < window.transactions - window.researchPurchases ||
+          window.sameSecondPurchases > Math.max(0, window.transactions - 1) || window.positiveIntervalCount > window.transactions + 1)
+        throw new Error('O2 inconsistent window counts');
+      const intervals = window.longestIntervals;
+      if (!Array.isArray(intervals) || intervals.length !== Math.min(5, window.positiveIntervalCount) ||
+          window.maxIntervalSeconds !== (intervals[0]?.durationSeconds ?? null)) throw new Error('O2 invalid window intervals');
+      let sum = 0;
+      for (const [i, interval] of intervals.entries()) {
+        const previous = intervals[i - 1];
+        if (!Number.isSafeInteger(interval.fromSeconds) || !Number.isSafeInteger(interval.toSeconds) ||
+            interval.durationSeconds <= 0 || interval.toSeconds > row.observedSeconds ||
+            interval.durationSeconds !== interval.toSeconds - interval.fromSeconds ||
+            !['purchase', 'window-end'].includes(interval.endedBy) ||
+            (interval.endedBy === 'window-end' && (interval.toAction !== null || interval.toSeconds !== row.observedSeconds)) ||
+            (interval.endedBy === 'purchase' && (!interval.toAction || typeof interval.toAction !== 'object')) ||
+            (previous && (previous.durationSeconds < interval.durationSeconds ||
+              (previous.durationSeconds === interval.durationSeconds && previous.fromSeconds >= interval.fromSeconds))))
+          throw new Error('O2 inconsistent window interval');
+        sum += interval.durationSeconds;
+      }
+      if (sum > row.observedSeconds || (window.positiveIntervalCount <= 5 && sum !== row.observedSeconds))
+        throw new Error('O2 inconsistent window interval duration');
+    }
+    elapsed = row.elapsedSeconds;
+  }
+  if (windowIndex !== windows.length || timeline.elapsedSeconds !== elapsed) throw new Error('O2 inconsistent window coverage');
+}
+
 export function diagnosePacing(timeline, purchaseWindows) {
   if (timeline.contractVersion !== 1) throw new Error('O2 unsupported O1 contract');
+  if (!['prestige-cycles', 'continuous'].includes(timeline.mode)) throw new Error('O2 invalid timeline mode');
+  validatePurchaseWindows(timeline, purchaseWindows);
   const byKey = new Map();
   for (const item of timeline.milestones) {
+    if (typeof item.key !== 'string' || !item.key) throw new Error('O2 invalid milestone key');
     if (byKey.has(item.key)) throw new Error('O2 duplicate milestone');
+    if (typeof item.reached !== 'boolean') throw new Error('O2 invalid milestone reached');
     if (item.reached) time(item.atSeconds);
     else if (item.atSeconds !== null) throw new Error('O2 unobserved milestone time');
+    if (item.reached ? (!Number.isSafeInteger(item.cycle) || item.cycle < 1) : item.cycle !== null)
+      throw new Error('O2 invalid milestone cycle');
     byKey.set(item.key, item);
   }
   const eras = timeline.milestones.filter(item => item.key.startsWith('era:'));

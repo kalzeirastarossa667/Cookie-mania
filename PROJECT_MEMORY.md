@@ -200,6 +200,11 @@ audit → E2 standalone-build proof. O2 observes purchase gaps, milestone delays
 and prestige-cycle acceleration without economic changes. Revalidate the actual
 HEAD/PR state before resuming; this paragraph does not assert an O2 merge.
 
+Later instruction on 2026-10-22: keep O2 PR #37 open and do not start O3.
+The immediate task is auditing `scripts/pacing-diagnostics.mjs` and
+`scripts/check-pacing.mjs`, including their simulator integration. Audit fixes
+belong to the same O2 PR; a green CI run does not override the hold on O3.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:
