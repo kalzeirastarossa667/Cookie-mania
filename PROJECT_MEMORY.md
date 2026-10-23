@@ -213,6 +213,15 @@ generator-relevance indicators and numeric-growth observations are still require
 before declaring original O2 complete. They are not implemented in this follow-up
 or silently moved to O3. Advanced universal balance verdicts are explicitly deferred.
 
+Later authorization after independent audit of `8e9a75e`: implement those three
+minimum O2 diagnostics on the same PR branch. Master §55.7 specifies them before
+implementation. The additive `pacing.economics` contract now measures real purchase
+effects, generator shares/local next-unit dominance and HugeNumber growth with
+explicit reset boundaries. See `docs/Cookie_Empire_O2_Economic_Diagnostics.md`.
+Keep all five O1 policies and legacy O2 fields; no runtime/save/UI/balance change.
+Publish with passing tests and stop for independent audit. Do not merge or start
+O3/E1/E2. Implementation completion is not independent acceptance.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:

@@ -1,6 +1,7 @@
 # Documentation actuelle
 
 - [Diagnostics O2 du rythme de progression](Cookie_Empire_O2_Pacing_Diagnostics.md) : mesures des achats réels, attentes, spécialisations et accélération des prestiges ; aucune modification du jeu.
+- [Complément économique O2](Cookie_Empire_O2_Economic_Diagnostics.md) : contribution marginale, pertinence locale des générateurs et croissance HugeNumber ; contrat additif et limites d'interprétation.
 
 - [Observatoire O1 de progression](Cookie_Empire_O1_Progression_Observatory.md) : définitions des événements, politiques, exemple Foundation 2.9 et limites ; outil de développement sans changement du jeu.
 

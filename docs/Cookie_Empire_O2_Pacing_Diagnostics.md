@@ -4,9 +4,11 @@ Contrat **v1**, 22 octobre 2026. Base : `ef81233cde248161926c942ab7aafd9f2432b8a
 O1 fusionné via PR #36. Le jeu reste Foundation 2.9, sauvegarde v7.
 O2 ne modifie ni `index.html`, ni les règles économiques, ni les cinq politiques O1.
 
-**État après revue de couverture du 23 octobre 2026 : O2 partiel.** Le contrat
-v1 décrit les diagnostics livrés, pas la totalité des objectifs initiaux O2.
-Les compléments indispensables et les reports sont distingués ci-dessous.
+**État actuel : les trois compléments descriptifs sont implémentés, en attente
+d'audit indépendant avant acceptation d'O2.** Voir le [contrat économique et ses
+mesures](Cookie_Empire_O2_Economic_Diagnostics.md), Master §55.7 et le HEAD de la
+PR #37. Le contrat pacing v1 est conservé ; `pacing.economics` ajoute un bloc v1.
+La revue historique de couverture ci-dessous explique les écarts alors constatés.
 
 ## Exécuter et lire
 
@@ -77,7 +79,7 @@ répétées passent. Le JSON complet est byte-identique au candidat `f06b1b8`.
 Les nouveaux résultats CI Foundation/Browser et leur HEAD exact sont consignés
 dans la PR #37 ; aucune validation sur téléphone physique n'est revendiquée.
 
-## Couverture du cahier des charges initial et décision de périmètre
+## Revue historique de couverture avant le complément économique
 
 La consigne initiale O2 du 7 octobre, retrouvée dans le contexte de reprise,
 mentionne attentes, murs, accélération, contribution marginale, obsolescence
@@ -102,6 +104,10 @@ conditions de clôture d'O2, à spécifier et traiter dans une passe complément
 O2 après le nouvel audit indépendant. Elles ne sont ni réputées livrées, ni
 transférées silencieusement à O3. La CI verte valide le code exécuté, pas la
 complétude du cahier des charges. O2 ne doit pas être déclaré terminé à ce stade.
+
+Cette restriction était celle de la passe des refus au HEAD `8e9a75e`.
+L'autorisation ultérieure du propriétaire lance désormais les trois compléments
+O2 décrits dans le rapport économique ; aucune nouvelle phase n'est lancée.
 
 Leur future spécification devra préserver les vraies API et les politiques,
 séparer CPS et clics hypothétiques, utiliser HugeNumber sans conversion naïve en
@@ -211,9 +217,10 @@ secondes entières, choix myopes, précision HugeNumber d'environ 15 chiffres,
 observation prestige pouvant dépasser le seuil, absence de simulation UI/offline
 et de commit de sauvegarde. Les maxima d'intervalles ne mesurent pas l'ennui réel.
 
-O2 ne déclare automatiquement ni mur, ni emballement, ni générateur obsolète.
-Les contrôles numériques O1/propriétés restent en place ; l'évolution détaillée
-des exposants et une recherche de stratégie optimale ne sont pas implémentées.
+O2 ne déclare automatiquement ni mur, ni emballement, ni défaut de design.
+Les observations économiques ajoutent contribution marginale, signal de domination
+locale et croissance des ordres de grandeur. Recherche optimale, verdict universel
+d'obsolescence et stress numérique exhaustif restent hors périmètre.
 
 Instruction de reprise : **laisser la PR #37 ouverte, sans fusion, et ne pas
 lancer O3**. La prochaine décision porte sur la revue de cet audit O2. O3 et

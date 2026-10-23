@@ -30,6 +30,7 @@ Pour reprendre une partie dans un nouveau fichier téléchargé, **Exporter les 
 - [Clickers GitHub étudiés et décisions retenues](docs/Cookie_Empire_GitHub_Research_2.1.md).
 - [Contrat O1 et exemple de timeline](docs/Cookie_Empire_O1_Progression_Observatory.md) : `npm run analyze:progression` mesure cinq politiques déterministes sans changer le jeu.
 - [Diagnostics O2 du rythme de progression](docs/Cookie_Empire_O2_Pacing_Diagnostics.md) : `npm run analyze:pacing` mesure les intervalles entre achats, les transitions et les cycles de prestige des mêmes politiques. Aucun rééquilibrage du jeu.
+- [Complément économique O2](docs/Cookie_Empire_O2_Economic_Diagnostics.md) : la même commande ajoute les effets réels des achats, les contributions des générateurs et les ordres de grandeur HugeNumber, sans changer les sorties historiques.
 - Node 24 : `npm ci`, puis `npm test`. `npm run analyze:balance` rejoue séparément l’observatoire déterministe de pacing.
 
 Sur le HEAD d’intégration Foundation 2.9 `5c4ee2eaa4fb3cae1b6ebc32be127da43898bd41`, les vérifications post-fusion de `main` sont vertes : Foundation **224/224**, propriétés déterministes PASS, interface ciblée PASS, Constellation **169/169**, Browser **28 PASS + 2 skips de viewport attendus**, et déploiement GitHub Pages **SUCCESS**. Le Browser post-merge couvre notamment les métriques avancées à CPS nul et avec un HugeNumber extrême (`1e1000`), axe en thèmes sombre/clair et les régressions 2.8.1/2.8.2/2.8.3. La PR #32 a été fusionnée dans `main`.

@@ -3055,3 +3055,81 @@ the destination for silently postponed O2 requirements and has not started.
 The detailed coverage matrix, minimum deliverables, rationale and limitations
 are in [the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Green CI validates
 the implemented code, not completion of the original O2 scope.
+
+## 55.7 O2 economic diagnostics completion contract — 2026-10-22 (local date)
+
+Specified before implementation, following independent approval of `8e9a75e`.
+The owner now authorizes the three missing descriptive diagnostics on PR #37's
+existing branch. This supersedes §55.6's implementation hold only for this scope.
+No runtime, economy, interface, persistence, O1 policy or event changes. No
+O3/E1/E2. Publish tested changes, then stop for independent audit without merging.
+
+Compatibility: default O1 JSON stays identical. Existing `pacing` v1 fields,
+including all `reports`, retain their values and shapes. Add only an independently
+versioned `pacing.economics = {contractVersion:1,reports:[{name,windows}]}`.
+Each started O1 cycle has exactly one economic window, matched by cycle, start,
+duration, stop reason and successful purchase count. Unstarted cycles have none.
+All five policies and deterministic repeated runs include the new observations.
+
+Economic numbers and nonnegative ratios are canonical HugeNumber pairs `{m,e}`,
+never expanded into Number or formatted suffixes. Zero is `{m:0,e:0}` and has no
+logarithmic order; for nonzero values `e` is floor(log10(value)). Deltas retain
+direction with `{sign:-1|0|1,magnitude:{m,e}}`. Null ratios mean zero denominator,
+not zero effect. Respect the runtime's roughly 15 significant digits; a zero
+delta is zero at that precision, not a proof of no mathematical contribution.
+
+Purchase contribution: capture production immediately before and after every
+successful real generator/research purchase, including x10/Max and repeats.
+Use actual paid cost from executeAction and real derived CPS/click values from
+Economy; modeled income is CPS + clickReward × policy click rate. Track signed
+changes separately for CPS, click reward and modeled income. Aggregate counts,
+units, costs and positive/negative deltas by kind/id/mode within each cycle;
+retain first and last detailed samples per group (time, quantity, cost,
+before/after, deltas, relative income change and cost/income-gain payback).
+Payback is a local heuristic, null for nonpositive gain, not a future strategy.
+Refusals add nothing. No unbounded transaction history. Research/synergy effects
+belong to the triggering transaction; sums are not lifetime causal attribution.
+
+Generator relevance: snapshots at window start, first ownership of each Content
+era within that cycle, and window end (start-owned eras do not create false
+acquisition events). For each generator use Economy's stack/unit CPS and click
+APIs, next single-unit cost, and ratios to current CPS/click/modeled income.
+Include ownership, affordability and next-unit income gain relative to current
+income and cost. No threshold labels a small share obsolete. A potential signal
+is emitted only for an owned, currently affordable next unit when another
+affordable generator's next unit costs no more and yields no less modeled
+income, with at least one strict inequality. List all such alternatives in
+catalogue order. This is local next-unit dominance, not a design defect or a
+claim about future unlocks, specializations, bulk buys or optimal play.
+
+Numeric growth: sample cookies, totalProduced, CPS, clickReward, modeledIncome,
+prestigePoints and prestigeCurrency at start, era acquisitions and end. Update
+per-field maxima at start, after every modeled wait and successful purchase,
+and end; record the earliest observation's time/phase on a tie. Those maxima
+cover simulation transition endpoints, not an invented continuous trace.
+Each completed prestige window separately records the candidate's after-reset
+values at its end time, including the final prestige; do not mix these into
+pre-reset maxima. Next cycle starts from that reset state. Empty/zero-income
+windows remain explicit. No estimates of long-term numerical safety.
+
+Verification: real-runtime deterministic tests for x1/x10/Max/research/synergy,
+zero/negative delta representation, zero denominators, extreme/tiny HugeNumbers,
+dominance and unavailable alternatives, bounded retention, maxima before spend,
+reset boundaries and no mutation. Integration gates recoup window coverage,
+purchase counts and reset continuity with O1. Compare default JSON and all legacy
+pacing fields against `8e9a75e`; run Foundation, O1/O2, five-policy repeats and
+Browser. Preserve runtime and lockfile blobs. Document measurements and limits.
+
+Implementation evidence: `scripts/economic-diagnostics.mjs` uses injected real
+Economy/HugeNumber APIs and bounded summaries, integrated into the existing
+simulator without changing policy decisions. Its nine deterministic test groups
+pass with all seven historical O2 groups, Foundation 224/224, 169 DOM, properties
+and O1. Five-policy repeated runs pass. O1 JSON and the legacy O2 projection are
+byte-identical to `8e9a75e` under Node 24.19.0. A temporary integration mutation
+removing wait observation fails explicitly with `O2 economics: wait coverage`.
+The additional unit/research count gates also pass against the generated reports.
+No protected runtime/lockfile/O1 contract file changes. See the
+[economic report](Cookie_Empire_O2_Economic_Diagnostics.md) for schema, observed
+metrics and precision/sampling limitations, and PR #37 for exact HEAD/CI evidence.
+All three descriptive additions are implemented; independent acceptance remains
+pending. Stop here after publication/CI; do not merge or begin O3/E1/E2.

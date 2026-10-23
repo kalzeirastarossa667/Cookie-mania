@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/check-foundation.mjs && node scripts/check-properties.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs && npm run test:progression && node scripts/check-pacing.mjs",
+    "test": "node scripts/check-foundation.mjs && node scripts/check-properties.mjs && node scripts/check-interface.mjs && node scripts/check-constellation.mjs && npm run test:progression && node scripts/check-pacing.mjs && node scripts/check-economic-diagnostics.mjs",
     "test:browser": "playwright test",
     "analyze:balance": "node scripts/analyze-balance.mjs",
     "analyze:progression": "node scripts/analyze-balance.mjs --progression-only",
