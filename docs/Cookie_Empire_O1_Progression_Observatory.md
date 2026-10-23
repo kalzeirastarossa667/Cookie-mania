@@ -6,6 +6,12 @@ interface, modèle temporel, prestige et sauvegardes v7 sont inchangés.
 
 ## Checkpoint et consolidation
 
+**Mise à jour du 22 octobre 2026 :** la PR #36 a été fusionnée le 7 octobre
+dans `main` à `ef81233cde248161926c942ab7aafd9f2432b8ad`. Les vérifications
+Foundation, Browser et Pages post-fusion sont SUCCESS. Les références ci-dessous
+décrivent la consolidation historique avant cette fusion ; elles ne désignent
+plus le HEAD à reprendre. Voir Master §54.1 et [la suite O2](Cookie_Empire_O2_Pacing_Diagnostics.md).
+
 - main : `af0443a94909a34a1f207665244d6eb4b55aab74`.
 - O1 officiel initial : `8b764e664788a602db06f66d79a1987a64a81de9`.
 - verify : `0bec4c1552d7c5a1fbb76563ffef9af3da2f0793`.

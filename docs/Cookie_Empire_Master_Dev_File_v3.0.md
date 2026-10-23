@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
 Status: FOUNDATION 2.9 VISUAL & GUIDANCE / SOURCE OF TRUTH
-Last audit: 2026-09-30 — final post-merge checkpoint
+Last audit: 2026-10-22 — O1 merged baseline; O2 specification below
 
 ## 0. Purpose
 
@@ -2892,3 +2892,265 @@ report browser automation separately from physical-device validation.
 Final candidate CI evidence belongs in its PR, with exact SHA.
 The O1 PR must remain unmerged pending independent audit. O2/O3/E1/E2, new mechanics,
 economic changes and Dependabot #35 remain outside scope.
+
+## 54.1 O1 merged checkpoint — verified 2026-10-22
+
+The unmerged-candidate wording above is historical. PR #36 was merged on
+2026-10-07 as `ef81233cde248161926c942ab7aafd9f2432b8ad`. Its post-merge
+Foundation `37681153655`, Browser `37681153629` and Pages `37681152514` runs
+all succeeded. The playable runtime remains Foundation 2.9 (unchanged blob
+`55b612488dbdecedafb2869028930fccd69a958f`), with save schema v7.
+Local resumption on Node 24.19.0 passes 224/224 Foundation, properties,
+targeted interface, 169 DOM checks and O1 contracts. No new physical-device
+validation is implied. Resume from this merged baseline, not af0443a.
+
+# 55. O2 — pacing diagnostics (development tooling only)
+
+Specification recorded BEFORE implementation, 2026-10-22. The accepted sequence
+is O1 progression observation → O2 pacing diagnostics → O3 versioned reference
+baseline → E1 extensibility audit → E2 standalone-build proof. This milestone
+implements O2 only, on main `ef81233cde248161926c942ab7aafd9f2432b8ad`.
+
+## 55.1 Scope and authority
+
+Add opt-in `--pacing` / `npm run analyze:pacing` to the existing observatory.
+Reuse its five policies, real purchases and exact simulated times. Do not change
+runtime, economic constants, policy decisions, O1 event definitions, persistence
+or dependencies. Default O1 JSON must stay byte-identical on the same Node.
+The pacing report has its own contract version and runtime SHA-256 provenance.
+It is a diagnostic measurement, not the O3 committed reference fixture.
+
+## 55.2 Measurements and interpretation
+
+- Track every successful generator/research purchase, including repeat purchases
+  that produce no new O1 milestone. Count transactions separately from units.
+- For each started economic window, retain the five longest positive intervals
+  without a successful purchase, from window start to first purchase, between
+  purchases, and from last purchase to window end. Ties use chronological order.
+  The trailing interval is explicitly observation-ended, never an invented time
+  to the next purchase. Zero-time purchases count but add no positive interval.
+  Sum of all intervals equals observed duration; retain counts, maximum and
+  bounded top-five detail rather than an unbounded action trace.
+- Report era first-acquisition times, delays from the preceding Content era,
+  and specialization access-to-purchase delay only when both first observations
+  belong to the same cycle. Missing milestones and cross-cycle comparisons
+  return null with explicit status, never zero or Infinity.
+- Compare consecutive completed prestige durations using current/previous ratio
+  and percent reduction. Zero previous duration or incomplete/unstarted cycles
+  make the comparison unavailable. Continuous target attainment is not prestige.
+- Report absent milestones as unobserved under this policy/horizon, not impossible
+  or obsolete content. An interval without purchase is not player inactivity:
+  hypothetical clicks/production continue, and policy may deliberately save.
+
+No arbitrary threshold labels a progression wall or runaway. No claim of optimal
+play, generator obsolescence, real player retention or final balance is inferred.
+Numerical canonical/finite guards from O1 remain; numeric stress coverage stays
+in the existing property suite. Full numeric-growth and optimal-strategy analysis
+are outside this restricted implementation. This does not establish completion
+of the original broader O2 request; the coverage decision in §55.6 takes precedence.
+
+## 55.3 Verification gate
+
+Cover repeated purchases without new milestones, failed actions, same-second
+transactions, exact waits/ties, zero income, horizon/step-limit tails, incomplete
+cycles, null comparisons, and invalid/non-finite observation data. Verify the
+real-engine observer count against run.purchases. Run full npm test, five-policy
+deterministic repeats, compare instrumented O1 fields against uninstrumented O1,
+and inspect the diff for unchanged index.html/package-lock.json. No browser
+behavior changes; distinguish prior browser evidence from any new run.
+
+## 55.4 Implementation and local evidence
+
+Implemented as a bounded purchase observer plus pure pacing derivation in
+`scripts/pacing-diagnostics.mjs`, connected only to the development simulator.
+The optional JSON `pacing` report leaves O1 timelines and default output intact.
+CI invokes O2 instead of O1 standalone, retaining the same five-policy repeats
+and integrity checks without running the simulation twice.
+
+Node 24.19.0: full npm test passes (224 Foundation, properties, interface,
+169 DOM checks, O1/O2 contracts). All five policies repeat identically with
+instrumentation. Default O1 JSON is byte-identical before/after; instrumented
+O1 fields equal the original baseline. Runtime and lockfile are unchanged.
+Initial O2 test failure was a missing module before implementation, not a game
+defect. No new physical-device validation is claimed.
+
+Measured first-window maximum purchase gaps: single 149 s, x10-first 153 s,
+Max-first 155 s, late-run 889135 s; zero-click has no positive observed interval.
+Single-policy prestige durations remain 25141 / 22828 / 20923 s, reductions
+of approximately 9.20% then 8.35%. These are policy-specific observations,
+not balance judgments. Definitions, full measurements and limitations are in
+[the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Candidate GitHub checks
+and their exact SHA are recorded in its PR. Next: O3 reference comparison
+baseline after review; E1/E2 and new mechanics remain separate.
+
+## 55.5 O2 code audit — 2026-10-22
+
+User steering supersedes the next-action wording above: keep PR #37 open,
+do not merge it and do not start O3. Audit the O2 implementation first.
+
+The audit of candidate `0d4a4283b72a9dff7e307e3d8baeb790e4bb3726`
+reproduced missing validation at the O2 boundary: inconsistent purchase mode/
+quantity, fractional/unsafe timestamps outside the integer-second model,
+missing milestone cycle identities, nonconsecutive prestige cycles, and missing
+or inconsistent purchase windows were accepted. This did not demonstrate wrong
+results in the five current policies; their complete JSON is unchanged after
+the repairs. The important integration gap was that an absent observer could
+produce an empty purchase report without failing diagnostics.
+
+Validation now checks successful quantity against mode before observation,
+safe integer times, boolean reached flags, positive cycle identities,
+consecutive cycle numbering and exactly one consistent purchase window per
+started cycle. Counters, durations, stop reasons, interval bounds/order and
+finite numeric observations are checked before reporting. Invalid observations
+fail explicitly instead of producing false measured values or JSON nulls.
+No policy, criterion or output for valid inputs changes; O2 remains contract v1.
+
+Tests preserve the original valid cases, add six named audit groups and compare
+bounded interval collection with a full chronological trace over 200 generated
+sequences (fast-check, existing dependency, seed 22022026). Five new groups
+failed before the repair; all six pass afterward. Full Foundation/property/DOM/
+O1 suites and the five-policy deterministic run are rerun. Audit observations,
+mutation checks and limitations are recorded in the O2 report and PR #37.
+The next action remains review of O2; O3 is explicitly on hold.
+
+## 55.6 Follow-up audit: refused observations and original O2 coverage — 2026-10-23
+
+PR #37 stays open on its existing branch, with no merge or O3. Stop after
+publication and CI for another independent audit. No runtime, economic constant,
+save or O1 contract change is authorized by this follow-up.
+
+The observer's early return for `ok:false, quantity:0` bypassed timestamp
+validation. Every accepted observation now has a safe nonnegative integer time,
+monotone across both successful and refused attempts. Finish cannot precede
+the latest valid observation. A separate last-observation clock advances on a
+valid refusal without counting a transaction or splitting a purchase interval.
+Invalid observations leave state unchanged. The actual simulator currently
+passes successful purchases only; this fixes the collector boundary contract.
+A targeted red/green regression covers invalid/refused timestamps, backward
+success/finish after a refusal, equal times and unchanged purchase statistics.
+
+Scope reconciliation: the original O2 request (7 October, recovered resumption
+context) includes marginal purchase contribution, potential generator obsolescence,
+progression walls and numeric growth, in addition to waits and prestige. The
+general intent also remains in PROJECT_MEMORY §16. The later §55 specification
+defines the implemented subset, not permission to silently drop the other goals.
+
+Decision: O2 is still partial. Waits, milestone delays, prestige ratios and
+descriptive wall signals are covered; they do not certify a wall or optimal play.
+Minimum missing observations remain required before closing original O2:
+real-purchase cost and marginal CPS/click/modeled-income gains; per-generator
+contribution and relative marginal relevance at deterministic era/cycle points;
+bounded HugeNumber growth snapshots and maxima with times/cycles/reset context.
+Existing policy scoring is not a published purchase-contribution measurement,
+and canonical/finite property checks are not a numeric-growth diagnostic.
+
+Do not implement these additional metrics in this follow-up. Revisit their
+specification in a complementary O2 pass only after independent audit. Defer
+universal obsolescence/wall verdicts, threshold calibration, optimal strategies,
+player-retention validation and exhaustive long-term numeric stress to a separately
+scoped later economic-analysis phase. They require evidence beyond the current
+five policies and are not prerequisites for descriptive O2 indicators. O3 is not
+the destination for silently postponed O2 requirements and has not started.
+
+The detailed coverage matrix, minimum deliverables, rationale and limitations
+are in [the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Green CI validates
+the implemented code, not completion of the original O2 scope.
+
+## 55.7 O2 economic diagnostics completion contract — 2026-10-22 (local date)
+
+Specified before implementation, following independent approval of `8e9a75e`.
+The owner now authorizes the three missing descriptive diagnostics on PR #37's
+existing branch. This supersedes §55.6's implementation hold only for this scope.
+No runtime, economy, interface, persistence, O1 policy or event changes. No
+O3/E1/E2. Publish tested changes, then stop for independent audit without merging.
+
+Compatibility: default O1 JSON stays identical. Existing `pacing` v1 fields,
+including all `reports`, retain their values and shapes. Add only an independently
+versioned `pacing.economics = {contractVersion:1,reports:[{name,windows}]}`.
+Each started O1 cycle has exactly one economic window, matched by cycle, start,
+duration, stop reason and successful purchase count. Unstarted cycles have none.
+All five policies and deterministic repeated runs include the new observations.
+
+Economic numbers and nonnegative ratios are canonical HugeNumber pairs `{m,e}`,
+never expanded into Number or formatted suffixes. Zero is `{m:0,e:0}` and has no
+logarithmic order; for nonzero values `e` is floor(log10(value)). Deltas retain
+direction with `{sign:-1|0|1,magnitude:{m,e}}`. Null ratios mean zero denominator,
+not zero effect. Respect the runtime's roughly 15 significant digits; a zero
+delta is zero at that precision, not a proof of no mathematical contribution.
+
+Purchase contribution: capture production immediately before and after every
+successful real generator/research purchase, including x10/Max and repeats.
+Use actual paid cost from executeAction and real derived CPS/click values from
+Economy; modeled income is CPS + clickReward × policy click rate. Track signed
+changes separately for CPS, click reward and modeled income. Aggregate counts,
+units, costs and positive/negative deltas by kind/id/mode within each cycle;
+retain first and last detailed samples per group (time, quantity, cost,
+before/after, deltas, relative income change and cost/income-gain payback).
+Payback is a local heuristic, null for nonpositive gain, not a future strategy.
+Refusals add nothing. No unbounded transaction history. Research/synergy effects
+belong to the triggering transaction; sums are not lifetime causal attribution.
+
+Generator relevance: snapshots at window start, first ownership of each Content
+era within that cycle, and window end (start-owned eras do not create false
+acquisition events). For each generator use Economy's stack/unit CPS and click
+APIs, next single-unit cost, and ratios to current CPS/click/modeled income.
+Include ownership, affordability and next-unit income gain relative to current
+income and cost. No threshold labels a small share obsolete. A potential signal
+is emitted only for an owned, currently affordable next unit when another
+affordable generator's next unit costs no more and yields no less modeled
+income, with at least one strict inequality. List all such alternatives in
+catalogue order. This is local next-unit dominance, not a design defect or a
+claim about future unlocks, specializations, bulk buys or optimal play.
+
+Numeric growth: sample cookies, totalProduced, CPS, clickReward, modeledIncome,
+prestigePoints and prestigeCurrency at start, era acquisitions and end. Update
+per-field maxima at start, after every modeled wait and successful purchase,
+and end; record the earliest observation's time/phase on a tie. Those maxima
+cover simulation transition endpoints, not an invented continuous trace.
+Each completed prestige window separately records the candidate's after-reset
+values at its end time, including the final prestige; do not mix these into
+pre-reset maxima. Next cycle starts from that reset state. Empty/zero-income
+windows remain explicit. No estimates of long-term numerical safety.
+
+Verification: real-runtime deterministic tests for x1/x10/Max/research/synergy,
+zero/negative delta representation, zero denominators, extreme/tiny HugeNumbers,
+dominance and unavailable alternatives, bounded retention, maxima before spend,
+reset boundaries and no mutation. Integration gates recoup window coverage,
+purchase counts and reset continuity with O1. Compare default JSON and all legacy
+pacing fields against `8e9a75e`; run Foundation, O1/O2, five-policy repeats and
+Browser. Preserve runtime and lockfile blobs. Document measurements and limits.
+
+Implementation evidence: `scripts/economic-diagnostics.mjs` uses injected real
+Economy/HugeNumber APIs and bounded summaries, integrated into the existing
+simulator without changing policy decisions. Its nine deterministic test groups
+pass with all seven historical O2 groups, Foundation 224/224, 169 DOM, properties
+and O1. Five-policy repeated runs pass. O1 JSON and the legacy O2 projection are
+byte-identical to `8e9a75e` under Node 24.19.0. A temporary integration mutation
+removing wait observation fails explicitly with `O2 economics: wait coverage`.
+The additional unit/research count gates also pass against the generated reports.
+No protected runtime/lockfile/O1 contract file changes. See the
+[economic report](Cookie_Empire_O2_Economic_Diagnostics.md) for schema, observed
+metrics and precision/sampling limitations, and PR #37 for exact HEAD/CI evidence.
+All three descriptive additions are implemented; independent acceptance remains
+pending. Stop here after publication/CI; do not merge or begin O3/E1/E2.
+
+## 55.8 Final O2 validation after dddf24a — 2026-10-23 UTC
+
+Revalidate the full PR against main `ef81233cde248161926c942ab7aafd9f2432b8ad`.
+Five failing regression cases exposed three boundary defects: O2 rejected O1's
+valid zero-income last-step `step-limit`; purchase/finish could advance economic
+time without an observed wait or accept a changed endpoint; reached milestones
+could reference an absent/unstarted cycle or a time outside its observed range.
+Minimal diagnostics-only guards now cover these cases, preserving O1 stop-reason
+precedence, all existing output shapes and valid five-policy observations.
+
+An independent rational-price oracle checks 96 real purchases across all 16
+generators, two initial quantities and x1/x10/Max. Hand-calculated research and
+synergy totals, extreme unclamped ratios, quantity limits and recursively frozen
+states extend the read-only/math evidence. Foundation, properties, interface,
+169 DOM, O1 and 8 pacing + 16 economic test groups pass locally. Full compatibility,
+deterministic runs and exact candidate CI evidence are recorded in PR #37; see
+the economic report for reproductions, fixes and retained precision/sampling
+limits. No runtime, balancing, save, UI, dependency or O1 contract change.
+Publish only these justified corrections on the existing branch, then stop for
+independent audit. No merge and no O3/E1/E2 without subsequent authorization.
