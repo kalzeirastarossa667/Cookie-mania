@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
 Status: FOUNDATION 2.9 VISUAL & GUIDANCE / SOURCE OF TRUTH
-Last audit: 2026-09-30 — final post-merge checkpoint
+Last audit: 2026-10-22 — O1 merged baseline; O2 specification below
 
 ## 0. Purpose
 
@@ -2892,3 +2892,92 @@ report browser automation separately from physical-device validation.
 Final candidate CI evidence belongs in its PR, with exact SHA.
 The O1 PR must remain unmerged pending independent audit. O2/O3/E1/E2, new mechanics,
 economic changes and Dependabot #35 remain outside scope.
+
+## 54.1 O1 merged checkpoint — verified 2026-10-22
+
+The unmerged-candidate wording above is historical. PR #36 was merged on
+2026-10-07 as `ef81233cde248161926c942ab7aafd9f2432b8ad`. Its post-merge
+Foundation `37681153655`, Browser `37681153629` and Pages `37681152514` runs
+all succeeded. The playable runtime remains Foundation 2.9 (unchanged blob
+`55b612488dbdecedafb2869028930fccd69a958f`), with save schema v7.
+Local resumption on Node 24.19.0 passes 224/224 Foundation, properties,
+targeted interface, 169 DOM checks and O1 contracts. No new physical-device
+validation is implied. Resume from this merged baseline, not af0443a.
+
+# 55. O2 — pacing diagnostics (development tooling only)
+
+Specification recorded BEFORE implementation, 2026-10-22. The accepted sequence
+is O1 progression observation → O2 pacing diagnostics → O3 versioned reference
+baseline → E1 extensibility audit → E2 standalone-build proof. This milestone
+implements O2 only, on main `ef81233cde248161926c942ab7aafd9f2432b8ad`.
+
+## 55.1 Scope and authority
+
+Add opt-in `--pacing` / `npm run analyze:pacing` to the existing observatory.
+Reuse its five policies, real purchases and exact simulated times. Do not change
+runtime, economic constants, policy decisions, O1 event definitions, persistence
+or dependencies. Default O1 JSON must stay byte-identical on the same Node.
+The pacing report has its own contract version and runtime SHA-256 provenance.
+It is a diagnostic measurement, not the O3 committed reference fixture.
+
+## 55.2 Measurements and interpretation
+
+- Track every successful generator/research purchase, including repeat purchases
+  that produce no new O1 milestone. Count transactions separately from units.
+- For each started economic window, retain the five longest positive intervals
+  without a successful purchase, from window start to first purchase, between
+  purchases, and from last purchase to window end. Ties use chronological order.
+  The trailing interval is explicitly observation-ended, never an invented time
+  to the next purchase. Zero-time purchases count but add no positive interval.
+  Sum of all intervals equals observed duration; retain counts, maximum and
+  bounded top-five detail rather than an unbounded action trace.
+- Report era first-acquisition times, delays from the preceding Content era,
+  and specialization access-to-purchase delay only when both first observations
+  belong to the same cycle. Missing milestones and cross-cycle comparisons
+  return null with explicit status, never zero or Infinity.
+- Compare consecutive completed prestige durations using current/previous ratio
+  and percent reduction. Zero previous duration or incomplete/unstarted cycles
+  make the comparison unavailable. Continuous target attainment is not prestige.
+- Report absent milestones as unobserved under this policy/horizon, not impossible
+  or obsolete content. An interval without purchase is not player inactivity:
+  hypothetical clicks/production continue, and policy may deliberately save.
+
+No arbitrary threshold labels a progression wall or runaway. No claim of optimal
+play, generator obsolescence, real player retention or final balance is inferred.
+Numerical canonical/finite guards from O1 remain; numeric stress coverage stays
+in the existing property suite. Full numeric-growth and optimal-strategy analysis
+are not promised by O2.
+
+## 55.3 Verification gate
+
+Cover repeated purchases without new milestones, failed actions, same-second
+transactions, exact waits/ties, zero income, horizon/step-limit tails, incomplete
+cycles, null comparisons, and invalid/non-finite observation data. Verify the
+real-engine observer count against run.purchases. Run full npm test, five-policy
+deterministic repeats, compare instrumented O1 fields against uninstrumented O1,
+and inspect the diff for unchanged index.html/package-lock.json. No browser
+behavior changes; distinguish prior browser evidence from any new run.
+
+## 55.4 Implementation and local evidence
+
+Implemented as a bounded purchase observer plus pure pacing derivation in
+`scripts/pacing-diagnostics.mjs`, connected only to the development simulator.
+The optional JSON `pacing` report leaves O1 timelines and default output intact.
+CI invokes O2 instead of O1 standalone, retaining the same five-policy repeats
+and integrity checks without running the simulation twice.
+
+Node 24.19.0: full npm test passes (224 Foundation, properties, interface,
+169 DOM checks, O1/O2 contracts). All five policies repeat identically with
+instrumentation. Default O1 JSON is byte-identical before/after; instrumented
+O1 fields equal the original baseline. Runtime and lockfile are unchanged.
+Initial O2 test failure was a missing module before implementation, not a game
+defect. No new physical-device validation is claimed.
+
+Measured first-window maximum purchase gaps: single 149 s, x10-first 153 s,
+Max-first 155 s, late-run 889135 s; zero-click has no positive observed interval.
+Single-policy prestige durations remain 25141 / 22828 / 20923 s, reductions
+of approximately 9.20% then 8.35%. These are policy-specific observations,
+not balance judgments. Definitions, full measurements and limitations are in
+[the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Candidate GitHub checks
+and their exact SHA are recorded in its PR. Next: O3 reference comparison
+baseline after review; E1/E2 and new mechanics remain separate.

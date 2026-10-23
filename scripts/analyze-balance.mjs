@@ -1,5 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { Script, createContext } from 'node:vm';
+import { createHash } from 'node:crypto';
+import { createPurchaseObserver, diagnosePacing } from './pacing-diagnostics.mjs';
 
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const match=html.match(/<script>([\s\S]*?)<\/script>/);
@@ -15,9 +17,13 @@ const context=createContext({
 });
 new Script(match[1],{filename:'index.html'}).runInContext(context);
 
-const progressionOnly=process.argv.includes('--progression-only');
+const pacingOutput=process.argv.includes('--pacing');
+const progressionOnly=process.argv.includes('--progression-only') || pacingOutput;
 const selfTestOnly=process.argv.includes('--self-test-only');
 const jsonOutput=process.argv.includes('--json');
+if(pacingOutput && selfTestOnly) throw new Error('--pacing requires complete progression runs');
+context.__pacingEnabled=pacingOutput;
+context.__createPurchaseObserver=createPurchaseObserver;
 context.__selfTestOnly=selfTestOnly;
 new Script(readFileSync(new URL('./progression-cases.js',import.meta.url),'utf8'),{filename:'progression-cases.js'}).runInContext(context);
 context.__progressionOnly=progressionOnly;
@@ -272,6 +278,7 @@ function runEconomicWindow(state,{
   assertEconomicState(state);
   const completed=()=>Boolean(stopWhen?.(state)) || (targetProduced!==null && Economy.compare(state.totalProduced,targetProduced)>=0);
   let seconds=0,purchases=0,steps=0;
+  const purchaseObserver=__pacingEnabled?__createPurchaseObserver():null;
   while(seconds<horizonSeconds && !completed() && steps<maxSteps){
     steps++;
     const action=chooseAction(state);
@@ -285,6 +292,7 @@ function runEconomicWindow(state,{
       if(action.expectedQuantity!==undefined && result.quantity!==action.expectedQuantity) throw new Error('Quantité candidate différente à l’exécution');
       assertEconomicState(state);
       purchases++;
+      purchaseObserver?.observe({seconds,action,result});
       if(onAction) onAction({seconds,action,result,before,state});
       continue;
     }
@@ -303,7 +311,7 @@ function runEconomicWindow(state,{
     seconds+=wait;
     assertEconomicState(state);
   }
-  return {
+  const run={
     engine,
     reached:completed(),
     stopReason:completed()?'target-reached':seconds>=horizonSeconds?'horizon':steps>=maxSteps?'step-limit':'no-income',
@@ -311,6 +319,8 @@ function runEconomicWindow(state,{
     purchases,
     steps
   };
+  if(purchaseObserver) run.purchaseActivity=purchaseObserver.finish(run);
+  return run;
 }
 
 function simulateBalanceScenario(spec){
@@ -510,6 +520,7 @@ function simulateProgressionTimeline(spec){
   const tracker=createTimelineTracker(spec);
   const policyState={strategy:spec.strategy ?? 'efficiency',controlOrder:[...(spec.controlOrder ?? [])],usedControls:new Set()};
   const cycles=[];
+  const purchaseWindows=[];
   let elapsedSeconds=0;
   observeSpecializationAccess(tracker,state,0,1);
 
@@ -526,6 +537,7 @@ function simulateProgressionTimeline(spec){
         onAction:info=>observeTimelineAction(tracker,info,baseElapsed+info.seconds,cycle,policyState)
       });
       elapsedSeconds+=run.seconds;
+      if(run.purchaseActivity) purchaseWindows.push({cycle,startSeconds:baseElapsed,...run.purchaseActivity});
       if(!run.reached){
         cycles.push({cycle,reached:false,cycleDurationSeconds:null,observedSeconds:run.seconds,elapsedSeconds,purchases:run.purchases,steps:run.steps,reward:null,stopReason:run.stopReason});
         for(let next=cycle+1;next<=spec.prestigeCycles;next++){
@@ -560,6 +572,7 @@ function simulateProgressionTimeline(spec){
       onAction:info=>observeTimelineAction(tracker,info,info.seconds,1,policyState)
     });
     elapsedSeconds=run.seconds;
+    if(run.purchaseActivity) purchaseWindows.push({cycle:1,startSeconds:0,...run.purchaseActivity});
     cycles.push({
       cycle:1,reached:run.reached,cycleDurationSeconds:null,observedSeconds:run.seconds,elapsedSeconds,stopReason:run.stopReason,
       purchases:run.purchases,steps:run.steps,reward:null
@@ -570,6 +583,7 @@ function simulateProgressionTimeline(spec){
 
   return {
     contractVersion:1,
+    ...(__pacingEnabled?{purchaseWindows}:{}),
     name:spec.name,
     description:spec.description,
     clickRate:spec.clickRate,
@@ -740,8 +754,16 @@ console.table(click);
 console.table(production);
 }
 
+const pacing=pacingOutput?{
+  contractVersion:1,
+  runtimeSha256:createHash('sha256').update(html).digest('hex'),
+  nodeVersion:process.version,
+  interpretation:'Policy-specific simulated observations; no balance verdict. Purchase gaps include continuous modeled income, not player inactivity. Unobserved does not mean unreachable.',
+  reports:context.__progressionTimelines.map(timeline=>diagnosePacing(timeline,timeline.purchaseWindows))
+}:null;
 if(jsonOutput){
-  console.log(JSON.stringify({contractVersion:1,timelines:context.__progressionTimelines},null,2));
+  const timelines=context.__progressionTimelines.map(({purchaseWindows,...timeline})=>timeline);
+  console.log(JSON.stringify({contractVersion:1,timelines,...(pacing?{pacing}:{})},null,2));
 }else{
 for(const timeline of context.__progressionTimelines){
   console.log('\nProgression timeline O1: '+timeline.name);
@@ -759,5 +781,20 @@ for(const timeline of context.__progressionTimelines){
 
 console.log('Progression contracts O1: PASS');
 if(!selfTestOnly) console.log('Progression observatory O1: PASS');
+if(pacing){
+  console.log('\nPacing O2 — '+pacing.interpretation);
+  for(const report of pacing.reports){
+    console.log('\nPolicy: '+report.name);
+    console.table(report.purchaseWindows.map(({longestIntervals,...row})=>row));
+    for(const window of report.purchaseWindows){
+      console.log('Longest purchase-free intervals (cycle '+window.cycle+', local seconds):');
+      console.table(window.longestIntervals.map(({fromAction,toAction,...row})=>({...row,from:fromAction?.id ?? 'window-start',to:toAction?.id ?? 'window-end'})));
+    }
+    console.table(report.eraTransitions);
+    console.table(report.specializations);
+    console.table(report.prestigeCycles);
+  }
+  console.log('Pacing diagnostics O2: PASS');
+}
 }
 if(!progressionOnly && !selfTestOnly) console.log('Balance observatory: PASS');

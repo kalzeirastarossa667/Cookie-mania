@@ -189,6 +189,17 @@ After deployment, the project owner manually checked the GitHub Pages version on
 
 This checkpoint closes Foundation 2.9 before post-2.9 work. The sequencing principle in section 16 remains **stability → observability → extensibility → new mechanics → deeper endgame**. Do not treat the candidate feature pool as permission to skip observability/extensibility preparation.
 
+### 10.2 Resumption checkpoint — 2026-10-22
+
+O1 was merged via PR #36 on 2026-10-07 as
+`ef81233cde248161926c942ab7aafd9f2432b8ad`; post-merge Foundation, Browser
+and Pages checks succeeded. The runtime remains Foundation 2.9 / save v7.
+The next implementation is O2 pacing diagnostics, specified in Master §55.
+The accepted sequence is O1 → O2 → O3 reference baseline → E1 extensibility
+audit → E2 standalone-build proof. O2 observes purchase gaps, milestone delays
+and prestige-cycle acceleration without economic changes. Revalidate the actual
+HEAD/PR state before resuming; this paragraph does not assert an O2 merge.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:

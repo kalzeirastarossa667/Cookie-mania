@@ -38,4 +38,5 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm test
-      - run: npm run analyze:progression
+      # O2 includes the same O1 policies and deterministic repeats, once each.
+      - run: npm run analyze:pacing
