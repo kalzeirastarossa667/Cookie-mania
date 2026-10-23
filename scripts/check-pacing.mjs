@@ -67,7 +67,7 @@ const timeline = {
   contractVersion: 1, name: 'fixture', mode: 'prestige-cycles',
   milestones: [milestone('era:workshop', 2), milestone('era:orbit', 20), milestone('era:cosmos', null),
     milestone('specialization:expert_cursor', 3), milestone('research:expert_cursor', 9),
-    milestone('specialization:expert_oven', 12), milestone('research:expert_oven', 40, 2),
+    milestone('specialization:expert_oven', 12), milestone('research:expert_oven', 140, 2),
     milestone('specialization:expert_grandma', 13), milestone('research:expert_grandma', null),
     milestone('specialization:first-access', 3)],
   cycles: [cycle(1, 100), cycle(2, 80), cycle(3, null, 'horizon'), cycle(4, null, 'not-started')]
@@ -114,8 +114,8 @@ assert.ok(Math.abs(result.prestigeCycles[1].reductionPercent - 20) < 1e-12);
 assert.equal(result.prestigeCycles[2].ratioToPrevious, null);
 assert.equal(result.prestigeCycles[3].stopReason, 'not-started');
 assert.deepEqual(result.unobservedMilestones, ['era:cosmos', 'research:expert_grandma']);
-assert.equal(diagnoseFixture({ ...timeline, mode: 'continuous', cycles: [{ ...cycle(1, null, 'horizon'), reached: false }] }).prestigeCycles.length, 0);
-assert.equal(diagnoseFixture({ ...timeline, cycles: [cycle(1, 0), cycle(2, 5)] }).prestigeCycles[1].ratioToPrevious, null);
+assert.equal(diagnoseFixture({ ...timeline, milestones: [], mode: 'continuous', cycles: [{ ...cycle(1, null, 'horizon'), reached: false }] }).prestigeCycles.length, 0);
+assert.equal(diagnoseFixture({ ...timeline, milestones: [], cycles: [cycle(1, 0), cycle(2, 5)] }).prestigeCycles[1].ratioToPrevious, null);
 assert.throws(() => diagnoseFixture({ ...timeline, contractVersion: 2 }), /contract/);
 assert.throws(() => diagnoseFixture({ ...timeline, cycles: [cycle(1, Infinity)] }), /duration/);
 assert.throws(() => diagnoseFixture({ ...timeline, milestones: [milestone('era:workshop', NaN)] }), /time/);
@@ -124,7 +124,7 @@ assert.equal(reversed.eraTransitions[1].secondsFromPreviousEra, null);
 assert.equal(reversed.eraTransitions[1].status, 'reverse-order');
 const slowdown = diagnoseFixture({ ...timeline, cycles: [cycle(1, 100), cycle(2, 150)] });
 assert.equal(slowdown.prestigeCycles[1].reductionPercent, -50);
-assert.equal(diagnoseFixture({ ...timeline, cycles: [cycle(1, null, 'horizon'), cycle(2, 150)] }).prestigeCycles[1].ratioToPrevious, null);
+assert.equal(diagnoseFixture({ ...timeline, milestones: [], cycles: [cycle(1, null, 'horizon'), cycle(2, 150)] }).prestigeCycles[1].ratioToPrevious, null);
 console.log('Pacing historical assertions O2: PASS (audit tests follow)');
 
 test('purchase labels must agree with runtime quantities, rejection is atomic', () => {
@@ -179,6 +179,15 @@ test('unidentified cycles cannot produce measured milestone delays', () => {
   }
   assert.throws(() => diagnoseFixture({ ...timeline, milestones: [{ ...milestone('era:workshop', 1), reached: 'yes' }] }), /reached/);
   assert.throws(() => diagnoseFixture({ ...timeline, milestones: [{ ...milestone('era:workshop', null), cycle: 1 }] }), /cycle/);
+});
+
+test('reached milestones must belong to a started cycle and its observed time range', () => {
+  for (const [seconds, number] of [[2, 99], [180, 4], [99, 2], [181, 2], [101, 1]]) {
+    assert.throws(() => diagnoseFixture({ ...timeline, milestones: [milestone('era:workshop', seconds, number)] }), /milestone.*cycle/);
+  }
+  for (const [seconds, number] of [[0, 1], [100, 1], [100, 2], [180, 2]]) {
+    assert.equal(diagnoseFixture({ ...timeline, milestones: [milestone('era:workshop', seconds, number)] }).eraTransitions[0].atSeconds, seconds);
+  }
 });
 
 test('prestige comparison requires a complete consecutively numbered O1 cycle list', () => {

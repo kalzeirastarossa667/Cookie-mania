@@ -171,3 +171,62 @@ réussis ; cinq politiques répétées à l'identique. Comparaison des sorties O
 de la projection O2 historique **byte-identique**, même ordre et format JSON.
 Runtime, équilibrage, sauvegardes, interface et lockfile restent inchangés.
 Une CI verte ne remplace pas l'audit indépendant ni une validation Android réelle.
+
+## Validation approfondie après le HEAD dddf24a — 23 octobre 2026 UTC
+
+Base relue : `main` à `ef81233cde248161926c942ab7aafd9f2432b8ad`, PR #37 à
+`dddf24ade0c63b6abcc4f1e15aef670c4789db34`. Revue de tout le diff O2 (14 fichiers),
+des instructions, des contrats O1/O2 et des API économiques utilisées.
+
+Trois défauts de frontière ont été reproduits avant correction :
+
+| Défaut | Reproduction et cause | Correction limitée |
+| --- | --- | --- |
+| Exécution valide rejetée à revenu nul | Le vrai `runEconomicWindow` avec `clickRate:0,maxSteps:1` termine par `step-limit`, car O1 donne priorité à la limite. O2 ne comptait l'étape sans revenu que pour `no-income` et levait `wait coverage`. | Reconnaître cette unique étape terminale lorsque le revenu observé est nul et que les compteurs correspondent. Conserver exactement la priorité et les sorties O1. Tester aussi `maxSteps:0` et le rejet d'une attente omise avec revenu positif. |
+| Chronologie économique incomplète acceptée | Un achat à une seconde jamais observée, une fin à 5 s après la dernière observation à 4 s, ou un solde modifié avant `finish` étaient acceptés malgré des compteurs concordants. La fin pouvait ainsi inventer un endpoint et dater incorrectement un maximum. | Les achats et la fin doivent rester à la dernière seconde observée ; les attentes font avancer le temps. Les sept valeurs économiques finales doivent égaler le dernier état observé avant tout ajout aux mesures. Un rejet ne clôt pas l'observateur. |
+| Jalons détachés des cycles acceptés | Des jalons au cycle 99 inexistant, dans un cycle non commencé ou hors de l'intervalle observé pouvaient alimenter des délais « mesurés ». Seule la positivité du numéro était vérifiée. | Vérifier l'existence du cycle commencé et l'appartenance de l'horodatage global à son intervalle inclusif. Préserver les événements simultanés à une frontière et les statuts `different-cycles`/`reverse-order` valides. |
+
+Cinq nouveaux tests de régression échouaient sur la version auditée puis passent
+après correction. Le cas `maxSteps:1` a également été reproduit en injectant
+l'appel dans une copie temporaire du véritable analyseur. Un contrôle d'intégration
+permanent couvre maintenant les limites zéro et une étape lorsque O2 est actif.
+Les anciens fixtures synthétiques sont rendus cohérents : attente explicite entre
+achats horodatés, fin à la dernière seconde observée, jalon du cycle 2 à 140 s
+(ce cycle commence à 100 s), absence de jalons hors fenêtre dans les seuls tests
+de ratios de durée. Les attentes et résultats testés initialement sont conservés.
+
+Vérifications indépendantes ajoutées, sans nouvelle métrique :
+
+- **96 achats réels** : 16 générateurs × deux possessions initiales (0 et 7)
+  × trois modes. Oracle de coût par somme rationnelle exacte des prix individuels
+  `base × (23/20)^n` en BigInt, distinct de la formule géométrique/logarithmique
+  du runtime. Quantité Max, gains CPS/clic/revenu, variation relative et rentabilité
+  sont recoupés ; conversion Number uniquement dans l'oracle de plage finie,
+  tolérance relative `3e-12` pour l'arithmétique runtime.
+- Recherches calculées à la main : 10 curseurs et 10 grand-mères, spécialisations,
+  déclenchement d'Atelier complice, multiplicateur CPS global, clic ×2 et recherche
+  CPS seule. Totaux après synergie : CPS 24,2 et clic 25,3 ; la transaction porte
+  bien tous les effets immédiats. Aucun écart de formule observé.
+- Ratios non plafonnés `7,5 × 10^-1002` et `7,5 × 10^998`, plafond de possession,
+  observations sur état récursivement gelé et modification d'une paire exportée
+  sans altération du runtime. Les cas existants conservent refus, gains nuls,
+  différences négatives, dénominateurs nuls, maxima avant dépense, vrais resets,
+  continuité des cycles et couverture manquante.
+
+Les vérifications locales Foundation/propriétés/interface/DOM/O1 et les **8 groupes
+O2 historiques + 16 économiques** passent après `npm ci`. Les cinq politiques se
+répètent à l'identique. JSON O1 **byte-identique à main** (182 074 octets) ; JSON O2
+complet, nouveaux diagnostics inclus, **byte-identique à dddf24a** (2 086 656 octets),
+sous Node 24.19.0. La projection O1 instrumentée est aussi identique à O1 seul.
+Le lancement Browser local est bloqué par l'absence du binaire Chromium ; sa
+tentative d'installation échoue au téléchargement. Les résultats Browser/CI du
+nouveau HEAD sont consignés dans la PR #37 après publication, distinctement de
+ce blocage local. Aucune nouvelle référence O3 n'est ajoutée au dépôt.
+
+Limites inchangées : précision HugeNumber d'environ 15 chiffres, observation de
+transitions et snapshots bornés, revenu de clic hypothétique, signaux de domination
+locaux sans verdict d'équilibrage. Les validateurs recoupent l'instrumentation ;
+ils ne constituent pas un schéma de désérialisation de JSON arbitraire. Aucune
+validation physique Android n'est revendiquée. Runtime, économie, sauvegardes,
+interface et contrats O1 restent inchangés. Attendre l'audit indépendant ; aucune
+fusion ni ouverture d'O3/E1/E2 n'est autorisée par cette validation.

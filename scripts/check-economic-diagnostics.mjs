@@ -133,8 +133,11 @@ test('numeric endpoints retain pre-spend peaks, earliest ties and extreme HugeNu
 
 test('retention is bounded by catalogue and eras, with complete aggregate transaction coverage', () => {
   const { state, engine } = fresh('1e30'), observed = diagnostics.createWindow(state, 2);
-  for (let i = 0; i < 200; i++) buy(observed, state, engine, i, 'cursor');
-  const report = observed.finish(run(200, 200));
+  for (let i = 0; i < 200; i++) {
+    if (i > 0) observed.observeWait(state, i);
+    buy(observed, state, engine, i, 'cursor');
+  }
+  const report = observed.finish(run(199, 200, 199));
   assert.equal(report.purchaseContribution.length, 1);
   const group = report.purchaseContribution[0];
   assert.equal(group.transactions, 200); assert.equal(group.units, 200);
@@ -200,4 +203,115 @@ test('invalid timestamps, refused or mismatched purchase observations do not ent
   observed.observePurchase(info);
   const report = observed.finish(run(0, 1));
   assert.equal(report.transactions, 1); assert.equal(report.purchaseContribution[0].units, 1);
+});
+
+test('economic time advances only through waits and finish cannot silently observe missing state', () => {
+  const { state, engine } = fresh('1000'), observed = diagnostics.createWindow(state, 2);
+  const before = observed.capture(state);
+  engine.buyGenerator('cursor');
+  const info = { seconds: 1, action: { kind: 'generator', id: 'cursor', mode: 'single' },
+    result: { ok: true, quantity: 1, cost: H.from(15) }, before, state };
+  assert.throws(() => observed.observePurchase(info), /unobserved time/);
+  info.seconds = 0; observed.observePurchase(info);
+  assert.throws(() => observed.finish(run(1, 1)), /unobserved time/);
+  state.cookies = E.add(state.cookies, 10);
+  assert.throws(() => observed.finish(run(0, 1)), /unobserved end state/);
+  observed.observeWait(state, 1);
+  assert.equal(observed.finish(run(1, 1, 1)).waits, 1);
+});
+
+test('zero income at the last permitted step is a valid O1 step-limit boundary', () => {
+  const { state } = fresh('0');
+  const report = diagnostics.createWindow(state, 0).finish({ seconds: 0, purchases: 0, steps: 1, stopReason: 'step-limit' });
+  assert.equal(report.waits, 0); assert.equal(report.transactions, 0);
+  assert.equal(diagnostics.createWindow(state, 0).finish(run(0, 0, 0, 'step-limit')).waits, 0);
+  assert.throws(() => diagnostics.createWindow(state, 2).finish({ seconds: 0, purchases: 0, steps: 1, stopReason: 'step-limit' }), /wait coverage/);
+});
+
+test('finish rejects an unobserved tail even when step counters match', () => {
+  const { state } = fresh('0'), observed = diagnostics.createWindow(state, 2);
+  observed.observeWait(state, 4);
+  assert.throws(() => observed.finish(run(5, 0, 1)), /unobserved time/);
+});
+
+test('finish rejects a changed economic endpoint without its observation', () => {
+  const { state } = fresh('0'), observed = diagnostics.createWindow(state, 2);
+  state.cookies = H.from(10);
+  assert.throws(() => observed.finish(run(0, 0)), /unobserved end state/);
+});
+
+// Independent finite-range oracle: exact rational sum of individual 23/20 prices,
+// not Economy's geometric-series/pow implementation. Number is used only here.
+function rationalCost(base, owned, quantity) {
+  let numerator = 0n;
+  for (let i = 0; i < quantity; i++) numerator += BigInt(base) * 23n ** BigInt(owned + i) * 20n ** BigInt(quantity - 1 - i);
+  return Number(numerator) / Number(20n ** BigInt(owned + quantity - 1));
+}
+function near(pair, expected) {
+  const actual = pair.m * 10 ** pair.e;
+  assert.ok(Math.abs(actual - expected) <= Math.max(Math.abs(expected) * 3e-12, 1e-12), `${actual} != ${expected}`);
+}
+
+test('all generator purchase modes agree with an independent rational cost and production oracle', () => {
+  for (const [id, definition] of Object.entries(GENERATORS)) for (const owned of [0, 7]) for (const mode of ['single', 'x10', 'max']) {
+    const funds = rationalCost(definition.baseCost, owned, 1) * 100;
+    const { state, engine } = fresh(String(funds));
+    state.generators[id] = owned; E.refreshDerived(state);
+    const observed = diagnostics.createWindow(state, 2);
+    let quantity = mode === 'x10' ? 10 : 1;
+    if (mode === 'max') while (rationalCost(definition.baseCost, owned, quantity + 1) <= funds) quantity++;
+    buy(observed, state, engine, 0, id, mode);
+    const sample = observed.finish(run(0, 1)).purchaseContribution[0].first;
+    const expectedCost = rationalCost(definition.baseCost, owned, quantity), gain = Number(definition.baseCps) * quantity;
+    assert.equal(sample.quantity, quantity);
+    near(sample.cost, expectedCost);
+    near(sample.changes.cps.magnitude, gain); near(sample.changes.clickReward.magnitude, gain);
+    near(sample.changes.modeledIncome.magnitude, 3 * gain);
+    near(sample.paybackSeconds, expectedCost / (3 * gain));
+    near(sample.relativeIncomeChange.magnitude, 3 * gain / (2 + 3 * Number(definition.baseCps) * owned));
+  }
+});
+
+test('research and synergy gains match hand-derived CPS and click totals', () => {
+  const { state, engine } = fresh('100000');
+  engine.buyGenerators('cursor', 10); engine.buyGenerators('grandma', 10);
+  const observed = diagnostics.createWindow(state, 2);
+  const expected = [
+    ['expert_cursor', 1200, 12, 13, 1, 1],
+    ['expert_grandma', 8000, 24.2, 25.3, 12.2, 12.3], // (2 + 20) × 1.1; (1 + 2 + 20) × 1.1
+    ['warm_ovens', 1000, 36.3, 25.3, 12.1, 0],
+    ['reinforced_click', 50, 36.3, 50.6, 0, 25.3],
+    ['efficient_cursor', 100, 39.6, 50.6, 3.3, 0]
+  ];
+  for (const [id] of expected) buy(observed, state, engine, 0, id, 'research');
+  const groups = observed.finish(run(0, expected.length)).purchaseContribution;
+  expected.forEach(([, cost, cps, click, cpsGain, clickGain], i) => {
+    const sample = groups[i].first;
+    near(sample.cost, cost); near(sample.after.cps, cps); near(sample.after.clickReward, click);
+    near(sample.changes.cps.magnitude, cpsGain); near(sample.changes.clickReward.magnitude, clickGain);
+    near(sample.paybackSeconds, cost / (cpsGain + 2 * clickGain));
+  });
+});
+
+test('unclamped extreme ratios, ownership ceiling and frozen-state observations', () => {
+  for (const [exponent, expectedExponent] of [[1000, -1002], [-1000, 998]]) {
+    const { state } = fresh('0'); state.clickPower = new H(2, exponent); E.refreshDerived(state);
+    const row = diagnostics.relevance(state, 2).find(row => row.id === 'cursor');
+    assert.deepEqual(row.nextUnit.relativeIncomeGain, { m: 7.5, e: expectedExponent });
+  }
+  const { state, engine } = fresh('1000'), observed = diagnostics.createWindow(state, 2), before = observed.capture(state);
+  engine.buyGenerator('cursor');
+  function freeze(value) { if (value && typeof value === 'object') { Object.values(value).forEach(freeze); Object.freeze(value); } }
+  freeze(state);
+  const original = JSON.stringify(state);
+  observed.observePurchase({ seconds: 0, action: { kind: 'generator', id: 'cursor', mode: 'single' },
+    result: { ok: true, quantity: 1, cost: H.from(15) }, before, state });
+  observed.observeWait(state, 1);
+  const report = observed.finish(run(1, 1, 1));
+  report.numericGrowth.samples.at(-1).values.cookies.m = 9;
+  assert.equal(JSON.stringify(state), original, 'all collector paths and exported pairs must leave runtime state intact');
+  const ceiling = fresh('0').state; ceiling.generators.cursor = Number.MAX_SAFE_INTEGER; E.refreshDerived(ceiling);
+  const row = diagnostics.relevance(ceiling, 0)[0];
+  assert.equal(row.nextUnit.status, 'quantity-limit'); assert.equal(row.nextUnit.cost, null);
+  assert.equal(row.nextUnit.incomePerCost, null); assert.deepEqual(row.dominatedBy, []);
 });

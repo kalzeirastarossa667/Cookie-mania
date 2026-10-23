@@ -139,6 +139,11 @@ export function diagnosePacing(timeline, purchaseWindows) {
     else if (item.atSeconds !== null) throw new Error('O2 unobserved milestone time');
     if (item.reached ? (!Number.isSafeInteger(item.cycle) || item.cycle < 1) : item.cycle !== null)
       throw new Error('O2 invalid milestone cycle');
+    if (item.reached) {
+      const cycle = timeline.cycles[item.cycle - 1];
+      if (!cycle || cycle.stopReason === 'not-started' || item.atSeconds < cycle.elapsedSeconds - cycle.observedSeconds ||
+          item.atSeconds > cycle.elapsedSeconds) throw new Error('O2 milestone outside observed cycle');
+    }
     byKey.set(item.key, item);
   }
   const eras = timeline.milestones.filter(item => item.key.startsWith('era:'));

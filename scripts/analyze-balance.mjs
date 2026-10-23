@@ -668,6 +668,14 @@ function milestone(timeline,key){
 }
 
 runProgressionChecks();
+if(__pacingEnabled){
+  // O1 stop-reason precedence must remain valid with O2 enabled, including no work.
+  for(const maxSteps of [0,1]){
+    const boundary=runEconomicWindow(GameState.create(),{clickRate:0,maxSteps});
+    if(boundary.stopReason!=='step-limit' || boundary.steps!==maxSteps || boundary.economicActivity.waits!==0)
+      throw new Error('O2 zero-income step-limit integration');
+  }
+}
 
 globalThis.__prestigeCatalogue=Object.fromEntries(Object.entries(PRESTIGE_UPGRADES).map(([id,d])=>[id,{requires:[...(d.requires ?? [])]}]));
 if(!__progressionOnly && !__selfTestOnly){

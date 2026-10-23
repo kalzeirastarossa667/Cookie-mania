@@ -222,6 +222,14 @@ Keep all five O1 policies and legacy O2 fields; no runtime/save/UI/balance chang
 Publish with passing tests and stop for independent audit. Do not merge or start
 O3/E1/E2. Implementation completion is not independent acceptance.
 
+Final validation requested after independent audit of `dddf24a`: review the whole
+PR and test beyond existing assertions. Three diagnostics boundary defects were
+reproduced and minimally repaired (zero-income step-limit, unobserved economic
+time/end state, milestones outside their observed cycle). Master §55.8 and the
+economic report record the independent arithmetic/read-only checks and regression
+evidence. Publish only justified fixes on PR #37's current branch and stop for
+another independent audit; merging still requires the owner's explicit permission.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:

@@ -85,6 +85,7 @@ export function createEconomicDiagnostics({ HugeNumber, Economy: E, GENERATORS, 
       },
       observePurchase({ seconds, action, result, before, state: current }) {
         ensureOpen(); time(seconds, lastSeconds);
+        check(seconds === lastSeconds, 'unobserved time before purchase');
         check(result.ok === true && Number.isSafeInteger(result.quantity) && result.quantity > 0, 'unsuccessful purchase');
         const catalogue = action.kind === 'generator' ? GENERATORS : action.kind === 'upgrade' ? UPGRADES : {};
         check(Object.hasOwn(catalogue, action.id) &&
@@ -124,8 +125,13 @@ export function createEconomicDiagnostics({ HugeNumber, Economy: E, GENERATORS, 
         ensureOpen(); time(run.seconds, lastSeconds);
         check(run.purchases === transactions, 'purchase count mismatch');
         check(['target-reached', 'no-income', 'horizon', 'step-limit'].includes(run.stopReason), 'invalid stop reason');
-        check(Number.isSafeInteger(run.steps) && run.steps === transactions + waits + (run.stopReason === 'no-income' ? 1 : 0), 'wait coverage');
+        // O1 gives step-limit precedence when the final permitted step finds zero income.
+        const noIncomeStep = run.stopReason === 'no-income' || (run.stopReason === 'step-limit' &&
+          lastValues.modeledIncome.m === 0 && run.steps === transactions + waits + 1);
+        check(Number.isSafeInteger(run.steps) && run.steps === transactions + waits + Number(noIncomeStep), 'wait coverage');
+        check(run.seconds === lastSeconds, 'unobserved time at window end');
         const end = capture(state, clickRate);
+        check(fields.every(key => compare(end[key], lastValues[key]) === 0), 'unobserved end state');
         track(end, run.seconds, 'window-end');
         checkpoint(state, end, run.seconds, 'window-end');
         closed = true;

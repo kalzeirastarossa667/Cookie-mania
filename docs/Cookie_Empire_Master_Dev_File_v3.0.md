@@ -3133,3 +3133,24 @@ No protected runtime/lockfile/O1 contract file changes. See the
 metrics and precision/sampling limitations, and PR #37 for exact HEAD/CI evidence.
 All three descriptive additions are implemented; independent acceptance remains
 pending. Stop here after publication/CI; do not merge or begin O3/E1/E2.
+
+## 55.8 Final O2 validation after dddf24a — 2026-10-23 UTC
+
+Revalidate the full PR against main `ef81233cde248161926c942ab7aafd9f2432b8ad`.
+Five failing regression cases exposed three boundary defects: O2 rejected O1's
+valid zero-income last-step `step-limit`; purchase/finish could advance economic
+time without an observed wait or accept a changed endpoint; reached milestones
+could reference an absent/unstarted cycle or a time outside its observed range.
+Minimal diagnostics-only guards now cover these cases, preserving O1 stop-reason
+precedence, all existing output shapes and valid five-policy observations.
+
+An independent rational-price oracle checks 96 real purchases across all 16
+generators, two initial quantities and x1/x10/Max. Hand-calculated research and
+synergy totals, extreme unclamped ratios, quantity limits and recursively frozen
+states extend the read-only/math evidence. Foundation, properties, interface,
+169 DOM, O1 and 8 pacing + 16 economic test groups pass locally. Full compatibility,
+deterministic runs and exact candidate CI evidence are recorded in PR #37; see
+the economic report for reproductions, fixes and retained precision/sampling
+limits. No runtime, balancing, save, UI, dependency or O1 contract change.
+Publish only these justified corrections on the existing branch, then stop for
+independent audit. No merge and no O3/E1/E2 without subsequent authorization.
