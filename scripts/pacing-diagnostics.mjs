@@ -5,7 +5,7 @@ function time(value, minimum = 0) {
 }
 
 export function createPurchaseObserver() {
-  let closed = false, previousSeconds = 0, previousAction = null;
+  let closed = false, previousSeconds = 0, lastObservationSeconds = 0, previousAction = null;
   let transactions = 0, generatorUnits = 0, researchPurchases = 0, sameSecondPurchases = 0;
   let positiveIntervalCount = 0, totalObservedSeconds = 0;
   const longestIntervals = [];
@@ -24,8 +24,12 @@ export function createPurchaseObserver() {
   return {
     observe({ seconds, action, result }) {
       ensureOpen();
-      if (result.ok === false && result.quantity === 0) return;
-      time(seconds, previousSeconds);
+      time(seconds, lastObservationSeconds);
+      // Refusals advance observation time, but never split a successful-purchase gap.
+      if (result.ok === false && result.quantity === 0) {
+        lastObservationSeconds = seconds;
+        return;
+      }
       if (result.ok !== true || !Number.isSafeInteger(result.quantity) || result.quantity <= 0)
         throw new Error('O2 invalid purchase quantity');
       if (!['generator', 'upgrade'].includes(action.kind) || typeof action.id !== 'string' || !action.id ||
@@ -37,6 +41,7 @@ export function createPurchaseObserver() {
       if (action.kind === 'generator' && !Number.isSafeInteger(generatorUnits + result.quantity))
         throw new Error('O2 unsafe aggregate quantity');
       const description = { kind: action.kind, id: action.id, mode: action.mode, quantity: result.quantity };
+      lastObservationSeconds = seconds;
       interval(seconds, description, 'purchase');
       if (transactions > 0 && seconds === previousSeconds) sameSecondPurchases++;
       transactions++;
@@ -47,7 +52,7 @@ export function createPurchaseObserver() {
     },
     finish(run) {
       ensureOpen();
-      time(run.seconds, previousSeconds);
+      time(run.seconds, lastObservationSeconds);
       if (run.purchases !== transactions) throw new Error('O2 observer/runtime purchase count mismatch');
       if (!['target-reached', 'no-income', 'horizon', 'step-limit'].includes(run.stopReason))
         throw new Error('O2 invalid stop reason');

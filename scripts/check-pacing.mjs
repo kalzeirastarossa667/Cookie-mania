@@ -144,6 +144,32 @@ test('integer-second observations reject fractional and unsafe times before muta
   }
 });
 
+test('refused purchases validate observation time without splitting purchase gaps', () => {
+  const observed = createPurchaseObserver();
+  observed.observe(action(2));
+  for (const seconds of [NaN, Infinity, -Infinity, -1, 1, 2.5, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(() => observed.observe(action(seconds, 0)), /time/);
+  }
+  observed.observe(action(2, 0)); // Same-second refusal is valid.
+  observed.observe(action(5, 0));
+  assert.throws(() => observed.observe(action(4, 0)), /time/);
+  assert.throws(() => observed.observe(action(4)), /time/);
+  assert.throws(() => observed.finish(run(4, 1)), /time/);
+  observed.observe(action(5));
+  observed.observe(action(7, 0));
+  const control = createPurchaseObserver();
+  control.observe(action(2));
+  control.observe(action(5));
+  assert.deepEqual(observed.finish(run(8, 2)), control.finish(run(8, 2)));
+
+  const refusalsOnly = createPurchaseObserver();
+  refusalsOnly.observe(action(0, 0));
+  refusalsOnly.observe(action(3, 0));
+  assert.throws(() => refusalsOnly.finish(run(2, 0, 'horizon')), /time/);
+  assert.deepEqual(refusalsOnly.finish(run(3, 0, 'horizon')),
+    createPurchaseObserver().finish(run(3, 0, 'horizon')));
+});
+
 test('unidentified cycles cannot produce measured milestone delays', () => {
   for (const invalid of [null, undefined, 0, 1.5, NaN]) {
     const source = { ...timeline, milestones: [milestone('era:workshop', 1, invalid), milestone('era:orbit', 10, invalid)] };

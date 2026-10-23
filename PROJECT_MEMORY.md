@@ -205,6 +205,14 @@ The immediate task is auditing `scripts/pacing-diagnostics.mjs` and
 `scripts/check-pacing.mjs`, including their simulator integration. Audit fixes
 belong to the same O2 PR; a green CI run does not override the hold on O3.
 
+Follow-up on 2026-10-23: fix validation of refused observations, publish on the
+same branch, rerun Foundation/O1/O2/Browser and stop for independent audit.
+Master §55.6 and the O2 report reconcile the original broader O2 goals with the
+implemented subset. O2 remains partial: minimum marginal-purchase contribution,
+generator-relevance indicators and numeric-growth observations are still required
+before declaring original O2 complete. They are not implemented in this follow-up
+or silently moved to O3. Advanced universal balance verdicts are explicitly deferred.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:

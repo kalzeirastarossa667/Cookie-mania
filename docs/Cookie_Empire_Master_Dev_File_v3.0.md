@@ -2946,7 +2946,8 @@ No arbitrary threshold labels a progression wall or runaway. No claim of optimal
 play, generator obsolescence, real player retention or final balance is inferred.
 Numerical canonical/finite guards from O1 remain; numeric stress coverage stays
 in the existing property suite. Full numeric-growth and optimal-strategy analysis
-are not promised by O2.
+are outside this restricted implementation. This does not establish completion
+of the original broader O2 request; the coverage decision in §55.6 takes precedence.
 
 ## 55.3 Verification gate
 
@@ -3011,3 +3012,46 @@ failed before the repair; all six pass afterward. Full Foundation/property/DOM/
 O1 suites and the five-policy deterministic run are rerun. Audit observations,
 mutation checks and limitations are recorded in the O2 report and PR #37.
 The next action remains review of O2; O3 is explicitly on hold.
+
+## 55.6 Follow-up audit: refused observations and original O2 coverage — 2026-10-23
+
+PR #37 stays open on its existing branch, with no merge or O3. Stop after
+publication and CI for another independent audit. No runtime, economic constant,
+save or O1 contract change is authorized by this follow-up.
+
+The observer's early return for `ok:false, quantity:0` bypassed timestamp
+validation. Every accepted observation now has a safe nonnegative integer time,
+monotone across both successful and refused attempts. Finish cannot precede
+the latest valid observation. A separate last-observation clock advances on a
+valid refusal without counting a transaction or splitting a purchase interval.
+Invalid observations leave state unchanged. The actual simulator currently
+passes successful purchases only; this fixes the collector boundary contract.
+A targeted red/green regression covers invalid/refused timestamps, backward
+success/finish after a refusal, equal times and unchanged purchase statistics.
+
+Scope reconciliation: the original O2 request (7 October, recovered resumption
+context) includes marginal purchase contribution, potential generator obsolescence,
+progression walls and numeric growth, in addition to waits and prestige. The
+general intent also remains in PROJECT_MEMORY §16. The later §55 specification
+defines the implemented subset, not permission to silently drop the other goals.
+
+Decision: O2 is still partial. Waits, milestone delays, prestige ratios and
+descriptive wall signals are covered; they do not certify a wall or optimal play.
+Minimum missing observations remain required before closing original O2:
+real-purchase cost and marginal CPS/click/modeled-income gains; per-generator
+contribution and relative marginal relevance at deterministic era/cycle points;
+bounded HugeNumber growth snapshots and maxima with times/cycles/reset context.
+Existing policy scoring is not a published purchase-contribution measurement,
+and canonical/finite property checks are not a numeric-growth diagnostic.
+
+Do not implement these additional metrics in this follow-up. Revisit their
+specification in a complementary O2 pass only after independent audit. Defer
+universal obsolescence/wall verdicts, threshold calibration, optimal strategies,
+player-retention validation and exhaustive long-term numeric stress to a separately
+scoped later economic-analysis phase. They require evidence beyond the current
+five policies and are not prerequisites for descriptive O2 indicators. O3 is not
+the destination for silently postponed O2 requirements and has not started.
+
+The detailed coverage matrix, minimum deliverables, rationale and limitations
+are in [the O2 report](Cookie_Empire_O2_Pacing_Diagnostics.md). Green CI validates
+the implemented code, not completion of the original O2 scope.

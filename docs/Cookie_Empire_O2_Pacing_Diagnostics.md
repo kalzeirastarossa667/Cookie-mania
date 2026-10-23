@@ -4,6 +4,10 @@ Contrat **v1**, 22 octobre 2026. Base : `ef81233cde248161926c942ab7aafd9f2432b8a
 O1 fusionné via PR #36. Le jeu reste Foundation 2.9, sauvegarde v7.
 O2 ne modifie ni `index.html`, ni les règles économiques, ni les cinq politiques O1.
 
+**État après revue de couverture du 23 octobre 2026 : O2 partiel.** Le contrat
+v1 décrit les diagnostics livrés, pas la totalité des objectifs initiaux O2.
+Les compléments indispensables et les reports sont distingués ci-dessous.
+
 ## Exécuter et lire
 
 ```sh
@@ -45,6 +49,74 @@ Les fenêtres non commencées n'ont pas de relevé d'achats ; elles restent visi
 dans les cycles O1 et les diagnostics prestige. Chaque fenêtre commencée vérifie
 que le nombre de transactions égale `run.purchases` et que la somme de ses
 intervalles égale la durée effectivement simulée.
+
+### Contrat des observations refusées
+
+Tout appel à `observe`, réussi ou refusé, porte un temps entier sûr, positif ou
+nul, au moins égal à celui du dernier appel valide. `finish` ne peut pas précéder
+cette dernière observation. Un refus valide (`ok:false`, `quantity:0`) avance
+seulement cette borne chronologique : il ne compte pas comme achat, n'ajoute pas
+d'unités et ne découpe pas l'intervalle entre achats réussis. Son action n'est pas
+enregistrée comme achat. Une entrée invalide ne modifie aucun état du collecteur.
+
+Avant cette correction, le retour anticipé ignorait notamment NaN, Infinity,
+les temps négatifs, fractionnaires, non sûrs ou antérieurs au dernier achat.
+Le vrai analyseur n'envoie actuellement que des achats réussis : le défaut est
+celui du contrat du collecteur, sans erreur reproduite dans les cinq politiques.
+Une borne de dernière observation distincte du dernier achat évite aussi
+d'accepter un achat ou une fin de fenêtre antérieurs à un refus valide.
+
+Le test ciblé échoue sur `f06b1b8` puis passe après correction. Il couvre les
+temps invalides, les retours temporels après refus, l'égalité des temps, une
+fenêtre composée seulement de refus et l'égalité complète du rapport avec une
+trace sans refus. Les six groupes d'audit précédents restent en place.
+
+Après correction sous Node 24.19.0 : `npm ci`, `npm test` (224/224 Foundation,
+propriétés, interface, 169 DOM, contrats O1 et 7 groupes O2) et les cinq politiques
+répétées passent. Le JSON complet est byte-identique au candidat `f06b1b8`.
+Les nouveaux résultats CI Foundation/Browser et leur HEAD exact sont consignés
+dans la PR #37 ; aucune validation sur téléphone physique n'est revendiquée.
+
+## Couverture du cahier des charges initial et décision de périmètre
+
+La consigne initiale O2 du 7 octobre, retrouvée dans le contexte de reprise,
+mentionne attentes, murs, accélération, contribution marginale, obsolescence
+potentielle, prestige et croissance numérique. La mémoire du dépôt §16 conserve
+ces intentions générales. Master §55.1–55.3, rédigé le 22 octobre, spécifie un
+sous-ensemble mesurable : il ne prouve pas une autorisation antérieure d'abandonner
+les autres objectifs. Cette revue corrige cette ambiguïté sans réécrire O1.
+
+| Objectif initial | Preuve dans le code / couverture actuelle | Décision pour terminer O2 |
+| --- | --- | --- |
+| Attentes et temps morts | `createPurchaseObserver` : toutes transactions réussies, maximum et cinq plus longs intervalles, fin censurée et compteurs ; `validatePurchaseWindows` recoupe O1 | Indispensable, couvert après correction des refus. Il s'agit d'attentes sans achat, pas d'inactivité humaine. |
+| Transitions et spécialisations | `diagnosePacing` : écarts entre ères et accès → achat, statuts pour absences/cycles distincts | Indispensable, couvert dans le modèle O1. |
+| Prestige et accélération | `prestigeCycles` : durées consécutives, ratios et réductions ; O1 conserve seuils et récompenses | Indispensable, couvert pour les cycles et politiques observés ; aucune conclusion générale sur la puissance du prestige. |
+| Murs de progression | Intervalles, délais, jalons non atteints, horizons et raisons d'arrêt constituent des signaux descriptifs | Minimum descriptif couvert. Les 889 135 s late-run sont une attente sous stratégie restrictive, pas un mur démontré. Classification automatique et seuils universels reportés. |
+| Contribution marginale des achats | `evaluateAction` calcule un gain de revenu et coût/gain pour choisir une action sur une copie d'état ; O2 ne les mesure ni ne les publie pour les transactions réelles. Le nombre d'unités n'est pas une contribution économique | **Manquant, indispensable avant de déclarer O2 initial terminé** : coût réel, delta CPS et delta clic/revenu modélisé avant/après achat réussi, avec mode, quantité, cycle et politique ; résumé borné par type d'achat. |
+| Obsolescence potentielle des générateurs | O1 indique les premières possessions ; O2 compte globalement les achats. Ni part de revenu par générateur ni évolution de son gain relatif ne sont publiées. Absence d'achat ≠ obsolescence | **Manquant, indispensable au niveau indicateur** : relever à des points déterministes par ère/cycle la contribution CPS/clic et le gain relatif d'un achat comparable par générateur, avec disponibilité et limites de politique. Le verdict universel d'obsolescence est reporté. |
+| Croissance numérique | `assertEconomicState`, `assertFiniteTree` et les tests de propriétés vérifient canonicité/finitude ; ils ne publient pas la trajectoire ou les maxima des grandeurs | **Manquant, indispensable au niveau observation** : maxima et relevés bornés à jalons fixes des cookies, production totale, CPS, récompense clic et prestige, avec temps/cycle et représentation HugeNumber ; distinguer les remises à zéro. Stress exhaustif et seuils de danger extrapolés reportés. |
+
+**Décision de cette passe :** réparer seulement le contrat des refus et rendre
+les écarts explicites. Les trois mesures minimales manquantes restent des
+conditions de clôture d'O2, à spécifier et traiter dans une passe complémentaire
+O2 après le nouvel audit indépendant. Elles ne sont ni réputées livrées, ni
+transférées silencieusement à O3. La CI verte valide le code exécuté, pas la
+complétude du cahier des charges. O2 ne doit pas être déclaré terminé à ce stade.
+
+Leur future spécification devra préserver les vraies API et les politiques,
+séparer CPS et clics hypothétiques, utiliser HugeNumber sans conversion naïve en
+Number et borner les observations. Les agrégats de gains locaux ne seront pas
+présentés comme une attribution causale globale, notamment avec les synergies.
+
+**Reports explicites à une phase ultérieure d'analyse économique**, à cadrer
+séparément avant tout rééquilibrage : recherche de stratégie optimale, preuve
+d'obsolescence pour toutes les stratégies, classification automatique des murs
+ou d'un prestige trop puissant, calibration par sessions humaines, et stress
+numérique exhaustif/extrapolation très long terme. Ces travaux demandent des
+contrefactuels, seuils justifiés ou données joueur absents des cinq sondes ; ils
+ne sont pas nécessaires pour livrer des indicateurs descriptifs O2 honnêtes.
+Ce report ne lance aucune nouvelle phase et ne change pas le rôle d'O3 comme
+future référence comparative.
 
 ## Mesure locale sur Foundation 2.9
 
