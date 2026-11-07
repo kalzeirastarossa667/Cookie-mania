@@ -1,5 +1,7 @@
 # O2 — complément économique descriptif
 
+**Statut actuel :** les PR #39 et #37 ont été fusionnées avec l’accord explicite du propriétaire. Les mentions de candidat ou d’attente ci-dessous sont historiques ; voir le [checkpoint d’intégration](Cookie_Empire_2.9.1_Integration_Release.md) pour les preuves finales.
+
 Contrat spécifié dans Master §55.7 avant implémentation, 22 octobre 2026 (date
 locale). Base auditée : `8e9a75e888bc6d38bb4378ced7d0d9536d3f184c` de la PR #37.
 Les trois compléments autorisés sont implémentés ; leur acceptation reste soumise

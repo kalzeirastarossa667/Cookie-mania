@@ -377,3 +377,7 @@ This ordering is guidance, not a frozen roadmap. Prefer the smallest next featur
 ### Current integration authorization — 2026-11-07
 
 The owner now explicitly authorizes #39 and #37 to merge after final review. This supersedes the earlier O2 merge hold for these PRs. #39 is merged as 9f96bda5847dc927a293a653208f721549c2906e. #37 receives the reviewed Numeric/O2 integration with all regression suites; its fresh CI must pass before merge. Track the final result in docs/Cookie_Empire_2.9.1_Integration_Release.md and Master §56.7. O3 has not started; do not infer a balance verdict from O2.
+
+### Merged checkpoint — 2026-11-07
+
+#39 and #37 merged; code main 1092c8010df83605cacc88ac4da8dc095f7188a3. Post-merge Foundation 42425228716, Browser 42425228810 (32 PASS + 2 expected skips) and Pages 42425228728 succeeded. Public runtime hash matches the approved 2.9.1 build. This supersedes pending/O2-not-accepted wording above. Master §56.8 and release report carry current evidence. O3 reference specification is next; no O3 implementation or rebalancing in this release.

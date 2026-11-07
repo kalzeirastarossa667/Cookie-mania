@@ -1,5 +1,7 @@
 # Revue et préparation d’intégration — 7 novembre 2026
 
+**Statut actuel :** les PR #39 et #37 ont été fusionnées avec l’accord explicite du propriétaire. Les mentions de candidat ou d’attente ci-dessous sont historiques ; voir le [checkpoint d’intégration](Cookie_Empire_2.9.1_Integration_Release.md) pour les preuves finales.
+
 ## Résultat
 
 La combinaison de Foundation 2.9.1 Numeric et des diagnostics O2 passe la suite automatique complète. Les cinq simulations répétées produisent exactement les mêmes timelines O1, diagnostics de rythme et diagnostics économiques que le candidat O2 avant correction numérique. Aucun nouveau défaut bloquant reproduit dans le périmètre revu.

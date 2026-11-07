@@ -1,5 +1,7 @@
 # Documentation actuelle
 
+- [Foundation 2.9.1 + O2 intégrés](Cookie_Empire_2.9.1_Integration_Release.md) : checkpoint actuel, fusions autorisées et preuves.
+
 - [Préparation d’intégration Numeric + O2](Cookie_Empire_Integration_Review_2026-11-07.md) : conflits résolus, suite combinée et comparaison complète ; main inchangée.
 
 - [Candidat Foundation 2.9.1 Numeric](Cookie_Empire_Foundation_2.9.1_Numeric_Report.md) : corrections numériques et compteur ; validation du candidat distincte du déploiement 2.9.

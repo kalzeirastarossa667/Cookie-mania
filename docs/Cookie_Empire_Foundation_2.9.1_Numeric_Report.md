@@ -1,5 +1,7 @@
 # Foundation 2.9.1 — candidate numérique
 
+**Statut actuel :** les PR #39 et #37 ont été fusionnées avec l’accord explicite du propriétaire. Les mentions de candidat ou d’attente ci-dessous sont historiques ; voir le [checkpoint d’intégration](Cookie_Empire_2.9.1_Integration_Release.md) pour les preuves finales.
+
 Base : main `ef81233cde248161926c942ab7aafd9f2432b8ad`, 7 novembre 2026. PR O2 #37 inchangée et non fusionnée. Contrat : Master §56 ; §55 réservé au contrat O2 de sa branche.
 
 ## Changements

@@ -1,5 +1,7 @@
 # O2 — diagnostics du rythme de progression
 
+**Statut actuel :** les PR #39 et #37 ont été fusionnées avec l’accord explicite du propriétaire. Les mentions de candidat ou d’attente ci-dessous sont historiques ; voir le [checkpoint d’intégration](Cookie_Empire_2.9.1_Integration_Release.md) pour les preuves finales.
+
 Contrat **v1**, 22 octobre 2026. Base : `ef81233cde248161926c942ab7aafd9f2432b8ad`,
 O1 fusionné via PR #36. Le jeu reste Foundation 2.9, sauvegarde v7.
 O2 ne modifie ni `index.html`, ni les règles économiques, ni les cinq politiques O1.

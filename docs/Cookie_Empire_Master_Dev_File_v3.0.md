@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
-Status: FOUNDATION 2.9 VISUAL & GUIDANCE / SOURCE OF TRUTH
-Last audit: 2026-11-07 — Numeric/O2 integration preparation; main unchanged
+Status: FOUNDATION 2.9.1 NUMERIC + O2 MERGED / SOURCE OF TRUTH
+Last audit: 2026-11-07 — Numeric/O2 merged; post-merge CI and Pages verified
 
 ## 0. Purpose
 
@@ -3190,3 +3190,7 @@ The owner requested the next logical step alongside reusable skills. Prepared a 
 ## 56.7 Owner-approved integration — 2026-11-07
 
 The owner explicitly approved merging #39 and #37 after a final review. This supersedes the no-merge hold in §55.8 for these two PRs only. Revalidated unchanged heads c7ab7f2 / f7dd58d and their passing CI; reviewed the integration resolutions and retained full local regression/simulation evidence. #39 merged as `9f96bda5847dc927a293a653208f721549c2906e`. Update #37 with this main and the reviewed integration tree, require passing Foundation and Browser checks on that candidate, then merge it and verify post-merge CI and Pages. O3 has not started. See [release checkpoint](Cookie_Empire_2.9.1_Integration_Release.md) for current evidence; earlier unmerged status paragraphs describe historical checkpoints.
+
+## 56.8 Merged checkpoint and verified release
+
+PR #39 and #37 are merged with explicit owner approval. Final code main is `1092c8010df83605cacc88ac4da8dc095f7188a3`; Foundation 42425228716, Browser 42425228810 (32 PASS + 2 expected skips) and Pages 42425228728 succeeded. Logs were read; the public runtime hash matches 82fae47a4b6c389d4ef8a8e4f5b6b941f64502b1cd44d9e2f51045e3e010c6b1. The candidate and merge code trees match. These facts supersede the pending integration wording above. Documentation-only closure retains the tested code. Save v7 and economic constants remain unchanged; no physical Android claim. Next logical milestone: specify O3 reference baseline, not yet implemented. See release checkpoint for links and interpretation limits.
