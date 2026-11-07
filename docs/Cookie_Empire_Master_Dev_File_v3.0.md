@@ -2892,3 +2892,27 @@ report browser automation separately from physical-device validation.
 Final candidate CI evidence belongs in its PR, with exact SHA.
 The O1 PR must remain unmerged pending independent audit. O2/O3/E1/E2, new mechanics,
 economic changes and Dependabot #35 remain outside scope.
+
+# 56. Foundation 2.9.1 candidate — numeric boundary hardening
+
+Specification before runtime changes, 2026-11-07. Baseline main `ef81233cde248161926c942ab7aafd9f2432b8ad`; O1 is merged through #36. O2 remains separately proposed in #37; section 55 is reserved for that branch's existing contract. Historical pending-O1 instructions in §54 describe its pre-merge checkpoint, not current main.
+
+## 56.1 Numeric contract
+
+Keep HugeNumber and ~15 significant digits. Require a finite integer exponent at construction/JSON normalization: fractional exponents violate the ordering algorithm and are rejected, including in legacy loads. Preserve normalization of legacy finite noncanonical mantissas with integer exponents (e.g. `{m:12,e:2}`), and canonical zero. This supersedes permissive fractional-exponent loading; do not reinterpret these corrupt values silently.
+
+Parse positive scientific strings that underflow native Number without converting them to zero. Convert positive subnormal Number inputs through their decimal scientific representation to avoid division by a zero power of ten. Recheck finite normalized results. No precision guarantee beyond the existing Number exponent representation, no new big-number dependency, and no changes to ordinary economic formulas/constants.
+
+Keep save schema v7 and storage keys: field structure and meanings do not change. Valid v1-v7 saves retain migration paths; rejected raw saves stay protected by existing recovery behavior. Test imports, legacy normalization and round-trips. No economy rebalance, O2 acceptance, O3 or new mechanic is authorized by this patch.
+
+## 56.2 Evidence before implementation
+
+The new `check-numeric-boundaries.mjs` produces four failures (tiny string parsing, subnormal Number, fractional constructor/JSON exponent, fractional save field) and one passing legacy/tiny-pair round-trip control on the unchanged baseline. Add this bounded suite to npm test. Browser tests must distinguish actual browser runs from jsdom; preserve existing regression gates.
+
+## 56.3 Numeric implementation checkpoint
+
+Four red cases now pass; seven boundary groups pass including protected corrupt-load recovery. The 224 Foundation rules, properties, interface, 169 DOM checks and O1 pass. One historical import assertion expected a subnormal mantissa to remain invalid after broken normalization; it now tests a negative mantissa instead, and a new positive test requires the normalized subnormal import to succeed. This is a deliberate correction of that obsolete expectation, not removal of import validation. Browser verification pending on this candidate.
+
+## 56.4 Click counter boundary — separate change
+
+Before implementation, the new boundary test fails: after two clicks from MAX_SAFE_INTEGER-1, the count becomes 9007199254740992 and cannot be saved. Keep totalClicks as a non-negative safe integer, saturating at MAX_SAFE_INTEGER. Continue crediting normal click rewards and production at saturation. No new field or schema; the displayed counter is capped, not a mathematically unbounded history. This supersedes unguarded increment at the boundary only.

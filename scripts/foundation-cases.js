@@ -896,7 +896,7 @@ validateResearchGraph(UPGRADES);
     const {save,raw}=recoveryFixture();for(const patch of [{ownedUpgrades:['unknown']},{ownedUpgrades:['reinforced_click','reinforced_click']},{generators:{cursor:-1}},{cookies:{m:9,e:30}},{lastSavedAt:Date.now()+120000}]){const d=JSON.parse(raw);Object.assign(d.state,patch);assert(save.decodeImport(JSON.stringify(d))===null,'refus');}
   });
   test('import : nombres non canoniques après normalisation refusés',()=>{
-    const {save,raw}=recoveryFixture();for(const number of [{m:2,e:.5},{m:5e-324,e:0}]){const d=JSON.parse(raw);d.state.cookies=number;d.state.totalProduced=number;assert(save.decodeImport(JSON.stringify(d))===null,'nombre importé invalide');}
+    const {save,raw}=recoveryFixture();for(const number of [{m:2,e:.5},{m:-1,e:0}]){const d=JSON.parse(raw);d.state.cookies=number;d.state.totalProduced=number;assert(save.decodeImport(JSON.stringify(d))===null,'nombre importé invalide');}
   });
   test('import : grands nombres et CPS fractionnaire préservés',()=>{
     const {save,raw}=recoveryFixture();const d=JSON.parse(raw);d.state.cookies={m:1.23,e:1000};d.state.totalProduced=d.state.cookies;d.state.generators.cursor=1;

@@ -235,7 +235,7 @@ test('Foundation 2.5 : achat permanent dépense le portefeuille et survit au rel
 
 test('Foundation 2.7.1 : les deux branches de Rayonnement restent jouables jusqu’à la convergence', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('footer')).toContainText('Foundation 2.9 · Visual');
+  await expect(page.locator('footer')).toContainText('Foundation 2.9.1 · Numeric');
   await page.evaluate(() => {
     const state=window.cookieEmpire.state;
     state.prestigePoints.m=2;state.prestigePoints.e=1;
@@ -474,4 +474,34 @@ test('Foundation 2.8.3 : le menu options reste au-dessus du HUD de ressources', 
     });
     expect(hitTest.isTopmost, JSON.stringify(hitTest)).toBe(true);
   }
+});
+
+test('numeric hardening: corrupted exponent stays protected while clicking works', async ({ page }) => {
+  await page.goto('/');
+  const raw=await page.evaluate(()=>{
+    const app=window.cookieEmpire;
+    const payload=JSON.parse(app.saveSystem.encode(app.state));
+    payload.state.cookies={m:1,e:0.5};payload.state.totalProduced={m:1,e:0.5};
+    const raw=JSON.stringify(payload);localStorage.setItem(app.saveSystem.key,raw);return raw;
+  });
+  await page.reload();
+  await expect(page.locator('#recoveryPanel')).toBeVisible();
+  await page.locator('#cookieButton').click();
+  await expect(page.locator('#balance')).toHaveText('1');
+  expect(await page.evaluate(()=>{
+    const app=window.cookieEmpire;app.saveSystem.save(app.state);
+    return localStorage.getItem(app.saveSystem.key);
+  })).toBe(raw);
+});
+
+test('numeric hardening: saturated clicks persist and keep awarding cookies', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(()=>{window.cookieEmpire.state.totalClicks=Number.MAX_SAFE_INTEGER;});
+  await page.locator('#cookieButton').click();
+  await page.locator('#saveButton').click();
+  await page.reload();
+  await expect(page.locator('#balance')).toHaveText('1');
+  expect(await page.evaluate(()=>window.cookieEmpire.state.totalClicks)).toBe(Number.MAX_SAFE_INTEGER);
+  await page.locator('#cookieButton').click();
+  await expect(page.locator('#balance')).toHaveText('2');
 });
