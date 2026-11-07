@@ -1,5 +1,7 @@
 # Documentation actuelle
 
+- [Candidat Foundation 2.9.1 Numeric](Cookie_Empire_Foundation_2.9.1_Numeric_Report.md) : corrections numériques et compteur ; validation du candidat distincte du déploiement 2.9.
+
 - [Observatoire O1 de progression](Cookie_Empire_O1_Progression_Observatory.md) : définitions des événements, politiques, exemple Foundation 2.9 et limites ; outil de développement sans changement du jeu.
 
 - [Master Dev File v3.0](Cookie_Empire_Master_Dev_File_v3.0.md) : décisions et règles du projet ; lire avant de modifier le jeu.
