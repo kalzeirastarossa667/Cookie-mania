@@ -189,6 +189,47 @@ After deployment, the project owner manually checked the GitHub Pages version on
 
 This checkpoint closes Foundation 2.9 before post-2.9 work. The sequencing principle in section 16 remains **stability → observability → extensibility → new mechanics → deeper endgame**. Do not treat the candidate feature pool as permission to skip observability/extensibility preparation.
 
+### 10.2 Resumption checkpoint — 2026-10-22
+
+O1 was merged via PR #36 on 2026-10-07 as
+`ef81233cde248161926c942ab7aafd9f2432b8ad`; post-merge Foundation, Browser
+and Pages checks succeeded. The runtime remains Foundation 2.9 / save v7.
+The next implementation is O2 pacing diagnostics, specified in Master §55.
+The accepted sequence is O1 → O2 → O3 reference baseline → E1 extensibility
+audit → E2 standalone-build proof. O2 observes purchase gaps, milestone delays
+and prestige-cycle acceleration without economic changes. Revalidate the actual
+HEAD/PR state before resuming; this paragraph does not assert an O2 merge.
+
+Later instruction on 2026-10-22: keep O2 PR #37 open and do not start O3.
+The immediate task is auditing `scripts/pacing-diagnostics.mjs` and
+`scripts/check-pacing.mjs`, including their simulator integration. Audit fixes
+belong to the same O2 PR; a green CI run does not override the hold on O3.
+
+Follow-up on 2026-10-23: fix validation of refused observations, publish on the
+same branch, rerun Foundation/O1/O2/Browser and stop for independent audit.
+Master §55.6 and the O2 report reconcile the original broader O2 goals with the
+implemented subset. O2 remains partial: minimum marginal-purchase contribution,
+generator-relevance indicators and numeric-growth observations are still required
+before declaring original O2 complete. They are not implemented in this follow-up
+or silently moved to O3. Advanced universal balance verdicts are explicitly deferred.
+
+Later authorization after independent audit of `8e9a75e`: implement those three
+minimum O2 diagnostics on the same PR branch. Master §55.7 specifies them before
+implementation. The additive `pacing.economics` contract now measures real purchase
+effects, generator shares/local next-unit dominance and HugeNumber growth with
+explicit reset boundaries. See `docs/Cookie_Empire_O2_Economic_Diagnostics.md`.
+Keep all five O1 policies and legacy O2 fields; no runtime/save/UI/balance change.
+Publish with passing tests and stop for independent audit. Do not merge or start
+O3/E1/E2. Implementation completion is not independent acceptance.
+
+Final validation requested after independent audit of `dddf24a`: review the whole
+PR and test beyond existing assertions. Three diagnostics boundary defects were
+reproduced and minimally repaired (zero-income step-limit, unobserved economic
+time/end state, milestones outside their observed cycle). Master §55.8 and the
+economic report record the independent arithmetic/read-only checks and regression
+evidence. Publish only justified fixes on PR #37's current branch and stop for
+another independent audit; merging still requires the owner's explicit permission.
+
 ## 11. Visual-refresh guardrails
 
 A visual refactor should:
