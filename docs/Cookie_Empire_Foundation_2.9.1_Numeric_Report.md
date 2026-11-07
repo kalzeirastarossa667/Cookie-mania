@@ -20,3 +20,15 @@ Deux parcours Playwright ajoutés couvrent la conservation d’une sauvegarde à
 ## Limites
 
 Précision ~15 chiffres inchangée. L’exposant reste un Number fini entier, pas un entier arbitrairement précis. Une donnée volontairement corrompue n’est pas réparée automatiquement. La saturation du compteur ne conserve pas le nombre de clics au-delà du plafond ; les gains continuent. Aucune validation sur Android physique, aucun rééquilibrage et aucune acceptation d’O2.
+
+## Validation finale du code — 7 novembre 2026
+
+Le statut navigateur en attente ci-dessus est désormais clos pour le code `548e0e5c1096c4f34c258c13982b2c31ce8d4896` (PR #39) :
+- [Foundation CI 42423522958](https://github.com/kalzeirastarossa667/Cookie-mania/actions/runs/42423522958) SUCCESS.
+- [Browser CI 42423522923](https://github.com/kalzeirastarossa667/Cookie-mania/actions/runs/42423522923) SUCCESS, journal vérifié : **32 PASS + 2 skips attendus**, Chromium desktop et Pixel 5 émulé. Les deux nouveaux parcours passent sur les deux projets.
+- Les cinq timelines O1 recalculées sont identiques à la référence de l’audit pré-correction.
+- Les 8 contrôles pacing et 16 économiques d’O2 passent aussi sur une copie temporaire utilisant ce runtime ; cela n’est pas une acceptation ni une modification de la PR #37.
+- Catalogue, Economy, SaveSystem, GameUI et orchestration temporelle sont identiques à main ; syntaxe et diff sans erreur.
+- Runtime livré SHA-256 : `82fae47a4b6c389d4ef8a8e4f5b6b941f64502b1cd44d9e2f51045e3e010c6b1`.
+
+La consignation de ces résultats ne change que la documentation. Le candidat n’est ni fusionné ni déployé. Android physique reste non vérifié.
