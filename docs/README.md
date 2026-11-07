@@ -1,6 +1,10 @@
 # Documentation actuelle
 
+- [Préparation d’intégration Numeric + O2](Cookie_Empire_Integration_Review_2026-11-07.md) : conflits résolus, suite combinée et comparaison complète ; main inchangée.
+
 - [Candidat Foundation 2.9.1 Numeric](Cookie_Empire_Foundation_2.9.1_Numeric_Report.md) : corrections numériques et compteur ; validation du candidat distincte du déploiement 2.9.
+- [Diagnostics O2 du rythme de progression](Cookie_Empire_O2_Pacing_Diagnostics.md) : mesures des achats réels, attentes, spécialisations et accélération des prestiges ; aucune modification du jeu.
+- [Complément économique O2](Cookie_Empire_O2_Economic_Diagnostics.md) : contribution marginale, pertinence locale des générateurs et croissance HugeNumber ; contrat additif et limites d'interprétation.
 
 - [Observatoire O1 de progression](Cookie_Empire_O1_Progression_Observatory.md) : définitions des événements, politiques, exemple Foundation 2.9 et limites ; outil de développement sans changement du jeu.
 
