@@ -373,3 +373,7 @@ A plausible future sequence, subject to revalidation and product decisions, is:
 - challenge universes and only then consider a higher prestige layer.
 
 This ordering is guidance, not a frozen roadmap. Prefer the smallest next feature that creates meaningful player decisions without destabilizing the validated foundation.
+
+### Current integration authorization — 2026-11-07
+
+The owner now explicitly authorizes #39 and #37 to merge after final review. This supersedes the earlier O2 merge hold for these PRs. #39 is merged as 9f96bda5847dc927a293a653208f721549c2906e. #37 receives the reviewed Numeric/O2 integration with all regression suites; its fresh CI must pass before merge. Track the final result in docs/Cookie_Empire_2.9.1_Integration_Release.md and Master §56.7. O3 has not started; do not infer a balance verdict from O2.

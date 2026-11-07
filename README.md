@@ -1,5 +1,7 @@
 # Cookie Empire
 
+Candidat **Foundation 2.9.1 — Numeric** : parseur des très petites valeurs, validation des exposants et compteur de clics renforcés. Sauvegardes v7 conservées. Voir le [rapport du candidat](docs/Cookie_Empire_Foundation_2.9.1_Numeric_Report.md) ; les validations historiques 2.9 ci-dessous ne certifient pas cette branche.
+
 **Foundation 2.9 — Visual & Guidance** : clicker autonome avec **16 générateurs**, **22 recherches**, **44 objectifs** et un système de **prestige permanent à branches**, désormais accompagné d’une hiérarchie visuelle renforcée et d’un guidage joueur explicite.
 
 ## Jouer

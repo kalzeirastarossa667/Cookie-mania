@@ -1,7 +1,7 @@
 # COOKIE EMPIRE — MASTER DEV FILE
 Version: 3.0
 Status: FOUNDATION 2.9 VISUAL & GUIDANCE / SOURCE OF TRUTH
-Last audit: 2026-10-22 — O1 merged baseline; O2 specification below
+Last audit: 2026-11-07 — Numeric/O2 integration preparation; main unchanged
 
 ## 0. Purpose
 
@@ -3154,3 +3154,39 @@ the economic report for reproductions, fixes and retained precision/sampling
 limits. No runtime, balancing, save, UI, dependency or O1 contract change.
 Publish only these justified corrections on the existing branch, then stop for
 independent audit. No merge and no O3/E1/E2 without subsequent authorization.
+
+# 56. Foundation 2.9.1 candidate — numeric boundary hardening
+
+Specification before runtime changes, 2026-11-07. Baseline main `ef81233cde248161926c942ab7aafd9f2432b8ad`; O1 is merged through #36. O2 remains separately proposed in #37; section 55 is reserved for that branch's existing contract. Historical pending-O1 instructions in §54 describe its pre-merge checkpoint, not current main.
+
+## 56.1 Numeric contract
+
+Keep HugeNumber and ~15 significant digits. Require a finite integer exponent at construction/JSON normalization: fractional exponents violate the ordering algorithm and are rejected, including in legacy loads. Preserve normalization of legacy finite noncanonical mantissas with integer exponents (e.g. `{m:12,e:2}`), and canonical zero. This supersedes permissive fractional-exponent loading; do not reinterpret these corrupt values silently.
+
+Parse positive scientific strings that underflow native Number without converting them to zero. Convert positive subnormal Number inputs through their decimal scientific representation to avoid division by a zero power of ten. Recheck finite normalized results. No precision guarantee beyond the existing Number exponent representation, no new big-number dependency, and no changes to ordinary economic formulas/constants.
+
+Keep save schema v7 and storage keys: field structure and meanings do not change. Valid v1-v7 saves retain migration paths; rejected raw saves stay protected by existing recovery behavior. Test imports, legacy normalization and round-trips. No economy rebalance, O2 acceptance, O3 or new mechanic is authorized by this patch.
+
+## 56.2 Evidence before implementation
+
+The new `check-numeric-boundaries.mjs` produces four failures (tiny string parsing, subnormal Number, fractional constructor/JSON exponent, fractional save field) and one passing legacy/tiny-pair round-trip control on the unchanged baseline. Add this bounded suite to npm test. Browser tests must distinguish actual browser runs from jsdom; preserve existing regression gates.
+
+## 56.3 Numeric implementation checkpoint
+
+Four red cases now pass; seven boundary groups pass including protected corrupt-load recovery. The 224 Foundation rules, properties, interface, 169 DOM checks and O1 pass. One historical import assertion expected a subnormal mantissa to remain invalid after broken normalization; it now tests a negative mantissa instead, and a new positive test requires the normalized subnormal import to succeed. This is a deliberate correction of that obsolete expectation, not removal of import validation. Browser verification pending on this candidate.
+
+## 56.4 Click counter boundary — separate change
+
+Before implementation, the new boundary test fails: after two clicks from MAX_SAFE_INTEGER-1, the count becomes 9007199254740992 and cannot be saved. Keep totalClicks as a non-negative safe integer, saturating at MAX_SAFE_INTEGER. Continue crediting normal click rewards and production at saturation. No new field or schema; the displayed counter is capped, not a mathematically unbounded history. This supersedes unguarded increment at the boundary only.
+
+## 56.5 Final candidate verification
+
+Code commit `548e0e5c1096c4f34c258c13982b2c31ce8d4896`, PR #39: Foundation CI 42423522958 SUCCESS; Browser CI 42423522923 SUCCESS, **32 PASS + 2 expected skips**, including the two new persistence/counter scenarios on desktop Chromium and Pixel 5. Local full suite and eight boundary groups pass; five O1 timelines are unchanged. O2's 8 pacing and 16 economic checks also pass against a temporary copy with this runtime (not O2 acceptance). See the [2.9.1 report](Cookie_Empire_Foundation_2.9.1_Numeric_Report.md). No physical-device claim, merge or deployment. Subsequent evidence-only documentation does not modify the tested runtime.
+
+## 56.6 Integration preparation — 2026-11-07
+
+The owner requested the next logical step alongside reusable skills. Prepared a separate integration branch combining #39 c7ab7f2 and #37 f7dd58d, preserving all tests and both contracts. Three merge conflicts (test command, Master append, docs index) are resolved. Full combined npm test passes; all five O1 timelines and full O2 observations match exactly across the numeric correction. This is preparation, not a main merge or O2 acceptance; §55.8’s explicit owner-approval gate remains. See [integration review](Cookie_Empire_Integration_Review_2026-11-07.md) for evidence and limits.
+
+## 56.7 Owner-approved integration — 2026-11-07
+
+The owner explicitly approved merging #39 and #37 after a final review. This supersedes the no-merge hold in §55.8 for these two PRs only. Revalidated unchanged heads c7ab7f2 / f7dd58d and their passing CI; reviewed the integration resolutions and retained full local regression/simulation evidence. #39 merged as `9f96bda5847dc927a293a653208f721549c2906e`. Update #37 with this main and the reviewed integration tree, require passing Foundation and Browser checks on that candidate, then merge it and verify post-merge CI and Pages. O3 has not started. See [release checkpoint](Cookie_Empire_2.9.1_Integration_Release.md) for current evidence; earlier unmerged status paragraphs describe historical checkpoints.
